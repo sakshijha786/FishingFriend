@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": false,
+        "resolveJsonModule": true
+    },
+    "exclude": [
+        "public",
+        "dist",
+        "node_modules"
+    ]
+}

@@ -1,0 +1,24 @@
+.menu {
+    display: block;
+}
+
+.menu-item {
+    padding: var(--spacing__small);
+    border-radius: var(--border__radius);
+    cursor: pointer;
+}
+
+.menu-item--active {
+    color: var(--colour__primary);
+}
+
+@media (hover: hover) {
+
+    .menu-item {
+
+        &:hover {
+            background-color: var(--background__colour--hover);
+        }
+    }
+
+}

@@ -1,0 +1,20 @@
+{
+    "name": "@ocula/app",
+    "repository": "https://github.com/andrewcourtice/ocula.git",
+    "author": "Andrew Courtice",
+    "description": "The free and open-source progressive weather app",
+    "license": "MIT",
+    "private": true,
+    "workspaces": [
+        "api",
+        "client",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "cd client && yarn start --port $PORT",
+        "build": "cd client && yarn build"
+    },
+    "devDependencies": {
+        "typescript": "^4.1.2"
+    }
+}

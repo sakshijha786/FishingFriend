@@ -1,0 +1,92 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-weight: var(--font__weight--heavy);
+}
+
+a,
+.link {
+    text-decoration: none;
+}
+
+a {
+    color: var(--colour__primary);
+    
+    &:hover {
+        color: var(--colour__primary--dark);
+    }
+}
+
+.link {
+    color: inherit;
+}
+
+.link--inherit {
+    color: inherit;
+
+    &:hover {
+        color: inherit;
+    }
+}
+
+.text--meta {
+    color: var(--font__colour--meta);
+}
+
+.text--medium {
+    font-weight: var(--font__weight--medium);
+}
+
+strong,
+.text--heavy {
+    font-weight: var(--font__weight--heavy);
+}
+
+small,
+.text--small {
+    font-size: var(--font__size--small);
+}
+
+.text--x-small {
+    font-size: var(--font__size--x-small);
+}
+
+.text--left {
+    text-align: left;
+}
+
+.text--centre {
+    text-align: center;
+}
+
+.text--right {
+    text-align: right;
+}
+
+.text--tight {
+    line-height: 1;
+}
+
+.text--no-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.text--truncate {
+    @include text-truncate;
+}
+
+@media (hover: hover) {
+
+    a {
+
+        &:hover {
+            color: var(--colour__primary--dark);
+        }
+    }
+
+}
