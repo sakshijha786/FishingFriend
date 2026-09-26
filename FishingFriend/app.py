@@ -42,6 +42,7 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 import streamlit as st
+import streamlit.components.v1 as components
 import folium
 from streamlit_folium import st_folium
 import pandas as pd
@@ -708,6 +709,21 @@ if "last_pipeline_result" not in st.session_state:
 if "show_sos_modal" not in st.session_state:
     st.session_state.show_sos_modal = False
 
+if "show_guide_modal" not in st.session_state:
+    st.session_state.show_guide_modal = False
+
+if "show_manifest_modal" not in st.session_state:
+    st.session_state.show_manifest_modal = False
+
+if "vessel_class" not in st.session_state:
+    st.session_state.vessel_class = "Mechanized Trawler (12-18m)"
+
+if "departure_window" not in st.session_state:
+    st.session_state.departure_window = "Immediate (Current Tide)"
+
+if "unit_system" not in st.session_state:
+    st.session_state.unit_system = "Metric (km/h, km)"
+
 
 # ---------------------------------------------------------
 # TOP BRAND NAVIGATION & CONTROLS
@@ -715,8 +731,8 @@ if "show_sos_modal" not in st.session_state:
 
 inject_theme(st.session_state.selected_theme)
 
-# Top Bar with Title, Port Selection, Theme Toggle & SOS Button
-nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([4, 3, 3, 2])
+# Top Bar with Title, Port Selection, Theme Toggle, Guide & SOS Buttons
+nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns([3.5, 2.5, 2.2, 1.8, 2.0])
 
 with nav_col1:
     st.markdown("""
@@ -764,9 +780,143 @@ with nav_col3:
         st.rerun()
 
 with nav_col4:
+    if st.button("💡 Guide & SOP", use_container_width=True):
+        st.session_state.show_guide_modal = not st.session_state.show_guide_modal
+
+with nav_col5:
     if st.button("🚨 EMERGENCY SOS", type="primary", use_container_width=True):
         st.session_state.show_sos_modal = not st.session_state.show_sos_modal
 
+# ---------------------------------------------------------
+# 1-TAP COASTAL PORT QUICK SELECTOR PILLS
+# ---------------------------------------------------------
+st.markdown("<div style='margin-top: 4px;'></div>", unsafe_allow_html=True)
+coast_col1, coast_col2 = st.columns([1, 1])
+
+west_ports = [("kochi", "⚓ Kochi"), ("veraval", "⚓ Veraval"), ("mangalore", "⚓ Mangalore"), ("porbandar", "⚓ Porbandar")]
+east_ports = [("chennai", "⚓ Chennai"), ("vizag", "⚓ Visakhapatnam"), ("tuticorin", "⚓ Thoothukudi")]
+
+with coast_col1:
+    st.markdown("<span style='font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase;'>🌊 West Coast (Arabian Sea):</span>", unsafe_allow_html=True)
+    w_btn_cols = st.columns(len(west_ports))
+    for col, (pid, pname) in zip(w_btn_cols, west_ports):
+        with col:
+            is_active = (st.session_state.active_port_id == pid)
+            if st.button(pname, key=f"quick_port_{pid}", type="primary" if is_active else "secondary", use_container_width=True):
+                st.session_state.active_port_id = pid
+                st.rerun()
+
+with coast_col2:
+    st.markdown("<span style='font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase;'>🌊 East Coast (Bay of Bengal):</span>", unsafe_allow_html=True)
+    e_btn_cols = st.columns(len(east_ports))
+    for col, (pid, pname) in zip(e_btn_cols, east_ports):
+        with col:
+            is_active = (st.session_state.active_port_id == pid)
+            if st.button(pname, key=f"quick_port_{pid}", type="primary" if is_active else "secondary", use_container_width=True):
+                st.session_state.active_port_id = pid
+                st.rerun()
+
+# ---------------------------------------------------------
+# VESSEL SPECIFICATION & VOYAGE CONTROLS EXPANDER
+# ---------------------------------------------------------
+with st.expander("⛵ Vessel Classification, Departure Timing & Unit Settings", expanded=False):
+    v_col1, v_col2, v_col3 = st.columns(3)
+    with v_col1:
+        vessel_options = [
+            "Mechanized Trawler (12-18m)",
+            "Small Craft (<10m)",
+            "FRP / Fiber Boat (8-10m)",
+            "Deep-Sea Longliner (>20m)"
+        ]
+        cur_v_idx = vessel_options.index(st.session_state.vessel_class) if st.session_state.vessel_class in vessel_options else 0
+        sel_vessel = st.selectbox(
+            "Vessel Classification & OAL",
+            options=vessel_options,
+            index=cur_v_idx,
+            help="Small Craft (<10m) enforces stricter wave limits (<1.8m) under INCOIS/IMD safety standards."
+        )
+        if sel_vessel != st.session_state.vessel_class:
+            st.session_state.vessel_class = sel_vessel
+            st.session_state.last_pipeline_result = None
+            st.rerun()
+
+    with v_col2:
+        dep_options = [
+            "Immediate (Current Tide)",
+            "Next High Water Window",
+            "Dawn Departure (04:00 IST)",
+            "Dusk Departure (17:00 IST)"
+        ]
+        cur_dep_idx = dep_options.index(st.session_state.departure_window) if st.session_state.departure_window in dep_options else 0
+        sel_dep = st.selectbox(
+            "Departure Timing Window",
+            options=dep_options,
+            index=cur_dep_idx,
+            help="Harmonizes vessel departure with bar depth & tidal stream."
+        )
+        if sel_dep != st.session_state.departure_window:
+            st.session_state.departure_window = sel_dep
+            st.rerun()
+
+    with v_col3:
+        unit_options = ["Metric (km/h, km)", "Nautical (knots, nm)"]
+        cur_u_idx = unit_options.index(st.session_state.unit_system) if st.session_state.unit_system in unit_options else 0
+        sel_unit = st.selectbox(
+            "Display Unit System",
+            options=unit_options,
+            index=cur_u_idx,
+            help="Choose between metric units (km/h, km) and maritime nautical units (knots, nm)."
+        )
+        if sel_unit != st.session_state.unit_system:
+            st.session_state.unit_system = sel_unit
+            st.rerun()
+
+# ---------------------------------------------------------
+# INTERACTIVE SKIPPER'S FIELD GUIDE & ONBOARDING DRAWER
+# ---------------------------------------------------------
+if st.session_state.show_guide_modal:
+    st.markdown("""
+    <div class="ocula-card" style="border: 2px solid var(--primary); background: rgba(2, 132, 199, 0.05); margin-top: 10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:18px; font-weight:800; color:var(--primary);">
+                💡 SKIPPER'S FIELD GUIDE & MARITIME ADVISORY STANDARD OPERATING PROCEDURE (SOP)
+            </div>
+            <div style="font-size:11px; font-weight:700; color:var(--primary); background:rgba(2, 132, 199, 0.15); padding:4px 8px; border-radius:6px;">
+                INCOIS / IMD / ICG CODIFIED RULES
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px;">
+            <div style="background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; padding: 10px 12px; border-radius: 6px;">
+                <b style="color:#16a34a;">🟢 SAFE OPERATIONAL CLEARANCE (GO)</b>
+                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4;">
+                    • Swell &lt; 1.80m & Wind &lt; 32 km/h.<br>
+                    • Safe distance from International Maritime Boundaries (&gt;10 nm).<br>
+                    • All registered craft permitted for unrestricted offshore voyage.
+                </p>
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 10px 12px; border-radius: 6px;">
+                <b style="color:#d97706;">🟡 CONDITIONAL CLEARANCE (CAUTION)</b>
+                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4;">
+                    • Swell 1.80m - 2.50m or Wind 32 - 45 km/h.<br>
+                    • Traditional craft (&lt;10m) restricted within 12 nm.<br>
+                    • Mechanized trawlers maintain continuous VHF Ch 16 watch.
+                </p>
+            </div>
+            <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 10px 12px; border-radius: 6px;">
+                <b style="color:#dc2626;">🔴 OPERATIONAL SUSPENSION (NO-GO)</b>
+                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4;">
+                    • Swell &gt; 2.50m (INCOIS High Wave Red Alert).<br>
+                    • Wind &gt; 45.0 km/h (IMD Squall / Gale Warning).<br>
+                    • Proximity to IMBL &lt; 10.0 nm (Apprehension Danger). All vessels remain moored.
+                </p>
+            </div>
+        </div>
+        <div style="font-size:12px; margin-top:10px; line-height:1.5; opacity:0.85;">
+            🐟 <b>Potential Fishing Zones (PFZs):</b> Calculated using ISRO Oceansat-3 chlorophyll-a and SST thermal boundaries. Convergence lines congregate pelagic fish, cutting searching fuel by 20-30%.<br>
+            🚨 <b>Emergency Protocols:</b> Indian Coast Guard Toll-Free: <b>1554</b> | Coastal Security Police: <b>1093</b> | VHF Distress Channel: <b>16</b> | DSC Alert: <b>Channel 70</b>.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # INTERACTIVE QUERY BAR & VOICE PRESETS
@@ -819,7 +969,7 @@ if trigger_analyze or st.session_state.last_pipeline_result is None or user_q !=
         res: ORCASynthesisResult = st.session_state.orchestrator.run_pipeline(
             query=user_q,
             selected_port_id=st.session_state.active_port_id,
-            vessel_class="Mechanized Trawler (12-18m)"
+            vessel_class=st.session_state.vessel_class
         )
         st.session_state.last_pipeline_result = res
 
@@ -935,7 +1085,22 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# 2. Live Telemetry Chips (5 clean metric cards)
+# 2. Live Telemetry Chips (5 clean metric cards with Dynamic Units)
+is_naut = "Nautical" in st.session_state.unit_system
+
+if is_naut:
+    curr_disp = f"{res.telemetry.ocean_current_velocity * 0.539957:.1f}"
+    curr_unit = "kts"
+    wind_disp = f"{res.telemetry.wind_speed * 0.539957:.1f}"
+    wind_unit = "kts"
+    gust_disp = f"Gusts {res.telemetry.wind_gusts * 0.539957:.1f} kts"
+else:
+    curr_disp = f"{res.telemetry.ocean_current_velocity:.1f}"
+    curr_unit = "km/h"
+    wind_disp = f"{res.telemetry.wind_speed:.1f}"
+    wind_unit = "km/h"
+    gust_disp = f"Gusts {res.telemetry.wind_gusts:.1f} km/h"
+
 tc1, tc2, tc3, tc4, tc5 = st.columns(5)
 with tc1:
     st.markdown(f"""
@@ -959,7 +1124,7 @@ with tc3:
     st.markdown(f"""
     <div class="telemetry-chip">
         <div class="telemetry-lbl">💨 Ocean Current</div>
-        <div class="telemetry-val">{res.telemetry.ocean_current_velocity} <span style="font-size:14px;">km/h</span></div>
+        <div class="telemetry-val">{curr_disp} <span style="font-size:14px;">{curr_unit}</span></div>
         <div style="font-size:11px; opacity:0.75;">Drift {res.telemetry.ocean_current_direction:.0f}°</div>
     </div>
     """, unsafe_allow_html=True)
@@ -968,8 +1133,8 @@ with tc4:
     st.markdown(f"""
     <div class="telemetry-chip">
         <div class="telemetry-lbl">🌬️ Wind Speed</div>
-        <div class="telemetry-val">{res.telemetry.wind_speed} <span style="font-size:14px;">km/h</span></div>
-        <div style="font-size:11px; opacity:0.75;">Gusts {res.telemetry.wind_gusts} km/h</div>
+        <div class="telemetry-val">{wind_disp} <span style="font-size:14px;">{wind_unit}</span></div>
+        <div style="font-size:11px; opacity:0.75;">{gust_disp}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1042,12 +1207,50 @@ with tab_map:
             </div>
             """, unsafe_allow_html=True)
 
+        dist_label = f"{res.route.total_distance_nm:.1f} nm" if is_naut else f"{res.route.total_distance_nm * 1.852:.1f} km"
         st.markdown(f"""
         <div style="font-size:12px; opacity:0.85; margin-top:8px;">
-            ⛽ <b>Navigation Plan:</b> {res.route.total_distance_nm} nm · Transit ~{res.route.estimated_transit_hours:.1f} hrs · 
+            ⛽ <b>Navigation Plan:</b> {dist_label} · Transit ~{res.route.estimated_transit_hours:.1f} hrs · 
             Diesel ~{res.route.fuel_burn_liters} L (Savings: <span style="color:#059669; font-weight:bold;">{res.route.fuel_savings_liters} L</span>).
         </div>
         """, unsafe_allow_html=True)
+
+        # Voyage Manifest & Clearance Slip Generator
+        if st.button("📋 View / Print Voyage Clearance Manifest", key="btn_toggle_manifest", type="secondary", use_container_width=True):
+            st.session_state.show_manifest_modal = not st.session_state.show_manifest_modal
+
+        if st.session_state.show_manifest_modal:
+            status_color = "#16a34a" if res.safety.status == "SAFE_GO" else ("#d97706" if res.safety.status == "CAUTION_CONDITIONAL" else "#dc2626")
+            manifest_ref = f"IND-MARITIME-{res.port.id.upper()}-{abs(hash(res.port.id + res.top_pfz.zone_id)) % 100000:05d}"
+            
+            st.markdown(f"""
+            <div class="ocula-card" style="border: 2px dashed {status_color}; background: rgba(2, 132, 199, 0.04); margin-top: 10px; padding: 16px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
+                    <div>
+                        <div style="font-size:15px; font-weight:800; color:var(--primary);">📑 OFFICIAL VOYAGE MANIFEST & CLEARANCE SLIP</div>
+                        <div style="font-size:11px; opacity:0.8;">Ref: <b>{manifest_ref}</b> · {datetime.now().strftime('%d-%b-%Y %H:%M IST')}</div>
+                    </div>
+                    <span style="font-size:12px; font-weight:800; color:{status_color}; background:rgba(0,0,0,0.06); padding:2px 8px; border-radius:4px; border:1px solid {status_color};">
+                        {res.safety.status.replace('_', ' ')}
+                    </span>
+                </div>
+                <div style="font-size:12px; line-height:1.6; margin-top:8px;">
+                    • <b>Vessel:</b> {st.session_state.vessel_class} (Port: {res.port.name})<br>
+                    • <b>Departure:</b> {st.session_state.departure_window} | Water Level: {port_tides.current_water_level_m:.2f}m<br>
+                    • <b>Target PFZ:</b> {res.top_pfz.name} ({dist_label} · Bearing {res.top_pfz.bearing_deg}°)<br>
+                    • <b>Target Species:</b> {', '.join(res.top_pfz.species_likely[:3])}<br>
+                    • <b>Tide & Harbor Bar:</b> {port_tides.tide_phase.split('(')[0]} · Depth {port_tides.harbor_bar_depth_m:.1f}m<br>
+                    • <b>Fuel Estimate:</b> ~{res.route.fuel_burn_liters} L (Saved: {res.route.fuel_savings_liters} L)<br>
+                    • <b>Safety Guard:</b> IMBL {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})<br>
+                    • <b>Emergency SAR:</b> Coast Guard 1554 · VHF Ch 16 (156.800 MHz) · Police 1093
+                </div>
+                <div style="margin-top:10px; text-align:right;">
+                    <button onclick="window.print()" style="background:var(--primary); color:#ffffff; font-weight:700; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px;">
+                        🖨️ Print Voyage Slip
+                    </button>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
         # Marine Spatial Planning (MarineMap)
         st.markdown("---")
@@ -1457,6 +1660,50 @@ with tab_advisory:
         adv = res.advisory.tamil
     else:
         adv = res.advisory.english
+
+    # Audio Speech Synthesis Feature
+    speech_lang_code = "hi-IN" if "Hindi" in st.session_state.advisory_lang else ("ta-IN" if "Tamil" in st.session_state.advisory_lang else "en-IN")
+    speech_label = "🔊 ऑडियो में सुनें (Listen in Hindi)" if "Hindi" in st.session_state.advisory_lang else ("🔊 ஆடியோவில் கேளுங்கள் (Listen in Tamil)" if "Tamil" in st.session_state.advisory_lang else "🔊 Voice Audio Companion (Listen in English)")
+    
+    clean_speech_text = f"{adv['status_headline']}. {adv['safety_action']}. {adv['executive_summary']}"
+    clean_speech_text = clean_speech_text.replace('"', ' ').replace("'", ' ').replace('\n', ' ').replace('\r', ' ')
+
+    audio_html = f"""
+    <div style="background:rgba(2, 132, 199, 0.08); border:1px solid #0284c7; border-radius:10px; padding:12px 18px; margin-bottom: 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-family:'Plus Jakarta Sans', sans-serif;">
+        <div>
+            <div style="font-weight:700; font-size:14px; color:#0284c7;">{speech_label}</div>
+            <div style="font-size:12px; color:#64748b;">Spoken audio voice advisory for skippers & deckhands with zero reading required.</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <button id="tts-play-btn" onclick="playAdvisorySpeech()" style="background:#0284c7; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
+                ▶ Play Voice
+            </button>
+            <button id="tts-stop-btn" onclick="stopAdvisorySpeech()" style="background:#64748b; color:#ffffff; border:none; padding:8px 14px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
+                ⏹ Stop
+            </button>
+        </div>
+    </div>
+    <script>
+    function playAdvisorySpeech() {{
+        if ('speechSynthesis' in window) {{
+            window.speechSynthesis.cancel();
+            var utterance = new SpeechSynthesisUtterance("{clean_speech_text}");
+            utterance.lang = "{speech_lang_code}";
+            utterance.rate = 0.92;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }} else {{
+            alert("Speech synthesis is not supported in this browser.");
+        }}
+    }}
+    function stopAdvisorySpeech() {{
+        if ('speechSynthesis' in window) {{
+            window.speechSynthesis.cancel();
+        }}
+    }}
+    </script>
+    """
+    components.html(audio_html, height=75)
 
     adv_col1, adv_col2 = st.columns([7, 5])
     with adv_col1:

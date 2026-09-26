@@ -3,6 +3,7 @@
 > **Problem Statement:** ISRO Smart India Hackathon **SIH26176 / sih_176**  
 > *ORCA: Marine EcOsystem Reasoning with Collaborative Agents*
 
+[![Live Application](https://img.shields.io/badge/Live%20Application-Streamlit%20Cloud-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://sakshijha786-fishingfriend.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.35%2B-FF4B4B.svg)](https://streamlit.io/)
 [![Folium](https://img.shields.io/badge/Folium-Leaflet-green.svg)](https://python-visualization.github.io/folium/)
@@ -10,6 +11,20 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **FishingFriend** is an advanced, production-grade geospatial and multi-agent marine advisory platform built for coastal skippers, artisanal fishermen, and harbor authorities across India. It bridges live satellite oceanography, real-time wave/current telemetry, deterministic INCOIS/IMD physical safety rules, and collaborative AI agents to provide zero-hallucination **Go / No-Go clearances**, fuel-optimized **Potential Fishing Zone (PFZ) routing**, and **multilingual skipper advisories** in English, Hindi (हिन्दी), and Tamil (தமிழ்).
+
+---
+
+## 🌐 Live Web Application
+
+> 🚀 **Visit the Live Working Application:**  
+> ### **👉 [https://sakshijha786-fishingfriend.streamlit.app](https://sakshijha786-fishingfriend.streamlit.app) 👈**
+> *(Also directly accessible via the repository's **About / Website** link in the right sidebar)*
+
+- **Zero Setup Required:** Runs directly in any web browser on desktop, tablet, or smartphone.
+- **🔊 Multilingual Voice Audio Companion:** Tap `Play Voice` in the Advisory tab to hear safety directives spoken aloud in Hindi (`hi-IN`), Tamil (`ta-IN`), or English (`en-IN`).
+- **⛵ Vessel & Voyage Controls:** Switch between Mechanized Trawlers, Small Craft (<10m), FRP Boats, and Deep-Sea Craft to customize safety limits.
+- **📋 Voyage Clearance Manifest:** Generate and print official harbor departure slips with waypoints, tidal windows, and Coast Guard frequencies.
+- **🌊 1-Tap Coastal Ports:** Instant 1-click switching across 7 major hubs on the Arabian Sea and Bay of Bengal.
 
 ---
 
