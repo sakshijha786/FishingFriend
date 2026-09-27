@@ -115,7 +115,7 @@ class SupervisorAgent:
         "pomfret": ["pomfret", "पापलेट", "வாவல்", "vaval", "halwa"]
     }
 
-    def process(self, query: str, default_port_id: str = "kochi", vessel_class: str = "Mechanized Trawler (12-18m)") -> Tuple[SupervisorIntent, AgentStepLog]:
+    def process(self, query: str, default_port_id: Optional[str] = None, vessel_class: str = "Mechanized Trawler (12-18m)") -> Tuple[SupervisorIntent, AgentStepLog]:
         start_t = time.time()
         q_lower = query.lower().strip()
 
@@ -127,16 +127,18 @@ class SupervisorAgent:
             detected_lang = "ta"
 
         # Port resolution:
-        # 1. Check if query explicitly mentions a recognized port keyword
+        # 1. If explicit port was selected/passed from UI, respect it unconditionally
         resolved_port = None
-        for port_id, kws in self.PORT_KEYWORDS.items():
-            if any(kw in q_lower for kw in kws):
-                resolved_port = port_id
-                break
-
-        # 2. If no port mentioned in query, fallback to explicit default_port_id
-        if not resolved_port:
-            resolved_port = default_port_id if default_port_id in INDIAN_PORTS else "kochi"
+        if default_port_id and default_port_id in INDIAN_PORTS:
+            resolved_port = default_port_id
+        else:
+            # 2. Otherwise detect from query text keywords
+            for port_id, kws in self.PORT_KEYWORDS.items():
+                if any(kw in q_lower for kw in kws):
+                    resolved_port = port_id
+                    break
+            if not resolved_port:
+                resolved_port = "kochi"
 
         # Species resolution
         target_species = None

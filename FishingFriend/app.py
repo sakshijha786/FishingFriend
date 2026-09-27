@@ -1039,11 +1039,17 @@ port_list = list(INDIAN_PORTS.keys())
 
 # Sync top header widget states immediately on rerun before pipeline execution
 if "global_harbor_select" in st.session_state:
-    _sel_idx = st.session_state.global_harbor_select
-    if 0 <= _sel_idx < len(port_list):
-        if st.session_state.active_port_id != port_list[_sel_idx]:
-            st.session_state.active_port_id = port_list[_sel_idx]
-            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[st.session_state.active_port_id].name} for Yellowfin Tuna?"
+    _sel = st.session_state.global_harbor_select
+    if isinstance(_sel, str) and _sel in INDIAN_PORTS:
+        if st.session_state.active_port_id != _sel:
+            st.session_state.active_port_id = _sel
+            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_sel].name} for Yellowfin Tuna?"
+            st.session_state.last_pipeline_result = None
+    elif isinstance(_sel, int) and 0 <= _sel < len(port_list):
+        _port_id = port_list[_sel]
+        if st.session_state.active_port_id != _port_id:
+            st.session_state.active_port_id = _port_id
+            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_port_id].name} for Yellowfin Tuna?"
             st.session_state.last_pipeline_result = None
 
 if "global_theme_select" in st.session_state:
@@ -1175,24 +1181,27 @@ with hdr_col1:
 
 with hdr_col2:
     port_list = list(INDIAN_PORTS.keys())
-    port_names = []
-    for k in port_list:
-        p = INDIAN_PORTS[k]
-        coast_tag = "West" if "West" in p.coast else "East"
-        port_names.append(f"📍 {p.name} ({coast_tag})")
     
-    cur_idx = port_list.index(st.session_state.active_port_id)
+    def _on_harbor_dropdown_change():
+        _chosen = st.session_state.global_harbor_select
+        if _chosen in INDIAN_PORTS and _chosen != st.session_state.active_port_id:
+            st.session_state.active_port_id = _chosen
+            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_chosen].name} for Yellowfin Tuna?"
+            st.session_state.last_pipeline_result = None
+
+    cur_idx = port_list.index(st.session_state.active_port_id) if st.session_state.active_port_id in port_list else 0
     selected_p = st.selectbox(
         "Base Harbor",
-        options=range(len(port_list)),
-        format_func=lambda i: port_names[i],
+        options=port_list,
+        format_func=lambda pid: f"📍 {INDIAN_PORTS[pid].name} ({'West' if 'West' in INDIAN_PORTS[pid].coast else 'East'})",
         index=cur_idx,
         label_visibility="collapsed",
-        key="global_harbor_select"
+        key="global_harbor_select",
+        on_change=_on_harbor_dropdown_change
     )
-    if port_list[selected_p] != st.session_state.active_port_id:
-        st.session_state.active_port_id = port_list[selected_p]
-        st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[st.session_state.active_port_id].name} for Yellowfin Tuna?"
+    if selected_p != st.session_state.active_port_id:
+        st.session_state.active_port_id = selected_p
+        st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[selected_p].name} for Yellowfin Tuna?"
         st.session_state.last_pipeline_result = None
         st.rerun()
 
