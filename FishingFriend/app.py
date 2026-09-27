@@ -1106,6 +1106,43 @@ else:
     gust_disp = f"Gusts {res.telemetry.wind_gusts:.1f} km/h"
     dist_label_top = f"{res.route.total_distance_nm * 1.852:.1f} km"
 
+# Global Operational Status Classification (Available across all navigation tabs)
+if res.safety.status == "SAFE_GO":
+    status_cls = "ff-status-safe"
+    status_icon = "●"
+    status_title = "SAFE TO SAIL"
+    status_tag = "GO"
+    status_color = "var(--success)"
+    status_desc = f"Normal sea conditions off {res.port.name}. Wave and swell heights remain well within safe limits (<2.5m). Unrestricted offshore fishing cleared."
+elif res.safety.status == "CAUTION_CONDITIONAL":
+    status_cls = "ff-status-caution"
+    status_icon = "●"
+    status_title = "CAUTION ADVISED"
+    status_tag = "CONDITIONAL"
+    status_color = "var(--warning)"
+    status_desc = f"Moderate swell ({res.telemetry.swell_wave_height}m) or wind gusts off {res.port.name}. Traditional craft (<10m) advised to stay within 12 nm."
+else:
+    status_cls = "ff-status-danger"
+    status_icon = "●"
+    status_title = "NO-GO (OPERATIONS SUSPENDED)"
+    status_tag = "DANGER"
+    status_color = "var(--danger)"
+    status_desc = f"INCOIS threshold breached: Swell > 2.5m or wind > 45 km/h. All fishing vessels ordered to remain moored."
+
+# Dynamic continuous risk classification
+if res.safety.risk_score < 20:
+    risk_grade = "Low Ocean Hazard"
+    risk_grade_color = "var(--success)"
+elif res.safety.risk_score < 35:
+    risk_grade = "Moderate Sea State"
+    risk_grade_color = "#0284c7"
+elif res.safety.risk_score < 60:
+    risk_grade = "Elevated Caution"
+    risk_grade_color = "var(--warning)"
+else:
+    risk_grade = "Severe / No-Go"
+    risk_grade_color = "var(--danger)"
+
 
 # ---------------------------------------------------------
 # INJECT THEME CSS
@@ -1376,42 +1413,6 @@ if st.session_state.nav_section == "Dashboard":
     """, unsafe_allow_html=True)
 
     # 2. Primary Status: Clean Operational Clearance Hero Panel
-    if res.safety.status == "SAFE_GO":
-        status_cls = "ff-status-safe"
-        status_icon = "●"
-        status_title = "SAFE TO SAIL"
-        status_tag = "GO"
-        status_color = "var(--success)"
-        status_desc = f"Normal sea conditions off {res.port.name}. Wave and swell heights remain well within safe limits (<2.5m). Unrestricted offshore fishing cleared."
-    elif res.safety.status == "CAUTION_CONDITIONAL":
-        status_cls = "ff-status-caution"
-        status_icon = "●"
-        status_title = "CAUTION ADVISED"
-        status_tag = "CONDITIONAL"
-        status_color = "var(--warning)"
-        status_desc = f"Moderate swell ({res.telemetry.swell_wave_height}m) or wind gusts off {res.port.name}. Traditional craft (<10m) advised to stay within 12 nm."
-    else:
-        status_cls = "ff-status-danger"
-        status_icon = "●"
-        status_title = "NO-GO (OPERATIONS SUSPENDED)"
-        status_tag = "DANGER"
-        status_color = "var(--danger)"
-        status_desc = f"INCOIS threshold breached: Swell > 2.5m or wind > 45 km/h. All fishing vessels ordered to remain moored."
-
-    # Dynamic continuous risk classification
-    if res.safety.risk_score < 20:
-        risk_grade = "Low Ocean Hazard"
-        risk_grade_color = "var(--success)"
-    elif res.safety.risk_score < 35:
-        risk_grade = "Moderate Sea State"
-        risk_grade_color = "#0284c7"
-    elif res.safety.risk_score < 60:
-        risk_grade = "Elevated Caution"
-        risk_grade_color = "var(--warning)"
-    else:
-        risk_grade = "Severe / No-Go"
-        risk_grade_color = "var(--danger)"
-
     st.markdown(f"""
     <div class="ff-status-panel {status_cls}">
         <div>
