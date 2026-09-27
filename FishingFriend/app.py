@@ -73,7 +73,7 @@ st.set_page_config(
 def inject_theme(theme_name: str):
     """
     Injects a centralized semantic token system that guarantees high contrast,
-    subtle modern borders, consistent typography, and zero invisible text.
+    subtle modern borders, consistent typography, and zero invisible buttons/text.
     """
     if "Day" in theme_name or "Light" in theme_name:
         # ☀️ Ocula Sky Day (Light Mode)
@@ -110,6 +110,14 @@ def inject_theme(theme_name: str):
             --chart-main: #0284c7;
             --chart-sec: #0ea5e9;
             --chart-subtle: #94a3b8;
+            --btn-bg: #ffffff;
+            --btn-bg-hover: #f1f5f9;
+            --btn-text: #0f172a;
+            --btn-border: #cbd5e1;
+            --btn-primary-bg: #0284c7;
+            --btn-primary-bg-hover: #0369a1;
+            --btn-primary-text: #ffffff;
+            --btn-primary-border: #0284c7;
         """
         leaflet_tile = "cartodbpositron"
     elif "Tactical" in theme_name:
@@ -147,6 +155,14 @@ def inject_theme(theme_name: str):
             --chart-main: #10b981;
             --chart-sec: #06b6d4;
             --chart-subtle: #94a3b8;
+            --btn-bg: #0f1f38;
+            --btn-bg-hover: #172f53;
+            --btn-text: #f8fafc;
+            --btn-border: #244169;
+            --btn-primary-bg: #10b981;
+            --btn-primary-bg-hover: #059669;
+            --btn-primary-text: #030712;
+            --btn-primary-border: #10b981;
         """
         leaflet_tile = "cartodbdark_matter"
     else:
@@ -164,7 +180,7 @@ def inject_theme(theme_name: str):
             --text-primary: #f8fafc;
             --text-secondary: #cbd5e1;
             --text-muted: #8da2ba;
-            --text-on-primary: #ffffff;
+            --text-on-primary: #07111f;
             --border: #1e3552;
             --border-strong: #2b4970;
             --primary: #38bdf8;
@@ -184,6 +200,14 @@ def inject_theme(theme_name: str):
             --chart-main: #38bdf8;
             --chart-sec: #0ea5e9;
             --chart-subtle: #8da2ba;
+            --btn-bg: #10223a;
+            --btn-bg-hover: #183356;
+            --btn-text: #f8fafc;
+            --btn-border: #23436a;
+            --btn-primary-bg: #38bdf8;
+            --btn-primary-bg-hover: #0ea5e9;
+            --btn-primary-text: #07111f;
+            --btn-primary-border: #38bdf8;
         """
         leaflet_tile = "cartodbdark_matter"
 
@@ -229,34 +253,6 @@ def inject_theme(theme_name: str):
     }}
     [data-testid="stSidebarNav"] {{
         display: none !important;
-    }}
-
-    /* Custom Navigation Link / Button in Drawer (NO RADIO BUTTONS!) */
-    .ff-nav-item {{
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        margin-bottom: 6px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--text-secondary);
-        background: transparent;
-        border: 1px solid transparent;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        text-decoration: none;
-    }}
-    .ff-nav-item:hover {{
-        background: var(--bg-surface-hover);
-        color: var(--text-primary);
-    }}
-    .ff-nav-item.active {{
-        background: var(--primary-subtle) !important;
-        color: var(--primary) !important;
-        border-left: 4px solid var(--primary) !important;
-        font-weight: 700 !important;
     }}
 
     /* Top Header Shell (No Clipping, Perfect Spacing) */
@@ -356,37 +352,6 @@ def inject_theme(theme_name: str):
         margin-top: 3px;
     }}
 
-    /* Reusable Section Tabs Component */
-    .ff-tabs-container {{
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 8px;
-    }}
-    .ff-tab-btn {{
-        background: transparent;
-        border: 1px solid transparent;
-        color: var(--text-secondary);
-        font-size: 14px;
-        font-weight: 600;
-        padding: 8px 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.15s ease;
-    }}
-    .ff-tab-btn:hover {{
-        background: var(--bg-surface-hover);
-        color: var(--text-primary);
-    }}
-    .ff-tab-btn.active {{
-        background: var(--primary-subtle) !important;
-        color: var(--primary) !important;
-        border: 1px solid var(--primary) !important;
-        font-weight: 700 !important;
-    }}
-
     /* Global Form Controls & Dropdowns (100% Theme-Aware Contrast) */
     .stSelectbox label, .stTextInput label {{
         color: var(--text-secondary) !important;
@@ -403,6 +368,29 @@ def inject_theme(theme_name: str):
     div[data-baseweb="select"] * {{
         color: var(--text-primary) !important;
     }}
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] > div,
+    ul[role="listbox"] {{
+        background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 8px !important;
+    }}
+    li[role="option"] {{
+        background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
+        color: var(--text-primary) !important;
+    }}
+    li[role="option"]:hover,
+    li[aria-selected="true"] {{
+        background-color: var(--bg-surface-hover) !important;
+        background: var(--bg-surface-hover) !important;
+        color: var(--primary) !important;
+    }}
+    li[role="option"] span,
+    li[role="option"] div {{
+        color: inherit !important;
+    }}
     div[data-baseweb="input"] > div {{
         background-color: var(--bg-surface) !important;
         border-color: var(--border) !important;
@@ -413,42 +401,243 @@ def inject_theme(theme_name: str):
         color: var(--text-primary) !important;
         background: transparent !important;
     }}
+    input::placeholder, textarea::placeholder {{
+        color: var(--text-muted) !important;
+    }}
 
-    /* Button Hierarchy (Strict Light/Dark Awareness) */
+    /* ========================================================= */
+    /* COMPREHENSIVE STREAMLIT BUTTON OVERRIDES                  */
+    /* Fixes all white-on-white and dark-on-dark contrast bugs  */
+    /* ========================================================= */
+
+    /* 1. Generic & Secondary Buttons */
+    .stButton, .stDownloadButton, .stFormSubmitButton {{
+        display: inline-block;
+        width: 100%;
+    }}
+
+    .stButton > button,
+    .stButton button,
+    div[data-testid="stButton"] > button,
+    div[data-testid="stButton"] button,
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="stBaseButton-secondary"],
+    div[data-testid="baseButton-secondary"],
+    div[data-testid="stBaseButton-secondary"],
+    button[kind="secondary"],
+    div[data-testid="stDownloadButton"] > button,
+    div[data-testid="stFormSubmitButton"] > button,
+    .main button,
+    button {{
+        background-color: var(--btn-bg) !important;
+        background: var(--btn-bg) !important;
+        color: var(--btn-text) !important;
+        border: 1px solid var(--btn-border) !important;
+        border-radius: 8px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1.1rem !important;
+        box-shadow: var(--shadow-sm) !important;
+        transition: all 0.15s ease !important;
+    }}
+
+    /* Force child nodes inside secondary buttons to follow --btn-text */
+    .stButton > button p,
+    .stButton > button span,
+    .stButton > button div,
+    .stButton button p,
+    .stButton button span,
+    div[data-testid="stButton"] button p,
+    div[data-testid="stButton"] button span,
+    button[data-testid="baseButton-secondary"] p,
+    button[data-testid="baseButton-secondary"] span,
+    button[data-testid="stBaseButton-secondary"] p,
+    button[data-testid="stBaseButton-secondary"] span,
+    button[kind="secondary"] p,
+    button[kind="secondary"] span,
+    button p,
+    button span {{
+        color: var(--btn-text) !important;
+    }}
+
+    /* Secondary Buttons Hover State */
+    .stButton > button:hover,
+    .stButton button:hover,
+    div[data-testid="stButton"] > button:hover,
+    button[data-testid="baseButton-secondary"]:hover,
+    button[data-testid="stBaseButton-secondary"]:hover,
+    button[kind="secondary"]:hover,
+    button:hover {{
+        background-color: var(--btn-bg-hover) !important;
+        background: var(--btn-bg-hover) !important;
+        border-color: var(--primary) !important;
+        color: var(--primary) !important;
+    }}
+
+    .stButton > button:hover p,
+    .stButton > button:hover span,
+    .stButton button:hover p,
+    .stButton button:hover span,
+    button[data-testid="baseButton-secondary"]:hover p,
+    button[data-testid="baseButton-secondary"]:hover span,
+    button[data-testid="stBaseButton-secondary"]:hover p,
+    button[data-testid="stBaseButton-secondary"]:hover span,
+    button[kind="secondary"]:hover p,
+    button[kind="secondary"]:hover span,
+    button:hover p,
+    button:hover span {{
+        color: var(--primary) !important;
+    }}
+
+    /* 2. Primary Buttons (type="primary") */
+    .stButton > button[kind="primary"],
+    div[data-testid="stButton"] > button[kind="primary"],
+    button[data-testid="baseButton-primary"],
+    button[data-testid="stBaseButton-primary"],
+    div[data-testid="baseButton-primary"],
+    div[data-testid="stBaseButton-primary"],
     button[kind="primary"] {{
-        background-color: var(--primary) !important;
-        color: var(--text-on-primary) !important;
-        border: none !important;
+        background-color: var(--btn-primary-bg) !important;
+        background: var(--btn-primary-bg) !important;
+        color: var(--btn-primary-text) !important;
+        border: 1px solid var(--btn-primary-border) !important;
         font-weight: 700 !important;
         border-radius: 8px !important;
         font-size: 13px !important;
         box-shadow: var(--shadow-sm) !important;
         padding: 0.5rem 1.1rem !important;
     }}
-    button[kind="secondary"] {{
-        background-color: var(--bg-surface) !important;
-        color: var(--text-primary) !important;
-        border: 1px solid var(--border) !important;
-        font-weight: 600 !important;
-        border-radius: 8px !important;
-        font-size: 13px !important;
-        padding: 0.5rem 1.1rem !important;
-    }}
-    button[kind="secondary"]:hover {{
-        border-color: var(--primary) !important;
-        color: var(--primary) !important;
-        background-color: var(--bg-surface-hover) !important;
+
+    .stButton > button[kind="primary"] p,
+    .stButton > button[kind="primary"] span,
+    .stButton > button[kind="primary"] div,
+    button[data-testid="baseButton-primary"] p,
+    button[data-testid="baseButton-primary"] span,
+    button[data-testid="stBaseButton-primary"] p,
+    button[data-testid="stBaseButton-primary"] span,
+    button[kind="primary"] p,
+    button[kind="primary"] span {{
+        color: var(--btn-primary-text) !important;
+        font-weight: 700 !important;
     }}
 
-    /* SOS Header Button: Guaranteed Red with Crisp White Text */
-    .ff-sos-btn {{
+    .stButton > button[kind="primary"]:hover,
+    button[data-testid="baseButton-primary"]:hover,
+    button[data-testid="stBaseButton-primary"]:hover,
+    button[kind="primary"]:hover {{
+        background-color: var(--btn-primary-bg-hover) !important;
+        background: var(--btn-primary-bg-hover) !important;
+        border-color: var(--btn-primary-bg-hover) !important;
+        color: var(--btn-primary-text) !important;
+    }}
+
+    .stButton > button[kind="primary"]:hover p,
+    .stButton > button[kind="primary"]:hover span,
+    button[data-testid="baseButton-primary"]:hover p,
+    button[data-testid="baseButton-primary"]:hover span {{
+        color: var(--btn-primary-text) !important;
+    }}
+
+    /* 3. Header Emergency SOS Button */
+    div[data-testid="column"]:last-child .stButton > button[kind="primary"],
+    div[data-testid="column"]:last-child button[data-testid="baseButton-primary"],
+    div[data-testid="column"]:last-child button[data-testid="stBaseButton-primary"],
+    div[data-testid="column"]:last-child button {{
         background-color: #dc2626 !important;
+        background: #dc2626 !important;
+        color: #ffffff !important;
+        border: 1px solid #b91c1c !important;
+        font-weight: 800 !important;
+        box-shadow: 0 0 10px rgba(220, 38, 38, 0.4) !important;
+    }}
+    div[data-testid="column"]:last-child .stButton > button p,
+    div[data-testid="column"]:last-child .stButton > button span,
+    div[data-testid="column"]:last-child button p,
+    div[data-testid="column"]:last-child button span {{
         color: #ffffff !important;
         font-weight: 800 !important;
-        border: none !important;
+    }}
+    div[data-testid="column"]:last-child .stButton > button:hover {{
+        background-color: #b91c1c !important;
+        background: #b91c1c !important;
+        border-color: #991b1b !important;
+        color: #ffffff !important;
+    }}
+
+    /* 4. Sidebar Drawer Navigation Buttons */
+    [data-testid="stSidebar"] .stButton > button,
+    [data-testid="stSidebar"] button {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
         border-radius: 8px !important;
-        padding: 0.5rem 1.2rem !important;
-        box-shadow: 0 0 12px rgba(220, 38, 38, 0.4) !important;
+        color: var(--text-secondary) !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-bottom: 4px !important;
+    }}
+    [data-testid="stSidebar"] .stButton > button p,
+    [data-testid="stSidebar"] .stButton > button span,
+    [data-testid="stSidebar"] button p,
+    [data-testid="stSidebar"] button span {{
+        color: var(--text-secondary) !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
+    }}
+    [data-testid="stSidebar"] .stButton > button:hover,
+    [data-testid="stSidebar"] button:hover {{
+        background-color: var(--bg-surface-hover) !important;
+        background: var(--bg-surface-hover) !important;
+        border-color: transparent !important;
+        color: var(--text-primary) !important;
+    }}
+    [data-testid="stSidebar"] .stButton > button:hover p,
+    [data-testid="stSidebar"] .stButton > button:hover span,
+    [data-testid="stSidebar"] button:hover p,
+    [data-testid="stSidebar"] button:hover span {{
+        color: var(--text-primary) !important;
+    }}
+    [data-testid="stSidebar"] .stButton > button[kind="primary"],
+    [data-testid="stSidebar"] button[data-testid="baseButton-primary"],
+    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] {{
+        background-color: var(--primary-subtle) !important;
+        background: var(--primary-subtle) !important;
+        border-left: 4px solid var(--primary) !important;
+        border-top: 1px solid transparent !important;
+        border-right: 1px solid transparent !important;
+        border-bottom: 1px solid transparent !important;
+        color: var(--primary) !important;
+        font-weight: 700 !important;
+    }}
+    [data-testid="stSidebar"] .stButton > button[kind="primary"] p,
+    [data-testid="stSidebar"] .stButton > button[kind="primary"] span,
+    [data-testid="stSidebar"] button[data-testid="baseButton-primary"] p,
+    [data-testid="stSidebar"] button[data-testid="baseButton-primary"] span,
+    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] p,
+    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] span {{
+        color: var(--primary) !important;
+        font-weight: 700 !important;
+    }}
+
+    /* 5. Segmented Control Buttons */
+    div[data-testid="stSegmentedControl"] button,
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"] {{
+        background-color: var(--btn-bg) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border) !important;
+    }}
+    div[data-testid="stSegmentedControl"] button[aria-checked="true"],
+    div[data-testid="stSegmentedControl"] button[aria-selected="true"],
+    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-primary"] {{
+        background-color: var(--primary) !important;
+        color: var(--text-on-primary) !important;
+        border-color: var(--primary) !important;
+    }}
+    div[data-testid="stSegmentedControl"] button * {{
+        color: inherit !important;
     }}
 
     /* Modals & Overlays */
@@ -1770,17 +1959,25 @@ elif st.session_state.nav_section == "Safety & Advisory":
         clean_speech_text = f"{adv['status_headline']}. {adv['safety_action']}. {adv['executive_summary']}"
         clean_speech_text = clean_speech_text.replace('"', ' ').replace("'", ' ').replace('\n', ' ').replace('\r', ' ')
 
+        is_dark_theme = ("Dark" in st.session_state.selected_theme or "Tactical" in st.session_state.selected_theme)
+        aud_bg = "rgba(56, 189, 248, 0.12)" if is_dark_theme else "rgba(2, 132, 199, 0.08)"
+        aud_border = "#38bdf8" if is_dark_theme else "#0284c7"
+        aud_text = "#38bdf8" if is_dark_theme else "#0284c7"
+        aud_sub = "#cbd5e1" if is_dark_theme else "#64748b"
+        aud_btn_primary = "#38bdf8" if is_dark_theme else "#0284c7"
+        aud_btn_text = "#07111f" if is_dark_theme else "#ffffff"
+
         audio_html = f"""
-        <div style="background:var(--primary-subtle); border:1px solid var(--primary); border-radius:10px; padding:14px 20px; margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:'Plus Jakarta Sans', sans-serif;">
+        <div style="background:{aud_bg}; border:1px solid {aud_border}; border-radius:10px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:'Plus Jakarta Sans', -apple-system, sans-serif;">
             <div>
-                <div style="font-weight:700; font-size:14px; color:var(--primary);">{speech_label}</div>
-                <div style="font-size:12px; color:var(--text-muted);">Spoken audio voice advisory for skippers & deckhands with zero reading required.</div>
+                <div style="font-weight:700; font-size:14px; color:{aud_text};">{speech_label}</div>
+                <div style="font-size:12px; color:{aud_sub}; margin-top:2px;">Spoken audio voice advisory for skippers & deckhands with zero reading required.</div>
             </div>
             <div style="display:flex; gap:8px;">
-                <button id="tts-play-btn" onclick="playAdvisorySpeech()" style="background:var(--primary); color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
+                <button id="tts-play-btn" onclick="playAdvisorySpeech()" style="background:{aud_btn_primary}; color:{aud_btn_text}; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
                     ▶ Play Voice
                 </button>
-                <button id="tts-stop-btn" onclick="stopAdvisorySpeech()" style="background:#64748b; color:#ffffff; border:none; padding:8px 14px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
+                <button id="tts-stop-btn" onclick="stopAdvisorySpeech()" style="background:#475569; color:#ffffff; border:none; padding:8px 14px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
                     ⏹ Stop
                 </button>
             </div>
