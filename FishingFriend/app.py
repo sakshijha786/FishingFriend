@@ -1166,6 +1166,7 @@ with hdr_col2:
     )
     if port_list[selected_p] != st.session_state.active_port_id:
         st.session_state.active_port_id = port_list[selected_p]
+        st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[st.session_state.active_port_id].name} for Yellowfin Tuna?"
         st.session_state.last_pipeline_result = None
         st.rerun()
 

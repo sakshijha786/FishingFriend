@@ -126,12 +126,17 @@ class SupervisorAgent:
         elif any('\u0B80' <= char <= '\u0BFF' for char in query):
             detected_lang = "ta"
 
-        # Port resolution
-        resolved_port = default_port_id
+        # Port resolution:
+        # 1. Check if query explicitly mentions a recognized port keyword
+        resolved_port = None
         for port_id, kws in self.PORT_KEYWORDS.items():
             if any(kw in q_lower for kw in kws):
                 resolved_port = port_id
                 break
+
+        # 2. If no port mentioned in query, fallback to explicit default_port_id
+        if not resolved_port:
+            resolved_port = default_port_id if default_port_id in INDIAN_PORTS else "kochi"
 
         # Species resolution
         target_species = None
