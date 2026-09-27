@@ -978,9 +978,11 @@ def render_section_tabs(tab_list: List[str], current_tab: str, session_key: str)
     return selected_tab
 
 
-# ---------------------------------------------------------
-# APPLICATION STATE MANAGEMENT
-# ---------------------------------------------------------
+# Application Schema & Cache Invalidation Version
+_CACHE_SCHEMA_VER = "v3.4_realtime_continuous_risk"
+if st.session_state.get("_cache_schema_ver") != _CACHE_SCHEMA_VER:
+    st.session_state._cache_schema_ver = _CACHE_SCHEMA_VER
+    st.session_state.last_pipeline_result = None
 
 if "orchestrator" not in st.session_state:
     st.session_state.orchestrator = MultiAgentOrchestrator()
@@ -1387,6 +1389,20 @@ if st.session_state.nav_section == "Dashboard":
         status_color = "var(--danger)"
         status_desc = f"INCOIS threshold breached: Swell > 2.5m or wind > 45 km/h. All fishing vessels ordered to remain moored."
 
+    # Dynamic continuous risk classification
+    if res.safety.risk_score < 20:
+        risk_grade = "Low Ocean Hazard"
+        risk_grade_color = "var(--success)"
+    elif res.safety.risk_score < 35:
+        risk_grade = "Moderate Sea State"
+        risk_grade_color = "#0284c7"
+    elif res.safety.risk_score < 60:
+        risk_grade = "Elevated Caution"
+        risk_grade_color = "var(--warning)"
+    else:
+        risk_grade = "Severe / No-Go"
+        risk_grade_color = "var(--danger)"
+
     st.markdown(f"""
     <div class="ff-status-panel {status_cls}">
         <div>
@@ -1400,11 +1416,12 @@ if st.session_state.nav_section == "Dashboard":
                 {status_desc}
             </div>
         </div>
-        <div style="text-align:right; min-width:110px;">
+        <div style="text-align:right; min-width:130px;">
             <div style="font-size:28px; font-weight:800; color:{status_color}; font-family:'JetBrains Mono';">
                 {res.safety.risk_score} <span style="font-size:14px; font-weight:600; color:var(--text-muted);">/ 100</span>
             </div>
             <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Risk Index</div>
+            <div style="font-size:11px; font-weight:700; color:{risk_grade_color}; margin-top:2px;">{risk_grade}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1965,11 +1982,12 @@ elif st.session_state.nav_section == "Safety & Advisory":
                     {status_desc}
                 </div>
             </div>
-            <div style="text-align:right;">
+            <div style="text-align:right; min-width:130px;">
                 <div style="font-size:28px; font-weight:800; color:{status_color}; font-family:'JetBrains Mono';">
                     {res.safety.risk_score} <span style="font-size:14px; font-weight:600; color:var(--text-muted);">/ 100</span>
                 </div>
                 <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Risk Score</div>
+                <div style="font-size:11px; font-weight:700; color:{risk_grade_color}; margin-top:2px;">{risk_grade}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
