@@ -744,21 +744,39 @@ def evaluate_maritime_safety(
     reasons: List[str] = []
     restrictions: List[str] = []
     audit_log: List[RuleAuditItem] = []
-    risk_score = 15  # Baseline benign baseline
 
     # Check nearest IMBL
     nearest_imbl, border_dist = check_nearest_imbl(telemetry.lat, telemetry.lon)
 
     # -------------------------------------------------------------
-    # RULE 1: INCOIS SWELL WAVE & WAVE HEIGHT GUARDRAIL
-    # Swell wave height > 2.5m is classified as HIGH WAVE RED ALERT
+    # CONTINUOUS PHYSICAL RISK BASELINE (Proportional to Telemetry)
     # -------------------------------------------------------------
     swell_val = telemetry.swell_wave_height
     sig_wave_val = telemetry.wave_height
+    wind_spd = telemetry.wind_speed
+    wind_gst = telemetry.wind_gusts
+    curr_spd = telemetry.ocean_current_velocity
 
+    # Smooth continuous physical risk components
+    wave_risk = (swell_val / 2.50) * 20.0 + (sig_wave_val / 3.20) * 8.0
+    wind_risk = (wind_spd / 45.0) * 16.0 + (wind_gst / 60.0) * 8.0
+    curr_risk = (curr_spd / 2.80) * 8.0
+
+    if border_dist < 80.0:
+        imbl_base = ((80.0 - border_dist) / 80.0) * 12.0
+    else:
+        imbl_base = 0.0
+
+    raw_risk = wave_risk + wind_risk + curr_risk + imbl_base
+    risk_score = max(6, int(round(raw_risk)))
+
+    # -------------------------------------------------------------
+    # RULE 1: INCOIS SWELL WAVE & WAVE HEIGHT GUARDRAIL
+    # Swell wave height > 2.5m is classified as HIGH WAVE RED ALERT
+    # -------------------------------------------------------------
     if swell_val >= 2.50 or sig_wave_val >= 3.20:
         incois_alert = "RED_HIGH_WAVE"
-        risk_score += 65
+        risk_score = max(75, risk_score + 50)
         reasons.append(f"INCOIS High Wave Red Alert: Swell height {swell_val:.2f}m exceeds critical safety threshold of 2.50m.")
         restrictions.append("ALL marine fishing operations suspended. Strict harbor mooring order.")
         audit_log.append(RuleAuditItem(
@@ -771,7 +789,7 @@ def evaluate_maritime_safety(
         ))
     elif swell_val >= 1.80 or sig_wave_val >= 2.30:
         incois_alert = "ORANGE_WARNING"
-        risk_score += 35
+        risk_score = max(45, risk_score + 25)
         reasons.append(f"INCOIS Rough Sea Warning: Swell height {swell_val:.2f}m requires cautionary operation.")
         restrictions.append("Traditional non-motorized and small motorized craft (<10m) prohibited from deep offshore waters.")
         audit_log.append(RuleAuditItem(
@@ -784,7 +802,7 @@ def evaluate_maritime_safety(
         ))
     elif swell_val >= 1.30:
         incois_alert = "YELLOW_ALERT"
-        risk_score += 15
+        risk_score = max(30, risk_score + 10)
         restrictions.append("Maintain continuous VHF Channel 16 watch for swell surges.")
         audit_log.append(RuleAuditItem(
             metric="Swell Wave Height",
@@ -809,12 +827,9 @@ def evaluate_maritime_safety(
     # RULE 2: IMD WIND & SQUALL PROTOCOL
     # Wind speed > 45 km/h (25 knots) indicates squally weather
     # -------------------------------------------------------------
-    wind_spd = telemetry.wind_speed
-    wind_gst = telemetry.wind_gusts
-
     if wind_spd >= 45.0 or wind_gst >= 60.0:
         imd_alert = "GALE_STORM"
-        risk_score += 50
+        risk_score = max(70, risk_score + 40)
         reasons.append(f"IMD Squall / Gale Warning: Wind speed {wind_spd:.1f} km/h (gusting to {wind_gst:.1f} km/h) violates open-water threshold.")
         restrictions.append("Fishermen advised not to venture into sea. Vessels at sea advised to return to nearest shelter.")
         audit_log.append(RuleAuditItem(
@@ -827,7 +842,7 @@ def evaluate_maritime_safety(
         ))
     elif wind_spd >= 32.0 or wind_gst >= 45.0:
         imd_alert = "ROUGH_SQUALL"
-        risk_score += 25
+        risk_score = max(45, risk_score + 20)
         reasons.append(f"IMD Moderate Wind Alert: Wind speed {wind_spd:.1f} km/h causing choppy whitecaps.")
         restrictions.append("Reduce sailing speed by 25%. Secure deck gear and avoid overnight anchorage in open roadsteads.")
         audit_log.append(RuleAuditItem(
@@ -853,7 +868,6 @@ def evaluate_maritime_safety(
     # RULE 3: OCEAN CURRENT DRIFT & ENGINE OVERBURDEN
     # Currents > 2.5 km/h cause severe drift and net drag
     # -------------------------------------------------------------
-    curr_spd = telemetry.ocean_current_velocity
     if curr_spd >= 2.8:
         risk_score += 15
         reasons.append(f"Strong Ocean Current: Velocity {curr_spd:.1f} km/h causes significant lateral drift.")
@@ -885,7 +899,7 @@ def evaluate_maritime_safety(
 
     if border_dist < imbl_buffer_km:
         imbl_alert = "CRITICAL_BORDER_PROXIMITY"
-        risk_score += 70
+        risk_score = max(85, risk_score + 55)
         reasons.append(f"IMBL Security Threat: Target area is only {border_dist:.1f} km from {nearest_imbl}. High risk of border apprehension.")
         restrictions.append(f"IMMEDIATE ALTERATION OF COURSE: Steer at least {imbl_buffer_km:.1f} km away from international boundary lines.")
         audit_log.append(RuleAuditItem(
@@ -898,7 +912,7 @@ def evaluate_maritime_safety(
         ))
     elif border_dist < (imbl_buffer_km * 2.0):
         imbl_alert = "WARNING_CORRIDOR"
-        risk_score += 20
+        risk_score = max(45, risk_score + 20)
         reasons.append(f"IMBL Caution Corridor: Operating {border_dist:.1f} km from {nearest_imbl}. Keep AIS transponder active.")
         restrictions.append("Mandatory GPS waypoint alarm activated. Maintain at least 15 nm separation.")
         audit_log.append(RuleAuditItem(
