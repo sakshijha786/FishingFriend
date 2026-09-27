@@ -1027,6 +1027,12 @@ if "show_guide_modal" not in st.session_state:
 if "vessel_class" not in st.session_state:
     st.session_state.vessel_class = "Mechanized Trawler (12-18m)"
 
+if "departure_window" not in st.session_state:
+    st.session_state.departure_window = "Immediate (Current Tide)"
+
+if "unit_system" not in st.session_state:
+    st.session_state.unit_system = "Metric (km/h, km)"
+
 port_list = list(INDIAN_PORTS.keys())
 
 # Sync top header widget states immediately on rerun before pipeline execution
@@ -1076,7 +1082,7 @@ port_tides: PortTideData = res.tides if res.tides is not None else calculate_por
 port_hourly: HourlyMarineForecast = res.hourly_forecast if res.hourly_forecast is not None else fetch_hourly_marine_forecast(res.port)
 
 # Dynamic Unit conversions
-is_naut = "Nautical" in st.session_state.unit_system
+is_naut = "Nautical" in st.session_state.get("unit_system", "Metric (km/h, km)")
 if is_naut:
     curr_disp = f"{res.telemetry.ocean_current_velocity * 0.539957:.1f}"
     curr_unit = "kts"
