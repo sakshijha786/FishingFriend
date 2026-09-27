@@ -91,27 +91,27 @@ def inject_theme(theme_name: str):
             --text-secondary: #334155;
             --text-muted: #64748b;
             --text-on-primary: #ffffff;
-            --border: #e2e8f0;
-            --border-strong: #cbd5e1;
+            --border: #cbd5e1;
+            --border-strong: #94a3b8;
             --primary: #0284c7;
             --primary-hover: #0369a1;
-            --primary-subtle: rgba(2, 132, 199, 0.08);
+            --primary-subtle: rgba(2, 132, 199, 0.12);
             --secondary: #0ea5e9;
-            --accent: #38bdf8;
+            --accent: #0284c7;
             --success: #16a34a;
-            --success-bg: rgba(22, 163, 74, 0.08);
+            --success-bg: rgba(22, 163, 74, 0.10);
             --warning: #d97706;
-            --warning-bg: rgba(217, 119, 6, 0.08);
+            --warning-bg: rgba(217, 119, 6, 0.10);
             --danger: #dc2626;
-            --danger-bg: rgba(220, 38, 38, 0.08);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
-            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --danger-bg: rgba(220, 38, 38, 0.10);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
             --chart-main: #0284c7;
             --chart-sec: #0ea5e9;
-            --chart-subtle: #94a3b8;
-            --btn-bg: #ffffff;
-            --btn-bg-hover: #f1f5f9;
+            --chart-subtle: #64748b;
+            --btn-bg: #f1f5f9;
+            --btn-bg-hover: #e2e8f0;
             --btn-text: #0f172a;
             --btn-border: #cbd5e1;
             --btn-primary-bg: #0284c7;
@@ -255,7 +255,7 @@ def inject_theme(theme_name: str):
         display: none !important;
     }}
 
-    /* Top Header Shell (No Clipping, Perfect Spacing) */
+    /* Top Header Shell */
     .ff-header-shell {{
         background: var(--bg-surface);
         border: 1px solid var(--border);
@@ -365,6 +365,7 @@ def inject_theme(theme_name: str):
     }}
 
     /* Outer selectbox control wrapper */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
     div[data-baseweb="select"] > div {{
         background-color: var(--bg-surface) !important;
         background: var(--bg-surface) !important;
@@ -376,57 +377,56 @@ def inject_theme(theme_name: str):
         -webkit-text-fill-color: var(--text-primary) !important;
     }}
 
-    /* All inner text nodes in selectbox */
-    div[data-baseweb="select"] * {{
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-    }}
-
-    /* Value container and input */
-    div[data-baseweb="select"] div[class*="ValueContainer"],
-    div[data-baseweb="select"] div[class*="StyledSingleValue"],
-    div[data-baseweb="select"] div[class*="StyledControlContainer"],
-    div[data-baseweb="select"] div[class*="StyledDropdown"],
-    div[data-baseweb="select"] div[class*="StyledInputContainer"],
-    div[data-baseweb="select"] input {{
-        background-color: transparent !important;
-        background: transparent !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-        opacity: 1 !important;
-    }}
-
-    /* Dropdown chevron arrow */
-    div[data-baseweb="select"] svg,
-    div[data-baseweb="select"] path {{
-        fill: var(--text-primary) !important;
-        color: var(--text-primary) !important;
-    }}
-
     /* Hover state for selectboxes */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover,
     div[data-baseweb="select"] > div:hover {{
         border-color: var(--primary) !important;
         background-color: var(--bg-surface-hover) !important;
         background: var(--bg-surface-hover) !important;
     }}
-    div[data-baseweb="select"] > div:hover * {{
+
+    /* All inner text nodes in selectbox */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] div,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] span,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] p,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] input,
+    div[data-baseweb="select"] div,
+    div[data-baseweb="select"] span,
+    div[data-baseweb="select"] p,
+    div[data-baseweb="select"] input {{
         background-color: transparent !important;
         background: transparent !important;
+        color: var(--text-primary) !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
+    }}
+
+    /* Dropdown chevron arrow */
+    div[data-baseweb="select"] svg,
+    div[data-baseweb="select"] svg path {{
+        fill: var(--text-primary) !important;
+        color: var(--text-primary) !important;
     }}
 
     /* Dropdown Popover Menus & Lists (Rendered in Portal) */
     div[data-baseweb="popover"],
-    div[data-baseweb="popover"] > div,
-    div[data-baseweb="popover"] div,
-    ul[role="listbox"] {{
+    div[data-baseweb="popover"] > div {{
         background-color: var(--bg-surface) !important;
         background: var(--bg-surface) !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
         border: 1px solid var(--border) !important;
         border-radius: 8px !important;
         box-shadow: var(--shadow-lg) !important;
         padding: 4px !important;
+    }}
+
+    ul[role="listbox"] {{
+        background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }}
 
     li[role="option"] {{
@@ -437,17 +437,20 @@ def inject_theme(theme_name: str):
         padding: 8px 12px !important;
         border-radius: 6px !important;
         font-size: 13px !important;
+        font-weight: 500 !important;
         cursor: pointer !important;
+        border: none !important;
     }}
 
     li[role="option"] * {{
         color: var(--text-primary) !important;
         -webkit-text-fill-color: var(--text-primary) !important;
         background: transparent !important;
+        border: none !important;
     }}
 
     li[role="option"]:hover,
-    li[aria-selected="true"] {{
+    li[role="option"][aria-selected="true"] {{
         background-color: var(--bg-surface-hover) !important;
         background: var(--bg-surface-hover) !important;
         color: var(--primary) !important;
@@ -455,10 +458,9 @@ def inject_theme(theme_name: str):
     }}
 
     li[role="option"]:hover *,
-    li[aria-selected="true"] * {{
+    li[role="option"][aria-selected="true"] * {{
         color: var(--primary) !important;
         -webkit-text-fill-color: var(--primary) !important;
-        background: transparent !important;
     }}
 
     /* Text Inputs & Textareas */
@@ -487,25 +489,14 @@ def inject_theme(theme_name: str):
     /* Fixes all white-on-white and dark-on-dark contrast bugs  */
     /* ========================================================= */
 
-    /* 1. Generic & Secondary Buttons */
-    .stButton, .stDownloadButton, .stFormSubmitButton {{
-        display: inline-block;
-        width: 100%;
-    }}
-
-    .stButton > button,
-    .stButton button,
-    div[data-testid="stButton"] > button,
-    div[data-testid="stButton"] button,
+    /* 1. Default & Secondary Buttons */
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]),
+    div[data-testid="stDownloadButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
+    div[data-testid="stFormSubmitButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
     button[data-testid="baseButton-secondary"],
     button[data-testid="stBaseButton-secondary"],
-    div[data-testid="baseButton-secondary"],
-    div[data-testid="stBaseButton-secondary"],
-    button[kind="secondary"],
-    div[data-testid="stDownloadButton"] > button,
-    div[data-testid="stFormSubmitButton"] > button,
-    .main button,
-    button {{
+    button[kind="secondary"] {{
         background-color: var(--btn-bg) !important;
         background: var(--btn-bg) !important;
         color: var(--btn-text) !important;
@@ -519,35 +510,20 @@ def inject_theme(theme_name: str):
         transition: all 0.15s ease !important;
     }}
 
-    /* Force child nodes inside secondary buttons to follow --btn-text */
-    .stButton > button p,
-    .stButton > button span,
-    .stButton > button div,
-    .stButton button p,
-    .stButton button span,
-    div[data-testid="stButton"] button p,
-    div[data-testid="stButton"] button span,
-    button[data-testid="baseButton-secondary"] p,
-    button[data-testid="baseButton-secondary"] span,
-    button[data-testid="stBaseButton-secondary"] p,
-    button[data-testid="stBaseButton-secondary"] span,
-    button[kind="secondary"] p,
-    button[kind="secondary"] span,
-    button p,
-    button span,
-    button * {{
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]) *,
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]) *,
+    button[data-testid="baseButton-secondary"] *,
+    button[data-testid="stBaseButton-secondary"] *,
+    button[kind="secondary"] * {{
         color: var(--btn-text) !important;
         -webkit-text-fill-color: var(--btn-text) !important;
     }}
 
-    /* Secondary Buttons Hover State */
-    .stButton > button:hover,
-    .stButton button:hover,
-    div[data-testid="stButton"] > button:hover,
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]):hover,
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]):hover,
     button[data-testid="baseButton-secondary"]:hover,
     button[data-testid="stBaseButton-secondary"]:hover,
-    button[kind="secondary"]:hover,
-    button:hover {{
+    button[kind="secondary"]:hover {{
         background-color: var(--btn-bg-hover) !important;
         background: var(--btn-bg-hover) !important;
         border-color: var(--primary) !important;
@@ -555,21 +531,22 @@ def inject_theme(theme_name: str):
         -webkit-text-fill-color: var(--primary) !important;
     }}
 
-    .stButton > button:hover *,
-    .stButton button:hover *,
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]):hover *,
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]):hover *,
     button[data-testid="baseButton-secondary"]:hover *,
-    button:hover * {{
+    button[data-testid="stBaseButton-secondary"]:hover *,
+    button[kind="secondary"]:hover * {{
         color: var(--primary) !important;
         -webkit-text-fill-color: var(--primary) !important;
     }}
 
     /* 2. Primary Buttons (type="primary") */
-    .stButton > button[kind="primary"],
+    div[data-testid="stButton"] > button[data-testid*="primary"],
+    div[data-testid="stButton"] button[data-testid*="primary"],
     div[data-testid="stButton"] > button[kind="primary"],
+    div[data-testid="stButton"] button[kind="primary"],
     button[data-testid="baseButton-primary"],
     button[data-testid="stBaseButton-primary"],
-    div[data-testid="baseButton-primary"],
-    div[data-testid="stBaseButton-primary"],
     button[kind="primary"] {{
         background-color: var(--btn-primary-bg) !important;
         background: var(--btn-primary-bg) !important;
@@ -583,8 +560,10 @@ def inject_theme(theme_name: str):
         padding: 0.5rem 1.1rem !important;
     }}
 
-    .stButton > button[kind="primary"] *,
+    div[data-testid="stButton"] > button[data-testid*="primary"] *,
+    div[data-testid="stButton"] button[data-testid*="primary"] *,
     div[data-testid="stButton"] > button[kind="primary"] *,
+    div[data-testid="stButton"] button[kind="primary"] *,
     button[data-testid="baseButton-primary"] *,
     button[data-testid="stBaseButton-primary"] *,
     button[kind="primary"] * {{
@@ -593,7 +572,9 @@ def inject_theme(theme_name: str):
         font-weight: 700 !important;
     }}
 
-    .stButton > button[kind="primary"]:hover,
+    div[data-testid="stButton"] > button[data-testid*="primary"]:hover,
+    div[data-testid="stButton"] button[data-testid*="primary"]:hover,
+    div[data-testid="stButton"] > button[kind="primary"]:hover,
     button[data-testid="baseButton-primary"]:hover,
     button[data-testid="stBaseButton-primary"]:hover,
     button[kind="primary"]:hover {{
@@ -604,7 +585,8 @@ def inject_theme(theme_name: str):
         -webkit-text-fill-color: var(--btn-primary-text) !important;
     }}
 
-    .stButton > button[kind="primary"]:hover *,
+    div[data-testid="stButton"] > button[data-testid*="primary"]:hover *,
+    div[data-testid="stButton"] button[data-testid*="primary"]:hover *,
     button[data-testid="baseButton-primary"]:hover *,
     button[data-testid="stBaseButton-primary"]:hover *,
     button[kind="primary"]:hover * {{
@@ -612,67 +594,69 @@ def inject_theme(theme_name: str):
         -webkit-text-fill-color: var(--btn-primary-text) !important;
     }}
 
-    /* 3. Header Emergency SOS Button */
-    div.stButton button:has(p:contains("SOS")),
-    div.stButton button:has(span:contains("SOS")),
-    button[key="hdr_sos_btn"] {{
+    /* 3. Header Emergency SOS Button (6th Column in Header Bar) */
+    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button {{
         background-color: #dc2626 !important;
         background: #dc2626 !important;
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
         border: 1px solid #b91c1c !important;
         font-weight: 800 !important;
-        box-shadow: 0 0 12px rgba(220, 38, 38, 0.45) !important;
+        box-shadow: 0 0 10px rgba(220, 38, 38, 0.4) !important;
         white-space: nowrap !important;
     }}
-    div.stButton button:has(p:contains("SOS")) *,
-    div.stButton button:has(span:contains("SOS")) *,
-    button[key="hdr_sos_btn"] * {{
+
+    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button * {{
         color: #ffffff !important;
         -webkit-text-fill-color: #ffffff !important;
         font-weight: 800 !important;
         white-space: nowrap !important;
     }}
 
+    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button:hover {{
+        background-color: #b91c1c !important;
+        background: #b91c1c !important;
+        border-color: #991b1b !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }}
+
     /* 4. Sidebar Drawer Navigation Buttons */
-    [data-testid="stSidebar"] .stButton > button,
-    [data-testid="stSidebar"] button {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button {{
         background-color: transparent !important;
         background: transparent !important;
         border: 1px solid transparent !important;
         border-radius: 8px !important;
         color: var(--text-secondary) !important;
+        -webkit-text-fill-color: var(--text-secondary) !important;
         text-align: left !important;
         justify-content: flex-start !important;
         padding: 10px 14px !important;
         font-size: 14px !important;
         font-weight: 600 !important;
         margin-bottom: 4px !important;
+        box-shadow: none !important;
     }}
-    [data-testid="stSidebar"] .stButton > button p,
-    [data-testid="stSidebar"] .stButton > button span,
-    [data-testid="stSidebar"] button p,
-    [data-testid="stSidebar"] button span {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button * {{
         color: var(--text-secondary) !important;
+        -webkit-text-fill-color: var(--text-secondary) !important;
         text-align: left !important;
         justify-content: flex-start !important;
     }}
-    [data-testid="stSidebar"] .stButton > button:hover,
-    [data-testid="stSidebar"] button:hover {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {{
         background-color: var(--bg-surface-hover) !important;
         background: var(--bg-surface-hover) !important;
         border-color: transparent !important;
         color: var(--text-primary) !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
     }}
-    [data-testid="stSidebar"] .stButton > button:hover p,
-    [data-testid="stSidebar"] .stButton > button:hover span,
-    [data-testid="stSidebar"] button:hover p,
-    [data-testid="stSidebar"] button:hover span {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button:hover * {{
         color: var(--text-primary) !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
     }}
-    [data-testid="stSidebar"] .stButton > button[kind="primary"],
-    [data-testid="stSidebar"] button[data-testid="baseButton-primary"],
-    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button[data-testid*="primary"],
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] {{
         background-color: var(--primary-subtle) !important;
         background: var(--primary-subtle) !important;
         border-left: 4px solid var(--primary) !important;
@@ -680,15 +664,14 @@ def inject_theme(theme_name: str):
         border-right: 1px solid transparent !important;
         border-bottom: 1px solid transparent !important;
         color: var(--primary) !important;
+        -webkit-text-fill-color: var(--primary) !important;
         font-weight: 700 !important;
+        box-shadow: none !important;
     }}
-    [data-testid="stSidebar"] .stButton > button[kind="primary"] p,
-    [data-testid="stSidebar"] .stButton > button[kind="primary"] span,
-    [data-testid="stSidebar"] button[data-testid="baseButton-primary"] p,
-    [data-testid="stSidebar"] button[data-testid="baseButton-primary"] span,
-    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] p,
-    [data-testid="stSidebar"] button[data-testid="stBaseButton-primary"] span {{
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button[data-testid*="primary"] *,
+    [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] * {{
         color: var(--primary) !important;
+        -webkit-text-fill-color: var(--primary) !important;
         font-weight: 700 !important;
     }}
 
