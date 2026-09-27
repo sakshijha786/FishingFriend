@@ -1027,12 +1027,30 @@ if "show_guide_modal" not in st.session_state:
 if "vessel_class" not in st.session_state:
     st.session_state.vessel_class = "Mechanized Trawler (12-18m)"
 
-if "departure_window" not in st.session_state:
-    st.session_state.departure_window = "Immediate (Current Tide)"
+port_list = list(INDIAN_PORTS.keys())
 
-if "unit_system" not in st.session_state:
-    st.session_state.unit_system = "Metric (km/h, km)"
+# Sync top header widget states immediately on rerun before pipeline execution
+if "global_harbor_select" in st.session_state:
+    _sel_idx = st.session_state.global_harbor_select
+    if 0 <= _sel_idx < len(port_list):
+        if st.session_state.active_port_id != port_list[_sel_idx]:
+            st.session_state.active_port_id = port_list[_sel_idx]
+            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[st.session_state.active_port_id].name} for Yellowfin Tuna?"
+            st.session_state.last_pipeline_result = None
 
+if "global_theme_select" in st.session_state:
+    _t_opt = st.session_state.global_theme_select
+    _t_map = {
+        "☀️ Light": "☀️ Ocula Sky Day",
+        "🌙 Dark": "🌙 Ocula Oceanic Dark",
+        "⚡ Tactical": "⚡ Tactical Radar"
+    }
+    if _t_opt in _t_map and st.session_state.selected_theme != _t_map[_t_opt]:
+        st.session_state.selected_theme = _t_map[_t_opt]
+
+if "global_lang_select" in st.session_state:
+    if st.session_state.advisory_lang != st.session_state.global_lang_select:
+        st.session_state.advisory_lang = st.session_state.global_lang_select
 
 # ---------------------------------------------------------
 # EXECUTE DATA PIPELINE
