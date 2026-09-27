@@ -752,23 +752,29 @@ def evaluate_maritime_safety(
     # CONTINUOUS PHYSICAL RISK BASELINE (Proportional to Telemetry)
     # -------------------------------------------------------------
     swell_val = telemetry.swell_wave_height
+    swell_per = telemetry.swell_wave_period
     sig_wave_val = telemetry.wave_height
     wind_spd = telemetry.wind_speed
     wind_gst = telemetry.wind_gusts
     curr_spd = telemetry.ocean_current_velocity
 
-    # Smooth continuous physical risk components
-    wave_risk = (swell_val / 2.50) * 20.0 + (sig_wave_val / 3.20) * 8.0
-    wind_risk = (wind_spd / 45.0) * 16.0 + (wind_gst / 60.0) * 8.0
-    curr_risk = (curr_spd / 2.80) * 8.0
+    # Continuous multi-variable physical risk factors
+    swell_energy_risk = (swell_val / 2.50) * 26.0
+    period_energy_risk = max(0.0, (swell_per - 7.0) / 10.0) * 9.0
+    sea_state_risk = (sig_wave_val / 3.00) * 16.0
+    wind_energy_risk = (wind_spd / 40.0) * 15.0 + (wind_gst / 50.0) * 11.0
+    current_shear_risk = (curr_spd / 2.50) * 9.0
+    imbl_proximity_risk = max(0.0, (200.0 - border_dist) / 200.0) * 14.0 if border_dist < 200.0 else 0.0
 
-    if border_dist < 80.0:
-        imbl_base = ((80.0 - border_dist) / 80.0) * 12.0
-    else:
-        imbl_base = 0.0
-
-    raw_risk = wave_risk + wind_risk + curr_risk + imbl_base
-    risk_score = max(6, int(round(raw_risk)))
+    raw_risk = (
+        swell_energy_risk +
+        period_energy_risk +
+        sea_state_risk +
+        wind_energy_risk +
+        current_shear_risk +
+        imbl_proximity_risk
+    )
+    risk_score = max(8, int(round(raw_risk)))
 
     # -------------------------------------------------------------
     # RULE 1: INCOIS SWELL WAVE & WAVE HEIGHT GUARDRAIL
