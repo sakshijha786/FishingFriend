@@ -352,34 +352,84 @@ def inject_theme(theme_name: str):
         margin-top: 3px;
     }}
 
-    /* Global Form Controls & Dropdowns (100% Theme-Aware Contrast) */
-    .stSelectbox label, .stTextInput label {{
-        color: var(--text-secondary) !important;
-        font-size: 12px !important;
-        font-weight: 600 !important;
-    }}
-    div[data-baseweb="select"] > div {{
-        background-color: var(--bg-surface) !important;
-        border-color: var(--border) !important;
-        color: var(--text-primary) !important;
-        border-radius: 8px !important;
-        font-size: 13px !important;
-    }}
+    /* ========================================================= */
+    /* SELECTBOX & DROPDOWN TOTAL THEME OVERRIDE                 */
+    /* Fixes split white background and invisible text bug       */
+    /* ========================================================= */
+
+    .stSelectbox,
+    div[data-testid="stSelectbox"],
+    div[data-baseweb="select"],
     div[data-baseweb="select"] * {{
+        background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
         color: var(--text-primary) !important;
     }}
-    div[data-baseweb="popover"],
-    div[data-baseweb="popover"] > div,
-    ul[role="listbox"] {{
+
+    /* Outer selectbox control wrapper */
+    div[data-baseweb="select"] > div {{
         background-color: var(--bg-surface) !important;
         background: var(--bg-surface) !important;
         border: 1px solid var(--border) !important;
         border-radius: 8px !important;
+        min-height: 38px !important;
+        box-shadow: var(--shadow-sm) !important;
+    }}
+
+    /* Inner value container and text */
+    div[data-baseweb="select"] div[class*="ValueContainer"],
+    div[data-baseweb="select"] div[class*="StyledSingleValue"],
+    div[data-baseweb="select"] div[class*="StyledControlContainer"],
+    div[data-baseweb="select"] div[class*="StyledDropdown"],
+    div[data-baseweb="select"] div[class*="StyledInputContainer"] {{
+        background-color: transparent !important;
+        background: transparent !important;
+        color: var(--text-primary) !important;
+    }}
+
+    /* Dropdown chevron arrow icons */
+    div[data-baseweb="select"] svg,
+    div[data-baseweb="select"] path {{
+        fill: var(--text-primary) !important;
+        color: var(--text-primary) !important;
+    }}
+
+    /* Hover state for selectboxes */
+    div[data-baseweb="select"] > div:hover {{
+        border-color: var(--primary) !important;
+        background-color: var(--bg-surface-hover) !important;
+        background: var(--bg-surface-hover) !important;
+    }}
+    div[data-baseweb="select"] > div:hover * {{
+        background-color: transparent !important;
+        background: transparent !important;
+    }}
+
+    /* Dropdown Popover Menus & Lists */
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] > div,
+    div[data-baseweb="popover"] div,
+    ul[role="listbox"],
+    ul[role="listbox"] * {{
+        background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border) !important;
+    }}
+    ul[role="listbox"] {{
+        border: 1px solid var(--border) !important;
+        border-radius: 8px !important;
+        box-shadow: var(--shadow-lg) !important;
+        padding: 4px !important;
     }}
     li[role="option"] {{
         background-color: var(--bg-surface) !important;
         background: var(--bg-surface) !important;
         color: var(--text-primary) !important;
+        padding: 8px 12px !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
     }}
     li[role="option"]:hover,
     li[aria-selected="true"] {{
@@ -387,12 +437,19 @@ def inject_theme(theme_name: str):
         background: var(--bg-surface-hover) !important;
         color: var(--primary) !important;
     }}
-    li[role="option"] span,
-    li[role="option"] div {{
-        color: inherit !important;
+    li[role="option"]:hover *,
+    li[aria-selected="true"] * {{
+        background-color: transparent !important;
+        background: transparent !important;
+        color: var(--primary) !important;
     }}
-    div[data-baseweb="input"] > div {{
+
+    /* Text Inputs & Textareas */
+    div[data-baseweb="input"],
+    div[data-baseweb="input"] > div,
+    div[data-baseweb="input"] input {{
         background-color: var(--bg-surface) !important;
+        background: var(--bg-surface) !important;
         border-color: var(--border) !important;
         color: var(--text-primary) !important;
         border-radius: 8px !important;
@@ -539,25 +596,44 @@ def inject_theme(theme_name: str):
     }}
 
     /* 3. Header Emergency SOS Button */
-    div[data-testid="column"]:last-child .stButton > button[kind="primary"],
+    div[data-testid="column"]:last-child .stButton > button,
+    div[data-testid="stColumn"]:last-child .stButton > button,
+    [data-testid="stHorizontalBlock"] > div:last-child button,
+    [data-testid="stHorizontalBlock"] > [data-testid="column"]:last-child button,
+    [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:last-child button,
     div[data-testid="column"]:last-child button[data-testid="baseButton-primary"],
     div[data-testid="column"]:last-child button[data-testid="stBaseButton-primary"],
-    div[data-testid="column"]:last-child button {{
+    div[data-testid="stColumn"]:last-child button[data-testid="baseButton-primary"],
+    div[data-testid="stColumn"]:last-child button[data-testid="stBaseButton-primary"],
+    div[data-testid="column"]:last-child button,
+    div[data-testid="stColumn"]:last-child button {{
         background-color: #dc2626 !important;
         background: #dc2626 !important;
         color: #ffffff !important;
         border: 1px solid #b91c1c !important;
         font-weight: 800 !important;
-        box-shadow: 0 0 10px rgba(220, 38, 38, 0.4) !important;
+        box-shadow: 0 0 12px rgba(220, 38, 38, 0.45) !important;
+        white-space: nowrap !important;
     }}
     div[data-testid="column"]:last-child .stButton > button p,
     div[data-testid="column"]:last-child .stButton > button span,
+    div[data-testid="stColumn"]:last-child .stButton > button p,
+    div[data-testid="stColumn"]:last-child .stButton > button span,
+    [data-testid="stHorizontalBlock"] > div:last-child button p,
+    [data-testid="stHorizontalBlock"] > div:last-child button span,
     div[data-testid="column"]:last-child button p,
-    div[data-testid="column"]:last-child button span {{
+    div[data-testid="column"]:last-child button span,
+    div[data-testid="stColumn"]:last-child button p,
+    div[data-testid="stColumn"]:last-child button span {{
         color: #ffffff !important;
         font-weight: 800 !important;
+        white-space: nowrap !important;
     }}
-    div[data-testid="column"]:last-child .stButton > button:hover {{
+    div[data-testid="column"]:last-child .stButton > button:hover,
+    div[data-testid="stColumn"]:last-child .stButton > button:hover,
+    [data-testid="stHorizontalBlock"] > div:last-child button:hover,
+    div[data-testid="column"]:last-child button:hover,
+    div[data-testid="stColumn"]:last-child button:hover {{
         background-color: #b91c1c !important;
         background: #b91c1c !important;
         border-color: #991b1b !important;
@@ -1081,7 +1157,7 @@ with st.sidebar:
 # GLOBAL TOP HEADER BAR (UNCLUTTERED, GENEROUS WIDTHS)
 # ---------------------------------------------------------
 
-hdr_col1, hdr_col2, hdr_col3, hdr_col4, hdr_col5, hdr_col6 = st.columns([3.2, 3.2, 1.8, 1.6, 1.5, 2.0])
+hdr_col1, hdr_col2, hdr_col3, hdr_col4, hdr_col5, hdr_col6 = st.columns([2.6, 3.4, 1.6, 1.6, 1.4, 2.4])
 
 with hdr_col1:
     st.markdown("""
