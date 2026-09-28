@@ -603,8 +603,14 @@ def inject_theme(theme_name: str = "⚡ ChargeFlow Clean Light"):
     return leaflet_tile
 
 
-# ---------------------------------------------------------
-# INTERACTIVE GEOSPATIAL FOLIUM MAP ENGINE (LIGHT TILE SUITE)
+def render_clean_html(html_str: str):
+    """
+    Renders HTML cleanly without leading whitespace on lines to prevent
+    Markdown parsers from treating indentation as <pre><code> blocks.
+    """
+    clean_lines = [line.strip() for line in html_str.strip().splitlines() if line.strip()]
+    st.markdown("".join(clean_lines), unsafe_allow_html=True)
+
 # ---------------------------------------------------------
 
 def render_chargeflow_tactical_map(
@@ -859,7 +865,7 @@ inject_theme(st.session_state.selected_theme)
 # ---------------------------------------------------------
 
 # Top Header Card Container
-st.markdown("""
+render_clean_html("""
 <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:12px 22px; margin-bottom:18px; box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
     <!-- Brand & Sub-badge -->
     <div style="display:flex; align-items:center; gap:12px;">
@@ -886,7 +892,7 @@ st.markdown("""
         </div>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # 7 Center Primary Navigation Tabs (Pill Structure)
 nav_tabs = [
@@ -984,7 +990,7 @@ st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
 # ---------------------------------------------------------
 
 if st.session_state.show_sos_modal:
-    st.markdown("""
+    render_clean_html("""
     <div style="background:#fee2e2; border:2px solid #ef4444; border-radius:16px; padding:22px 26px; margin-bottom:20px; box-shadow:var(--shadow-lg);">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <div style="font-size:18px; font-weight:800; color:#991b1b; display:flex; align-items:center; gap:8px;">
@@ -996,7 +1002,7 @@ if st.session_state.show_sos_modal:
             Immediate broadcast channel for Indian Coast Guard Maritime Rescue Co-ordination Centres (MRCC) & Coastal Police.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     s1, s2 = st.columns([7, 3])
     with s1:
@@ -1011,7 +1017,7 @@ if st.session_state.show_sos_modal:
         )
         st.code(distress_payload, language="text")
     with s2:
-        st.markdown("""
+        render_clean_html("""
         <div style="font-size:12px; line-height:1.8; color:var(--text-primary);">
             <b>📞 National Sea Helplines:</b><br>
             • Coast Guard MRCC: <b style="color:#2563eb;">1554</b><br>
@@ -1019,7 +1025,7 @@ if st.session_state.show_sos_modal:
             • National Emergency: <b>112</b><br>
             • Sea Ambulance: <b>108</b>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         if st.button("📡 Transmit Simulated Mayday", type="primary", use_container_width=True, key="btn_send_mayday"):
             st.success("✅ Mayday payload acknowledged by Indian Coast Guard SAR Station.")
         if st.button("✕ Close Emergency Desk", use_container_width=True, key="btn_close_sos_modal"):
@@ -1030,7 +1036,7 @@ if st.session_state.show_sos_modal:
 
 
 if st.session_state.show_rule_explainer_modal:
-    st.markdown("""
+    render_clean_html("""
     <div class="cf-card" style="border-left: 5px solid #2563eb;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <div style="font-size:16px; font-weight:800; color:var(--primary);">
@@ -1068,7 +1074,7 @@ if st.session_state.show_rule_explainer_modal:
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
     if st.button("✕ Close Rule Architecture", key="btn_close_rule_explainer"):
         st.session_state.show_rule_explainer_modal = False
         st.rerun()
@@ -1082,7 +1088,7 @@ if st.session_state.show_rule_explainer_modal:
 if st.session_state.active_nav_tab == "Overview / Landing":
 
     # Hero Badge Pill
-    st.markdown("""
+    render_clean_html("""
     <div style="text-align:center; padding: 24px 10px 10px 10px;">
         <div style="display:inline-block; background:var(--primary-subtle); border:1px solid rgba(37,99,235,0.25); color:var(--primary); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; padding:6px 16px; border-radius:9999px; margin-bottom:16px;">
             ⚡ DETERMINISTIC RULE-BASED MARINE ADVISORY (NO AI/ML HALLUCINATION)
@@ -1094,7 +1100,7 @@ if st.session_state.active_nav_tab == "Overview / Landing":
             Eliminate rough sea navigation risks and boundary cross-overs. Real-time satellite telemetry correlation, strict INCOIS wave thresholds, fuel-efficient PFZ waypoints, and automated regional voice dispatch.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Dual CTA Buttons
     cta1, cta2, cta3, cta4 = st.columns([3, 3, 3, 3])
@@ -1112,7 +1118,7 @@ if st.session_state.active_nav_tab == "Overview / Landing":
     # 3 Metric Hero Cards Horizontally Stacked
     mc1, mc2, mc3 = st.columns(3)
     with mc1:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; padding:24px 20px;">
             <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
                 AVAILABLE HARBORS
@@ -1124,12 +1130,12 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 Veraval, Kochi, Chennai, Vizag, Mangalore, Tuticorin, Porbandar
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with mc2:
         wave_status_text = "Favorable" if res.safety.status == "SAFE_GO" else ("Caution" if res.safety.status == "CAUTION_CONDITIONAL" else "Dangerous")
         wave_color = "#16a34a" if res.safety.status == "SAFE_GO" else ("#d97706" if res.safety.status == "CAUTION_CONDITIONAL" else "#dc2626")
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-card" style="text-align:center; padding:24px 20px;">
             <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
                 ACTIVE SEA STATE ({res.port.name})
@@ -1141,10 +1147,10 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 INCOIS Alert Level: <b>{res.safety.incois_alert_level.replace('_', ' ')}</b>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with mc3:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; padding:24px 20px;">
             <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
                 MONITORED COASTAL ZONES
@@ -1156,7 +1162,7 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 Arabian Sea, Bay of Bengal, Palk Strait & Gulf of Mannar
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
 
@@ -1165,7 +1171,7 @@ if st.session_state.active_nav_tab == "Overview / Landing":
     r_col1, r_col2, r_col3, r_col4 = st.columns(4)
 
     with r_col1:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="height:100%; border-top: 4px solid #2563eb;">
             <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
                 🌊 1. Swell & Current Compatibility
@@ -1177,10 +1183,10 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 <span class="cf-badge cf-badge-danger">LIMIT: 2.50 M</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with r_col2:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="height:100%; border-top: 4px solid #16a34a;">
             <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
                 🐟 2. Bio-Optical Biomass
@@ -1192,10 +1198,10 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 <span class="cf-badge cf-badge-available">ISRO OCEANSAT-3</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with r_col3:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="height:100%; border-top: 4px solid #dc2626;">
             <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
                 🛑 3. Maritime Border Fence
@@ -1207,10 +1213,10 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 <span class="cf-badge cf-badge-danger">BUFFER: 10 NM</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with r_col4:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="height:100%; border-top: 4px solid #d97706;">
             <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
                 🚨 4. Distress Auto-Escalation
@@ -1222,7 +1228,7 @@ if st.session_state.active_nav_tab == "Overview / Landing":
                 <span class="cf-badge cf-badge-inuse">VHF 16 & SAR 1554</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # =========================================================
@@ -1235,7 +1241,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
     # Header with live subtitle + Right Action Buttons
     admin_hdr1, admin_hdr2 = st.columns([7, 3])
     with admin_hdr1:
-        st.markdown(f"""
+        render_clean_html(f"""
         <div>
             <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary); letter-spacing:-0.02em;">
                 Harbor Operations Control
@@ -1244,7 +1250,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 📍 <b>{res.port.name} Operations Hub</b> · {res.port.state} ({res.port.coast}) · Live Buoy Sync: {datetime.now().strftime('%d-%b-%Y %H:%M IST')}
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with admin_hdr2:
         btn_a1, btn_a2 = st.columns(2)
@@ -1260,7 +1266,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
     st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
 
     if st.session_state.show_walkin_modal:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="border-left: 4px solid var(--primary);">
             <div style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:8px;">
                 ⚓ Fast Walk-In Skipper Registration Desk
@@ -1269,7 +1275,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 Register an incoming artisanal or mechanized boat for immediate harbor clearance and PFZ waypoint calculation.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
         w_c1, w_c2, w_c3 = st.columns(3)
         with w_c1:
             st.text_input("Skipper Full Name", value="Capt. Ramesh Patel", key="wi_name")
@@ -1288,7 +1294,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
 
     with kpi1:
         cleared_count = sum(1 for v in st.session_state.fleet_registry if v["clearance"] == "CLEARED")
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-stat-card">
             <div class="cf-stat-label">
                 <span>AVAILABLE FLEET CLEARANCES</span>
@@ -1299,12 +1305,12 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 <span>↑ 100% Harbor Fairway Open</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with kpi2:
         swell_delta = "Safe (<2.0m)" if res.telemetry.swell_wave_height < 2.0 else "Caution (>2.0m)"
         delta_class = "cf-delta-up" if res.telemetry.swell_wave_height < 2.0 else "cf-delta-down"
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-stat-card">
             <div class="cf-stat-label">
                 <span>ACTIVE HARBOR WAVE SWELL</span>
@@ -1315,11 +1321,11 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 <span>● Period {res.telemetry.swell_wave_period}s ({swell_delta})</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with kpi3:
         queue_len = len(st.session_state.departure_queue)
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-stat-card">
             <div class="cf-stat-label">
                 <span>DEPARTURE QUEUE LENGTH</span>
@@ -1330,10 +1336,10 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 <span>Next Tide: {port_tides.tide_phase.split('(')[0].strip()}</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with kpi4:
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-stat-card">
             <div class="cf-stat-label">
                 <span>AVG DIESEL FUEL SAVINGS</span>
@@ -1344,7 +1350,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 <span>~{res.route.fuel_savings_liters:.1f} L saved via drift corridor</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
 
@@ -1362,7 +1368,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
         hero_badge = '<span class="cf-badge cf-badge-danger">OPERATIONS SUSPENDED</span>'
         hero_title = "RED DANGER: High Wave Alert (INCOIS Threshold Breached)"
 
-    st.markdown(f"""
+    render_clean_html(f"""
     <div class="cf-status-hero {hero_cls}">
         <div>
             <div style="margin-bottom:6px;">{hero_badge}</div>
@@ -1379,10 +1385,10 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
             <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Hazard Risk Score</div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Main Tactical Map Card
-    st.markdown("""
+    render_clean_html("""
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <div style="font-size:16px; font-weight:700; color:var(--text-primary);">
             Tactical Ocean Map & Geospatial Operations Fairway
@@ -1391,7 +1397,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
             CartoDB Light · OpenSeaMap · Oceansat-3 PFZ Hotspots · IMBL Geofencing
         </span>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     render_chargeflow_tactical_map(
         port=res.port,
@@ -1412,7 +1418,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
 
 elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
 
-    st.markdown("""
+    render_clean_html("""
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
         <div>
             <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
@@ -1423,7 +1429,7 @@ elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
             </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Search & Filter Strip
     f_c1, f_c2, f_c3 = st.columns([5, 4, 3])
@@ -1436,23 +1442,7 @@ elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
             st.rerun()
 
     # Replicated Clean HTML Table
-    table_html = """
-    <div class="cf-table-container">
-        <table class="cf-table">
-            <thead>
-                <tr>
-                    <th>Vessel ID & Name</th>
-                    <th>Harbor Base</th>
-                    <th>Engine & Tonnage</th>
-                    <th>Target Zone</th>
-                    <th>Est. Fuel Transit</th>
-                    <th>Clearance Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-    """
-
+    table_rows = []
     for v in st.session_state.fleet_registry:
         if filter_status != "All Statuses" and v["status"] != filter_status:
             continue
@@ -1466,31 +1456,11 @@ elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
         else:
             badge_html = '<span class="cf-badge cf-badge-danger">RESTRICTED</span>'
 
-        table_html += f"""
-        <tr>
-            <td>
-                <b>{v['id']}</b><br>
-                <span style="font-size:12px; color:var(--text-muted);">{v['name']}</span>
-            </td>
-            <td>📍 {INDIAN_PORTS.get(v['harbor'], res.port).name}</td>
-            <td>{v['tonnage']}</td>
-            <td>🐟 {v['target']}</td>
-            <td><b>{v['fuel']}</b></td>
-            <td>{badge_html}</td>
-            <td>
-                <span style="font-size:12px; font-weight:700; color:var(--primary); cursor:pointer;">
-                    [ Cleared ]
-                </span>
-            </td>
-        </tr>
-        """
+        port_name = INDIAN_PORTS.get(v['harbor'], res.port).name
+        table_rows.append(f"""<tr><td><b>{v['id']}</b><br><span style="font-size:12px; color:var(--text-muted);">{v['name']}</span></td><td>📍 {port_name}</td><td>{v['tonnage']}</td><td>🐟 {v['target']}</td><td><b>{v['fuel']}</b></td><td>{badge_html}</td><td><span style="font-size:12px; font-weight:700; color:var(--primary);">[ Cleared ]</span></td></tr>""")
 
-    table_html += """
-            </tbody>
-        </table>
-    </div>
-    """
-    st.markdown(table_html, unsafe_allow_html=True)
+    table_html = f"""<div class="cf-table-container"><table class="cf-table"><thead><tr><th>Vessel ID & Name</th><th>Harbor Base</th><th>Engine & Tonnage</th><th>Target Zone</th><th>Est. Fuel Transit</th><th>Clearance Status</th><th>Action</th></tr></thead><tbody>{''.join(table_rows)}</tbody></table></div>"""
+    render_clean_html(table_html)
 
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
 
@@ -1520,7 +1490,7 @@ elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
 
 elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
 
-    st.markdown("""
+    render_clean_html("""
     <div>
         <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
             Mission Dispatch Desk & Safe PFZ Calculator
@@ -1529,19 +1499,19 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
             Input vessel voyage parameters to compute deterministic fuel-optimized PFZ rhumb-line corridors.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
     d_col1, d_col2 = st.columns([7, 5])
 
     with d_col1:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card">
             <div style="font-size:16px; font-weight:700; color:var(--primary); margin-bottom:14px;">
                 📋 Skipper & Craft Registration Form
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
         fc1, fc2 = st.columns(2)
         with fc1:
@@ -1561,7 +1531,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
 
         radius_nm = st.slider("Trip Operational Radius (Nautical Miles)", min_value=10, max_value=60, value=25, step=5)
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        
 
         if st.button("🚀 Compute Safe PFZ Route via Rule Engine", type="primary", use_container_width=True, key="btn_run_dispatch_calc"):
             st.session_state.active_port_id = dep_harbor
@@ -1572,7 +1542,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
             st.rerun()
 
     with d_col2:
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
             <div>
                 <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">
@@ -1593,7 +1563,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
                 💡 <b>ISRO Satellite Synthesis:</b> Thermal front edge at {res.top_pfz.sst_celsius}°C with Chlorophyll-a proxy {res.top_pfz.chlorophyll_proxy} mg/m³.
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
 
@@ -1605,7 +1575,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
             is_top = (pz.zone_id == res.top_pfz.zone_id)
             top_badge = '<span class="cf-badge cf-badge-available">TOP RECOMMENDATION</span>' if is_top else '<span class="cf-badge cf-badge-info">SECONDARY</span>'
             border_color = "var(--primary)" if is_top else "var(--card-border)"
-            st.markdown(f"""
+            render_clean_html(f"""
             <div class="cf-card" style="border-color:{border_color}; padding:16px;">
                 <div style="margin-bottom:8px;">{top_badge}</div>
                 <div style="font-size:16px; font-weight:800; color:var(--primary);">{pz.name}</div>
@@ -1615,7 +1585,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
                     Depth: {pz.depth_m}m · SST: {pz.sst_celsius}°C
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
 
 # =========================================================
@@ -1625,7 +1595,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
 
 elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
 
-    st.markdown("""
+    render_clean_html("""
     <div>
         <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
             Safety & Priority Departure Queue Control
@@ -1634,28 +1604,13 @@ elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
             Deterministic compliance verification, IMBL safety buffers, and prioritized vessel dispatch queue.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
     # Priority Departure Queue Cards
     st.markdown("##### ⏱️ Active Departure Queue & Class Priority")
-    q_table_html = """
-    <div class="cf-table-container">
-        <table class="cf-table">
-            <thead>
-                <tr>
-                    <th>Vessel Reg</th>
-                    <th>Skipper Name</th>
-                    <th>Craft Class</th>
-                    <th>Priority Level</th>
-                    <th>Departure Window</th>
-                    <th>Target Frontier</th>
-                    <th>Queue Status</th>
-                </tr>
-            </thead>
-            <tbody>
-    """
+    q_rows = []
     for q in st.session_state.departure_queue:
         if "COMMERCIAL" in q["class"]:
             p_badge = '<span class="cf-badge cf-badge-info">COMMERCIAL FLEET</span>'
@@ -1665,24 +1620,10 @@ elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
             p_badge = '<span class="cf-badge cf-badge-danger">EMERGENCY SOS</span>'
 
         q_status_badge = '<span class="cf-badge cf-badge-available">APPROVED</span>' if q["status"] == "APPROVED" else ('<span class="cf-badge cf-badge-inuse">QUEUED</span>' if q["status"] == "QUEUED" else '<span class="cf-badge cf-badge-danger">HOLD WEATHER</span>')
+        q_rows.append(f"""<tr><td><b>{q['vessel_id']}</b></td><td>{q['skipper']}</td><td>{p_badge}</td><td><b>{q['priority']}</b></td><td>{q['departure']}</td><td>{q['pfz']}</td><td>{q_status_badge}</td></tr>""")
 
-        q_table_html += f"""
-        <tr>
-            <td><b>{q['vessel_id']}</b></td>
-            <td>{q['skipper']}</td>
-            <td>{p_badge}</td>
-            <td><b>{q['priority']}</b></td>
-            <td>{q['departure']}</td>
-            <td>{q['pfz']}</td>
-            <td>{q_status_badge}</td>
-        </tr>
-        """
-    q_table_html += """
-            </tbody>
-        </table>
-    </div>
-    """
-    st.markdown(q_table_html, unsafe_allow_html=True)
+    q_table_html = f"""<div class="cf-table-container"><table class="cf-table"><thead><tr><th>Vessel Reg</th><th>Skipper Name</th><th>Craft Class</th><th>Priority Level</th><th>Departure Window</th><th>Target Frontier</th><th>Queue Status</th></tr></thead><tbody>{''.join(q_rows)}</tbody></table></div>"""
+    render_clean_html(q_table_html)
 
     st.markdown("<div style='margin-top: 24px;'></div>", unsafe_allow_html=True)
 
@@ -1696,7 +1637,7 @@ elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
         v_badge = '<span class="cf-badge cf-badge-available">RULE_PASS</span>' if is_pass else ('<span class="cf-badge cf-badge-inuse">CAUTION</span>' if is_caution else '<span class="cf-badge cf-badge-danger">FAIL_TRIGGER</span>')
         border_col = "#16a34a" if is_pass else ("#d97706" if is_caution else "#dc2626")
 
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-card" style="border-left: 4px solid {border_col}; padding: 14px 18px; margin-bottom: 10px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:8px;">
@@ -1710,7 +1651,7 @@ elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
                 • <b>Physical Evaluation:</b> {item.explanation}
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # =========================================================
@@ -1720,7 +1661,7 @@ elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
 
 elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
 
-    st.markdown("""
+    render_clean_html("""
     <div>
         <h2 style="font-size:26px; font-weight:800; margin:0; color:#dc2626;">
             🚨 Coastal Search & Rescue (SAR) & Emergency Desk
@@ -1729,47 +1670,47 @@ elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
             Official direct dispatch hotlines, VHF radio distress watch, and regional MRCC contacts.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
     # 4 Emergency Hotlines
     e1, e2, e3, e4 = st.columns(4)
     with e1:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; border-top: 4px solid #2563eb;">
             <div style="font-size:11px; font-weight:700; color:#2563eb; text-transform:uppercase;">INDIAN COAST GUARD</div>
             <div style="font-size:30px; font-weight:800; color:#2563eb; margin:6px 0; font-family:'JetBrains Mono';">1554</div>
             <div style="font-size:11px; color:var(--text-muted);">24x7 Toll-Free SAR</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with e2:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; border-top: 4px solid #16a34a;">
             <div style="font-size:11px; font-weight:700; color:#16a34a; text-transform:uppercase;">COASTAL POLICE</div>
             <div style="font-size:30px; font-weight:800; color:#16a34a; margin:6px 0; font-family:'JetBrains Mono';">1093</div>
             <div style="font-size:11px; color:var(--text-muted);">Marine Security</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with e3:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; border-top: 4px solid #d97706;">
             <div style="font-size:11px; font-weight:700; color:#d97706; text-transform:uppercase;">NATIONAL EMERGENCY</div>
             <div style="font-size:30px; font-weight:800; color:#d97706; margin:6px 0; font-family:'JetBrains Mono';">112</div>
             <div style="font-size:11px; color:var(--text-muted);">All Services Relay</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with e4:
-        st.markdown("""
+        render_clean_html("""
         <div class="cf-card" style="text-align:center; border-top: 4px solid #dc2626;">
             <div style="font-size:11px; font-weight:700; color:#dc2626; text-transform:uppercase;">SEA AMBULANCE</div>
             <div style="font-size:30px; font-weight:800; color:#dc2626; margin:6px 0; font-family:'JetBrains Mono';">108</div>
             <div style="font-size:11px; color:var(--text-muted);">Critical Evacuation</div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
@@ -1781,7 +1722,7 @@ elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
     for idx, c in enumerate(contacts):
         col_target = ec_left if idx % 2 == 0 else ec_right
         with col_target:
-            st.markdown(f"""
+            render_clean_html(f"""
             <div class="cf-card">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div>
@@ -1797,14 +1738,14 @@ elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
                     🛡️ <b>Role:</b> {c.response_role}
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+            """)
 
     # Official Voyage Manifest & Print Slip
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     st.markdown("##### 📋 Official Maritime Dispatch Slip & Port Clearance Manifest")
     manifest_ref = f"IND-MARITIME-{res.port.id.upper()}-{abs(hash(res.port.id + res.top_pfz.zone_id)) % 100000:05d}"
     
-    st.markdown(f"""
+    render_clean_html(f"""
     <div class="cf-card" style="border: 2px dashed var(--border-strong); background: var(--bg-subtle);">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--border); padding-bottom:10px;">
             <div>
@@ -1828,7 +1769,7 @@ elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
             </button>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # =========================================================
@@ -1838,7 +1779,7 @@ elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
 
 elif st.session_state.active_nav_tab == "Marine Reports & Analytics":
 
-    st.markdown(f"""
+    render_clean_html(f"""
     <div>
         <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
             Marine Reports & Oceanographic Analytics
@@ -1847,7 +1788,7 @@ elif st.session_state.active_nav_tab == "Marine Reports & Analytics":
             48-hour continuous wave forecast, harmonic astronomical tides, and Doppler precipitation radar for <b>{res.port.name}</b>.
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
@@ -1924,7 +1865,7 @@ elif st.session_state.active_nav_tab == "Marine Reports & Analytics":
     with an_t3:
         st.markdown(f"##### 📡 Live Doppler Precipitation Radar for **{res.port.name}**")
         st.caption("Connected to Indian coastal radar network via RainViewer.")
-        st.markdown(f"""
+        render_clean_html(f"""
         <div class="cf-card" style="padding:10px;">
             <iframe 
                 src="https://www.rainviewer.com/map.html?loc={res.port.lat},{res.port.lon},8&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=83&lm=1&layer=radar&sm=1&sn=1" 
@@ -1934,7 +1875,7 @@ elif st.session_state.active_nav_tab == "Marine Reports & Analytics":
                 allowfullscreen>
             </iframe>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
 
 # ---------------------------------------------------------
