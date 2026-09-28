@@ -2,12 +2,20 @@
 FishingFriend - ORCA Marine Multi-Agent AI & Tactical Maritime Cockpit
 Problem Statement: ISRO Smart India Hackathon SIH26176 / sih_176
 
-Professional Marine Intelligence & Fishing Operations Platform:
-- Collapsible Navigation Drawer & Rail Architecture (Zero radio buttons, clean active states)
-- Radically simplified, calm Operational Dashboard
-- Reusable, properly spaced SectionTabs navigation
-- Centralized semantic token design system (100% dark mode / light mode contrast)
-- 100% Functionality Preservation across all APIs, calculations, layers, tides, forecasts, and safety rules
+Redesigned with ChargeFlow SaaS UI Design System:
+- Clean, crisp ultra-light slate background (#F8FAFC / #F1F5F9) & white surface cards (#FFFFFF)
+- Deep Electric / Royal Blue (#2563EB / #1D4ED8) accents & pill navigation
+- Replicated 2-Tier Navigation: Top Global Navigation Bar + Portal Sub-Navigation
+- Replicated 7 Core Views:
+  1. Overview / Landing Hero
+  2. Harbor Admin Portal (KPIs + Tactical Ocean Map)
+  3. Harbor Fleet Grid (Vessel Registry & Clearance Table)
+  4. Mission Dispatch & PFZ (Walk-In Customer / Skipper Desk)
+  5. Safety & IMBL Queue (Priority Queue & Deterministic Rule Audit Trail)
+  6. SOS & Emergency Desk (Coast Guard SAR & Distress Modal)
+  7. Marine Reports & Analytics (Tides, 48h Wave Forecast, Doppler Radar)
+- 100% Preservation of all Open-Meteo live telemetry, ISRO Oceansat-3 bio-optical proxy,
+  deterministic INCOIS/IMD safety guardrails, PFZ discovery, fuel routing, and audio synthesis.
 """
 
 from __future__ import annotations
@@ -60,75 +68,87 @@ from agent_core import MultiAgentOrchestrator, ORCASynthesisResult
 # STREAMLIT PAGE CONFIGURATION
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="FishingFriend | Marine Operations Platform",
+    page_title="FishingFriend | ChargeFlow Marine SaaS",
     page_icon="⚓",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ---------------------------------------------------------
-# CENTRALIZED SEMANTIC DESIGN SYSTEM & CSS TOKENS
+# CENTRALIZED CHARGEFLOW SEMANTIC DESIGN SYSTEM & CSS TOKENS
 # ---------------------------------------------------------
 
-def inject_theme(theme_name: str):
+def inject_theme(theme_name: str = "⚡ ChargeFlow Clean Light"):
     """
-    Injects a centralized semantic token system that guarantees high contrast,
-    subtle modern borders, consistent typography, and zero invisible buttons/text.
+    Injects the ChargeFlow modern enterprise SaaS design tokens into Streamlit.
+    Default: Ultra-clean light grey-white with crisp cards and royal blue primary accent.
     """
-    if "Day" in theme_name or "Light" in theme_name:
-        # ☀️ Ocula Sky Day (Light Mode)
+    if "Dark" in theme_name or "Oceanic" in theme_name:
+        # Dark Mode option
         theme_vars = """
-            --bg-page: #f8fafc;
-            --bg-surface: #ffffff;
-            --bg-surface-hover: #f1f5f9;
-            --bg-elevated: #ffffff;
-            --bg-subtle: #f0f9ff;
-            --bg-drawer: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --card-border-active: #0284c7;
-            --text-primary: #0f172a;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
+            --bg-page: #0b132b;
+            --bg-surface: #111e38;
+            --bg-surface-hover: #192b4d;
+            --bg-elevated: #162544;
+            --bg-subtle: #0f274a;
+            --bg-nav: #080f21;
+            --card-bg: #111e38;
+            --card-border: #1e355c;
+            --card-border-active: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #8fa0b5;
             --text-on-primary: #ffffff;
-            --border: #cbd5e1;
-            --border-strong: #94a3b8;
-            --primary: #0284c7;
-            --primary-hover: #0369a1;
-            --primary-subtle: rgba(2, 132, 199, 0.12);
+            --border: #1e355c;
+            --border-strong: #2e4d80;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-subtle: rgba(59, 130, 246, 0.15);
             --secondary: #0ea5e9;
-            --accent: #0284c7;
-            --success: #16a34a;
-            --success-bg: rgba(22, 163, 74, 0.10);
-            --warning: #d97706;
-            --warning-bg: rgba(217, 119, 6, 0.10);
-            --danger: #dc2626;
-            --danger-bg: rgba(220, 38, 38, 0.10);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
-            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
-            --chart-main: #0284c7;
-            --chart-sec: #0ea5e9;
-            --chart-subtle: #64748b;
-            --btn-bg: #f1f5f9;
-            --btn-bg-hover: #e2e8f0;
-            --btn-text: #0f172a;
-            --btn-border: #cbd5e1;
-            --btn-primary-bg: #0284c7;
-            --btn-primary-bg-hover: #0369a1;
+            --accent: #60a5fa;
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-border: #166534;
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-border: #92400e;
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --danger-border: #991b1b;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --btn-bg: #182846;
+            --btn-bg-hover: #20355b;
+            --btn-text: #f8fafc;
+            --btn-border: #294470;
+            --btn-primary-bg: #2563eb;
+            --btn-primary-bg-hover: #1d4ed8;
             --btn-primary-text: #ffffff;
-            --btn-primary-border: #0284c7;
+            --btn-primary-border: #2563eb;
+            --badge-avail-bg: #064e3b;
+            --badge-avail-text: #6ee7b7;
+            --badge-avail-border: #047857;
+            --badge-inuse-bg: #78350f;
+            --badge-inuse-text: #fde68a;
+            --badge-inuse-border: #b45309;
+            --badge-danger-bg: #7f1d1d;
+            --badge-danger-text: #fca5a5;
+            --badge-danger-border: #b91c1c;
+            --badge-info-bg: #0c4a6e;
+            --badge-info-text: #7dd3fc;
+            --badge-info-border: #0284c7;
         """
-        leaflet_tile = "cartodbpositron"
+        leaflet_tile = "cartodbdark_matter"
     elif "Tactical" in theme_name:
-        # ⚡ Tactical Radar Cockpit (Cyber-GIS Dark)
+        # Tactical Radar Mode
         theme_vars = """
             --bg-page: #030712;
             --bg-surface: #0b1426;
             --bg-surface-hover: #11203b;
             --bg-elevated: #142544;
-            --bg-subtle: #0a221a;
-            --bg-drawer: #070e1c;
+            --bg-subtle: #082f23;
+            --bg-nav: #02040a;
             --card-bg: #0b1426;
             --card-border: #1e2f47;
             --card-border-active: #10b981;
@@ -140,21 +160,21 @@ def inject_theme(theme_name: str):
             --border-strong: #2e4669;
             --primary: #10b981;
             --primary-hover: #059669;
-            --primary-subtle: rgba(16, 185, 129, 0.14);
+            --primary-subtle: rgba(16, 185, 129, 0.15);
             --secondary: #00ff88;
             --accent: #06b6d4;
             --success: #10b981;
-            --success-bg: rgba(16, 185, 129, 0.14);
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --success-border: #047857;
             --warning: #f59e0b;
-            --warning-bg: rgba(245, 158, 11, 0.14);
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-border: #b45309;
             --danger: #ef4444;
-            --danger-bg: rgba(239, 68, 68, 0.14);
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --danger-border: #b91c1c;
             --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
             --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.55);
-            --chart-main: #10b981;
-            --chart-sec: #06b6d4;
-            --chart-subtle: #94a3b8;
             --btn-bg: #0f1f38;
             --btn-bg-hover: #172f53;
             --btn-text: #f8fafc;
@@ -163,105 +183,111 @@ def inject_theme(theme_name: str):
             --btn-primary-bg-hover: #059669;
             --btn-primary-text: #030712;
             --btn-primary-border: #10b981;
+            --badge-avail-bg: #064e3b;
+            --badge-avail-text: #6ee7b7;
+            --badge-avail-border: #047857;
+            --badge-inuse-bg: #78350f;
+            --badge-inuse-text: #fde68a;
+            --badge-inuse-border: #b45309;
+            --badge-danger-bg: #7f1d1d;
+            --badge-danger-text: #fca5a5;
+            --badge-danger-border: #b91c1c;
+            --badge-info-bg: #0c4a6e;
+            --badge-info-text: #7dd3fc;
+            --badge-info-border: #0284c7;
         """
         leaflet_tile = "cartodbdark_matter"
     else:
-        # 🌙 Ocula Oceanic Dark (Deep Abyss Navy - Default)
+        # ⚡ ChargeFlow Clean SaaS Light Mode (Default & Master Palette)
         theme_vars = """
-            --bg-page: #07111f;
-            --bg-surface: #0e1d32;
-            --bg-surface-hover: #152943;
-            --bg-elevated: #14253e;
-            --bg-subtle: #0a2240;
-            --bg-drawer: #091628;
-            --card-bg: #0e1d32;
-            --card-border: #1e3552;
-            --card-border-active: #38bdf8;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #8da2ba;
-            --text-on-primary: #07111f;
-            --border: #1e3552;
-            --border-strong: #2b4970;
-            --primary: #38bdf8;
-            --primary-hover: #0ea5e9;
-            --primary-subtle: rgba(56, 189, 248, 0.12);
-            --secondary: #0ea5e9;
-            --accent: #7dd3fc;
-            --success: #22c55e;
-            --success-bg: rgba(34, 197, 94, 0.12);
-            --warning: #f59e0b;
-            --warning-bg: rgba(245, 158, 11, 0.12);
-            --danger: #ef4444;
-            --danger-bg: rgba(239, 68, 68, 0.12);
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
-            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.35);
-            --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.45);
-            --chart-main: #38bdf8;
-            --chart-sec: #0ea5e9;
-            --chart-subtle: #8da2ba;
-            --btn-bg: #10223a;
-            --btn-bg-hover: #183356;
-            --btn-text: #f8fafc;
-            --btn-border: #23436a;
-            --btn-primary-bg: #38bdf8;
-            --btn-primary-bg-hover: #0ea5e9;
-            --btn-primary-text: #07111f;
-            --btn-primary-border: #38bdf8;
+            --bg-page: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-hover: #f1f5f9;
+            --bg-elevated: #ffffff;
+            --bg-subtle: #eff6ff;
+            --bg-nav: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --card-border-active: #2563eb;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-on-primary: #ffffff;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-subtle: #eff6ff;
+            --secondary: #3b82f6;
+            --accent: #2563eb;
+            --success: #166534;
+            --success-bg: #dcfce7;
+            --success-border: #bbf7d0;
+            --warning: #92400e;
+            --warning-bg: #fef3c7;
+            --warning-border: #fde68a;
+            --danger: #991b1b;
+            --danger-bg: #fee2e2;
+            --danger-border: #fecaca;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            --btn-bg: #ffffff;
+            --btn-bg-hover: #f8fafc;
+            --btn-text: #0f172a;
+            --btn-border: #e2e8f0;
+            --btn-primary-bg: #2563eb;
+            --btn-primary-bg-hover: #1d4ed8;
+            --btn-primary-text: #ffffff;
+            --btn-primary-border: #2563eb;
+            --badge-avail-bg: #dcfce7;
+            --badge-avail-text: #166534;
+            --badge-avail-border: #bbf7d0;
+            --badge-inuse-bg: #fef3c7;
+            --badge-inuse-text: #92400e;
+            --badge-inuse-border: #fde68a;
+            --badge-danger-bg: #fee2e2;
+            --badge-danger-text: #991b1b;
+            --badge-danger-border: #fecaca;
+            --badge-info-bg: #e0f2fe;
+            --badge-info-text: #0369a1;
+            --badge-info-border: #bae6fd;
         """
-        leaflet_tile = "cartodbdark_matter"
+        leaflet_tile = "cartodbpositron"
 
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
     :root {{
         {theme_vars}
     }}
 
-    /* Global App Container */
+    /* Global Base Reset */
     .stApp {{
+        background-color: var(--bg-page) !important;
         background: var(--bg-page) !important;
         color: var(--text-primary) !important;
-        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        letter-spacing: -0.01em;
     }}
 
+    /* Container Spacing */
     .main .block-container {{
-        max-width: 1440px !important;
+        max-width: 1400px !important;
         padding-top: 1.0rem !important;
-        padding-bottom: 2.5rem !important;
-        padding-left: 2.5rem !important;
-        padding-right: 2.5rem !important;
+        padding-bottom: 3.5rem !important;
+        padding-left: 2.0rem !important;
+        padding-right: 2.0rem !important;
     }}
 
-    /* Global Text Overrides */
-    h1, h2, h3, h4, h5, h6, p, span, label, div {{
-        color: inherit;
-    }}
-    .stMarkdown, .stText {{
-        color: var(--text-primary) !important;
-    }}
-
-    /* Streamlit Native Sidebar Overrides: Drawer Architecture */
-    [data-testid="stSidebar"] {{
-        background: var(--bg-drawer) !important;
-        border-right: 1px solid var(--border) !important;
-        box-shadow: var(--shadow-lg);
-    }}
-    [data-testid="stSidebar"] * {{
-        color: var(--text-primary) !important;
-    }}
-    [data-testid="stSidebarNav"] {{
-        display: none !important;
-    }}
-
-    /* Top Header Shell */
-    .ff-header-shell {{
+    /* Top Global Navigation Bar Container */
+    .cf-topbar {{
         background: var(--bg-surface);
         border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px 20px;
-        margin-bottom: 20px;
+        border-radius: 14px;
+        padding: 10px 18px;
+        margin-bottom: 22px;
         box-shadow: var(--shadow-sm);
         display: flex;
         align-items: center;
@@ -270,200 +296,267 @@ def inject_theme(theme_name: str):
         flex-wrap: wrap;
     }}
 
-    /* Clean Card Container */
-    .ff-card {{
+    /* ChargeFlow Card System */
+    .cf-card {{
         background: var(--card-bg);
         border: 1px solid var(--card-border);
-        border-radius: 12px;
-        padding: 20px 22px;
-        margin-bottom: 16px;
+        border-radius: 14px;
+        padding: 22px 24px;
+        margin-bottom: 18px;
         box-shadow: var(--shadow-sm);
-        transition: border-color 0.15s ease;
+        transition: all 0.2s ease;
     }}
-    .ff-card:hover {{
+    .cf-card:hover {{
+        border-color: var(--border-strong);
+        box-shadow: var(--shadow-md);
+    }}
+
+    /* Stat KPI Cards (ChargeFlow 4-Grid Style) */
+    .cf-stat-card {{
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }}
+    .cf-stat-card:hover {{
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
         border-color: var(--card-border-active);
     }}
-
-    /* Operational Clearance Hero Card */
-    .ff-status-panel {{
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 12px;
-        padding: 22px 26px;
-        margin-bottom: 20px;
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-    }}
-    .ff-status-safe {{
-        border-left: 5px solid var(--success) !important;
-        background: var(--success-bg) !important;
-    }}
-    .ff-status-caution {{
-        border-left: 5px solid var(--warning) !important;
-        background: var(--warning-bg) !important;
-    }}
-    .ff-status-danger {{
-        border-left: 5px solid var(--danger) !important;
-        background: var(--danger-bg) !important;
-    }}
-
-    /* Unified Horizontal Metric Strip */
-    .ff-metric-strip {{
-        background: var(--bg-surface);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 16px 24px;
-        margin-bottom: 20px;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 20px;
-        box-shadow: var(--shadow-sm);
-    }}
-    .ff-metric-item {{
-        text-align: center;
-        border-right: 1px solid var(--border);
-        padding-right: 12px;
-    }}
-    .ff-metric-item:last-child {{
-        border-right: none;
-        padding-right: 0;
-    }}
-    .ff-metric-label {{
+    .cf-stat-label {{
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.6px;
         color: var(--text-muted);
-        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }}
-    .ff-metric-value {{
-        font-size: 22px;
+    .cf-stat-value {{
+        font-size: 26px;
         font-weight: 800;
-        color: var(--primary);
-        font-family: 'JetBrains Mono', monospace;
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        margin: 6px 0 2px 0;
+        letter-spacing: -0.03em;
     }}
-    .ff-metric-sub {{
+    .cf-stat-delta {{
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }}
+    .cf-delta-up {{
+        color: #16a34a;
+    }}
+    .cf-delta-down {{
+        color: #dc2626;
+    }}
+    .cf-delta-neutral {{
+        color: var(--text-muted);
+    }}
+
+    /* ChargeFlow Pill Status Badges (11px, Uppercase, Bold) */
+    .cf-badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         font-size: 11px;
-        color: var(--text-secondary);
-        margin-top: 3px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 3px 10px;
+        border-radius: 9999px;
+        line-height: 1.3;
+    }}
+    .cf-badge-available {{
+        background: var(--badge-avail-bg);
+        color: var(--badge-avail-text);
+        border: 1px solid var(--badge-avail-border);
+    }}
+    .cf-badge-inuse {{
+        background: var(--badge-inuse-bg);
+        color: var(--badge-inuse-text);
+        border: 1px solid var(--badge-inuse-border);
+    }}
+    .cf-badge-danger {{
+        background: var(--badge-danger-bg);
+        color: var(--badge-danger-text);
+        border: 1px solid var(--badge-danger-border);
+    }}
+    .cf-badge-info {{
+        background: var(--badge-info-bg);
+        color: var(--badge-info-text);
+        border: 1px solid var(--badge-info-border);
     }}
 
-    /* ========================================================= */
-    /* SELECTBOX & DROPDOWN TOTAL THEME OVERRIDE                 */
-    /* Works flawlessly across Light, Dark, and Tactical Themes  */
-    /* ========================================================= */
-
-    .stSelectbox,
-    div[data-testid="stSelectbox"],
-    div[data-baseweb="select"] {{
-        background-color: transparent !important;
-        background: transparent !important;
+    /* Status Banner / Operational Hero Bar */
+    .cf-status-hero {{
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 22px 26px;
+        margin-bottom: 22px;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }}
+    .cf-status-hero-safe {{
+        border-left: 6px solid #16a34a !important;
+        background: linear-gradient(90deg, var(--success-bg) 0%, var(--card-bg) 35%) !important;
+    }}
+    .cf-status-hero-caution {{
+        border-left: 6px solid #d97706 !important;
+        background: linear-gradient(90deg, var(--warning-bg) 0%, var(--card-bg) 35%) !important;
+    }}
+    .cf-status-hero-danger {{
+        border-left: 6px solid #dc2626 !important;
+        background: linear-gradient(90deg, var(--danger-bg) 0%, var(--card-bg) 35%) !important;
     }}
 
-    /* Outer selectbox control wrapper */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
-    div[data-baseweb="select"] > div {{
-        background-color: var(--bg-surface) !important;
-        background: var(--bg-surface) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 8px !important;
-        min-height: 38px !important;
-        box-shadow: var(--shadow-sm) !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
+    /* Circular SVG Gauge for Biomass / Sea State */
+    .cf-gauge-wrap {{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 0;
     }}
 
-    /* Hover state for selectboxes */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover,
-    div[data-baseweb="select"] > div:hover {{
-        border-color: var(--primary) !important;
-        background-color: var(--bg-surface-hover) !important;
-        background: var(--bg-surface-hover) !important;
+    /* Sleek Dark Toast Pill */
+    .cf-toast-pill {{
+        background: #0f172a;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: var(--shadow-lg);
+    }}
+    .cf-pulse-dot {{
+        width: 8px;
+        height: 8px;
+        background-color: #22c55e;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        animation: cfPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }}
+    @keyframes cfPulse {{
+        0% {{ box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }}
+        70% {{ box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }}
+        100% {{ box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }}
     }}
 
-    /* All inner text nodes in selectbox */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] div,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] span,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] p,
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] input,
-    div[data-baseweb="select"] div,
-    div[data-baseweb="select"] span,
-    div[data-baseweb="select"] p,
-    div[data-baseweb="select"] input {{
-        background-color: transparent !important;
-        background: transparent !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
+    /* Clean Tabular Styling (Chargers Registry Replicated) */
+    .cf-table-container {{
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }}
+    table.cf-table {{
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        text-align: left;
+    }}
+    table.cf-table th {{
+        background: var(--bg-surface-hover);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+    }}
+    table.cf-table td {{
+        padding: 14px 18px;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }}
+    table.cf-table tr:last-child td {{
+        border-bottom: none;
+    }}
+    table.cf-table tr:hover td {{
+        background: var(--bg-surface-hover);
+    }}
+
+    /* Streamlit Global Button Overrides (ChargeFlow SaaS Aesthetic) */
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]),
+    button[data-testid="baseButton-secondary"],
+    button[kind="secondary"] {{
+        background-color: var(--btn-bg) !important;
+        background: var(--btn-bg) !important;
+        color: var(--btn-text) !important;
+        -webkit-text-fill-color: var(--btn-text) !important;
+        border: 1px solid var(--btn-border) !important;
+        border-radius: 10px !important;
         font-size: 13px !important;
         font-weight: 600 !important;
-        opacity: 1 !important;
+        padding: 0.5rem 1.0rem !important;
+        box-shadow: var(--shadow-sm) !important;
+        transition: all 0.15s ease !important;
     }}
-
-    /* Dropdown chevron arrow */
-    div[data-baseweb="select"] svg,
-    div[data-baseweb="select"] svg path {{
-        fill: var(--text-primary) !important;
-        color: var(--text-primary) !important;
-    }}
-
-    /* Dropdown Popover Menus & Lists (Rendered in Portal) */
-    div[data-baseweb="popover"],
-    div[data-baseweb="popover"] > div {{
-        background-color: var(--bg-surface) !important;
-        background: var(--bg-surface) !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 8px !important;
-        box-shadow: var(--shadow-lg) !important;
-        padding: 4px !important;
-    }}
-
-    ul[role="listbox"] {{
-        background-color: var(--bg-surface) !important;
-        background: var(--bg-surface) !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }}
-
-    li[role="option"] {{
-        background-color: var(--bg-surface) !important;
-        background: var(--bg-surface) !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-        padding: 8px 12px !important;
-        border-radius: 6px !important;
-        font-size: 13px !important;
-        font-weight: 500 !important;
-        cursor: pointer !important;
-        border: none !important;
-    }}
-
-    li[role="option"] * {{
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-        background: transparent !important;
-        border: none !important;
-    }}
-
-    li[role="option"]:hover,
-    li[role="option"][aria-selected="true"] {{
+    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]):hover,
+    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]):hover,
+    button[data-testid="baseButton-secondary"]:hover,
+    button[kind="secondary"]:hover {{
         background-color: var(--bg-surface-hover) !important;
-        background: var(--bg-surface-hover) !important;
+        border-color: var(--primary) !important;
         color: var(--primary) !important;
         -webkit-text-fill-color: var(--primary) !important;
     }}
 
-    li[role="option"]:hover *,
-    li[role="option"][aria-selected="true"] * {{
-        color: var(--primary) !important;
-        -webkit-text-fill-color: var(--primary) !important;
+    /* Primary Action Buttons (Electric Blue) */
+    div[data-testid="stButton"] > button[data-testid*="primary"],
+    div[data-testid="stButton"] button[data-testid*="primary"],
+    div[data-testid="stButton"] > button[kind="primary"],
+    div[data-testid="stButton"] button[kind="primary"],
+    button[data-testid="baseButton-primary"],
+    button[kind="primary"] {{
+        background-color: var(--btn-primary-bg) !important;
+        background: var(--btn-primary-bg) !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        border: 1px solid var(--btn-primary-border) !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        font-size: 13px !important;
+        box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
+        padding: 0.55rem 1.2rem !important;
+        transition: all 0.15s ease !important;
+    }}
+    div[data-testid="stButton"] > button[data-testid*="primary"]:hover,
+    div[data-testid="stButton"] button[data-testid*="primary"]:hover,
+    button[data-testid="baseButton-primary"]:hover,
+    button[kind="primary"]:hover {{
+        background-color: var(--btn-primary-bg-hover) !important;
+        background: var(--btn-primary-bg-hover) !important;
+        border-color: var(--btn-primary-bg-hover) !important;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4) !important;
+        transform: translateY(-1px);
     }}
 
-    /* Text Inputs & Textareas */
+    /* Clean Input Fields */
     div[data-baseweb="input"],
     div[data-baseweb="input"] > div,
     div[data-baseweb="input"] input {{
@@ -472,252 +565,38 @@ def inject_theme(theme_name: str):
         border-color: var(--border) !important;
         color: var(--text-primary) !important;
         -webkit-text-fill-color: var(--text-primary) !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
     }}
-    input, textarea {{
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-        background: transparent !important;
-    }}
-    input::placeholder, textarea::placeholder {{
-        color: var(--text-muted) !important;
-        -webkit-text-fill-color: var(--text-muted) !important;
-    }}
-
-    /* ========================================================= */
-    /* COMPREHENSIVE STREAMLIT BUTTON OVERRIDES                  */
-    /* Fixes all white-on-white and dark-on-dark contrast bugs  */
-    /* ========================================================= */
-
-    /* 1. Default & Secondary Buttons */
-    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
-    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]),
-    div[data-testid="stDownloadButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
-    div[data-testid="stFormSubmitButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
-    button[data-testid="baseButton-secondary"],
-    button[data-testid="stBaseButton-secondary"],
-    button[kind="secondary"] {{
-        background-color: var(--btn-bg) !important;
-        background: var(--btn-bg) !important;
-        color: var(--btn-text) !important;
-        -webkit-text-fill-color: var(--btn-text) !important;
-        border: 1px solid var(--btn-border) !important;
-        border-radius: 8px !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        padding: 0.5rem 1.1rem !important;
-        box-shadow: var(--shadow-sm) !important;
-        transition: all 0.15s ease !important;
-    }}
-
-    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]) *,
-    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]) *,
-    button[data-testid="baseButton-secondary"] *,
-    button[data-testid="stBaseButton-secondary"] *,
-    button[kind="secondary"] * {{
-        color: var(--btn-text) !important;
-        -webkit-text-fill-color: var(--btn-text) !important;
-    }}
-
-    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]):hover,
-    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]):hover,
-    button[data-testid="baseButton-secondary"]:hover,
-    button[data-testid="stBaseButton-secondary"]:hover,
-    button[kind="secondary"]:hover {{
-        background-color: var(--btn-bg-hover) !important;
-        background: var(--btn-bg-hover) !important;
-        border-color: var(--primary) !important;
-        color: var(--primary) !important;
-        -webkit-text-fill-color: var(--primary) !important;
-    }}
-
-    div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]):hover *,
-    div[data-testid="stButton"] button:not([data-testid*="primary"]):not([kind="primary"]):hover *,
-    button[data-testid="baseButton-secondary"]:hover *,
-    button[data-testid="stBaseButton-secondary"]:hover *,
-    button[kind="secondary"]:hover * {{
-        color: var(--primary) !important;
-        -webkit-text-fill-color: var(--primary) !important;
-    }}
-
-    /* 2. Primary Buttons (type="primary") */
-    div[data-testid="stButton"] > button[data-testid*="primary"],
-    div[data-testid="stButton"] button[data-testid*="primary"],
-    div[data-testid="stButton"] > button[kind="primary"],
-    div[data-testid="stButton"] button[kind="primary"],
-    button[data-testid="baseButton-primary"],
-    button[data-testid="stBaseButton-primary"],
-    button[kind="primary"] {{
-        background-color: var(--btn-primary-bg) !important;
-        background: var(--btn-primary-bg) !important;
-        color: var(--btn-primary-text) !important;
-        -webkit-text-fill-color: var(--btn-primary-text) !important;
-        border: 1px solid var(--btn-primary-border) !important;
-        font-weight: 700 !important;
-        border-radius: 8px !important;
-        font-size: 13px !important;
-        box-shadow: var(--shadow-sm) !important;
-        padding: 0.5rem 1.1rem !important;
-    }}
-
-    div[data-testid="stButton"] > button[data-testid*="primary"] *,
-    div[data-testid="stButton"] button[data-testid*="primary"] *,
-    div[data-testid="stButton"] > button[kind="primary"] *,
-    div[data-testid="stButton"] button[kind="primary"] *,
-    button[data-testid="baseButton-primary"] *,
-    button[data-testid="stBaseButton-primary"] *,
-    button[kind="primary"] * {{
-        color: var(--btn-primary-text) !important;
-        -webkit-text-fill-color: var(--btn-primary-text) !important;
-        font-weight: 700 !important;
-    }}
-
-    div[data-testid="stButton"] > button[data-testid*="primary"]:hover,
-    div[data-testid="stButton"] button[data-testid*="primary"]:hover,
-    div[data-testid="stButton"] > button[kind="primary"]:hover,
-    button[data-testid="baseButton-primary"]:hover,
-    button[data-testid="stBaseButton-primary"]:hover,
-    button[kind="primary"]:hover {{
-        background-color: var(--btn-primary-bg-hover) !important;
-        background: var(--btn-primary-bg-hover) !important;
-        border-color: var(--btn-primary-bg-hover) !important;
-        color: var(--btn-primary-text) !important;
-        -webkit-text-fill-color: var(--btn-primary-text) !important;
-    }}
-
-    div[data-testid="stButton"] > button[data-testid*="primary"]:hover *,
-    div[data-testid="stButton"] button[data-testid*="primary"]:hover *,
-    button[data-testid="baseButton-primary"]:hover *,
-    button[data-testid="stBaseButton-primary"]:hover *,
-    button[kind="primary"]:hover * {{
-        color: var(--btn-primary-text) !important;
-        -webkit-text-fill-color: var(--btn-primary-text) !important;
-    }}
-
-    /* 3. Header Emergency SOS Button (6th Column in Header Bar) */
-    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button {{
-        background-color: #dc2626 !important;
-        background: #dc2626 !important;
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        border: 1px solid #b91c1c !important;
-        font-weight: 800 !important;
-        box-shadow: 0 0 10px rgba(220, 38, 38, 0.4) !important;
-        white-space: nowrap !important;
-    }}
-
-    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button * {{
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        font-weight: 800 !important;
-        white-space: nowrap !important;
-    }}
-
-    div[data-testid="column"]:nth-child(6) div[data-testid="stButton"] > button:hover {{
-        background-color: #b91c1c !important;
-        background: #b91c1c !important;
-        border-color: #991b1b !important;
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-    }}
-
-    /* 4. Sidebar Drawer Navigation Buttons */
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button:not([data-testid*="primary"]):not([kind="primary"]),
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button {{
-        background-color: transparent !important;
-        background: transparent !important;
-        border: 1px solid transparent !important;
-        border-radius: 8px !important;
-        color: var(--text-secondary) !important;
-        -webkit-text-fill-color: var(--text-secondary) !important;
-        text-align: left !important;
-        justify-content: flex-start !important;
-        padding: 10px 14px !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        margin-bottom: 4px !important;
-        box-shadow: none !important;
-    }}
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button * {{
-        color: var(--text-secondary) !important;
-        -webkit-text-fill-color: var(--text-secondary) !important;
-        text-align: left !important;
-        justify-content: flex-start !important;
-    }}
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {{
-        background-color: var(--bg-surface-hover) !important;
-        background: var(--bg-surface-hover) !important;
-        border-color: transparent !important;
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-    }}
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button:hover * {{
-        color: var(--text-primary) !important;
-        -webkit-text-fill-color: var(--text-primary) !important;
-    }}
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button[data-testid*="primary"],
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] {{
-        background-color: var(--primary-subtle) !important;
-        background: var(--primary-subtle) !important;
-        border-left: 4px solid var(--primary) !important;
-        border-top: 1px solid transparent !important;
-        border-right: 1px solid transparent !important;
-        border-bottom: 1px solid transparent !important;
-        color: var(--primary) !important;
-        -webkit-text-fill-color: var(--primary) !important;
-        font-weight: 700 !important;
-        box-shadow: none !important;
-    }}
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button[data-testid*="primary"] *,
-    [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] * {{
-        color: var(--primary) !important;
-        -webkit-text-fill-color: var(--primary) !important;
-        font-weight: 700 !important;
-    }}
-
-    /* 5. Segmented Control Buttons */
-    div[data-testid="stSegmentedControl"] button,
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"] {{
-        background-color: var(--btn-bg) !important;
-        color: var(--text-primary) !important;
+    div[data-baseweb="select"] > div {{
+        background-color: var(--bg-surface) !important;
         border: 1px solid var(--border) !important;
-    }}
-    div[data-testid="stSegmentedControl"] button[aria-checked="true"],
-    div[data-testid="stSegmentedControl"] button[aria-selected="true"],
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-primary"] {{
-        background-color: var(--primary) !important;
-        color: var(--text-on-primary) !important;
-        border-color: var(--primary) !important;
-    }}
-    div[data-testid="stSegmentedControl"] button * {{
-        color: inherit !important;
+        border-radius: 10px !important;
+        color: var(--text-primary) !important;
     }}
 
-    /* Modals & Overlays */
-    .ff-modal-box {{
-        background: var(--bg-surface);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 22px 26px;
-        margin-bottom: 20px;
-        box-shadow: var(--shadow-lg);
+    /* Sidebar Drawer Reset (Dark Left Rail when expanded) */
+    [data-testid="stSidebar"] {{
+        background: #0f172a !important;
+        border-right: 1px solid #1e293b !important;
+    }}
+    [data-testid="stSidebar"] * {{
+        color: #f8fafc !important;
+    }}
+    [data-testid="stSidebarNav"] {{
+        display: none !important;
     }}
 
-    /* Animated Ocean Current Flow */
-    @keyframes flowCurrentStream {{
-        from {{ stroke-dashoffset: 40; }}
-        to {{ stroke-dashoffset: 0; }}
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {{
+        width: 6px;
+        height: 6px;
     }}
-    path.animated-current-flow {{
-        stroke-dasharray: 8, 14 !important;
-        animation: flowCurrentStream 1.2s linear infinite !important;
+    ::-webkit-scrollbar-track {{
+        background: var(--bg-page);
     }}
-
-    /* Clean Table and Dataframe */
-    .stDataFrame {{
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid var(--border);
+    ::-webkit-scrollbar-thumb {{
+        background: var(--border-strong);
+        border-radius: 4px;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -725,10 +604,10 @@ def inject_theme(theme_name: str):
 
 
 # ---------------------------------------------------------
-# INTERACTIVE GEOSPATIAL MAP ENGINE
+# INTERACTIVE GEOSPATIAL FOLIUM MAP ENGINE (LIGHT TILE SUITE)
 # ---------------------------------------------------------
 
-def render_tactical_map(
+def render_chargeflow_tactical_map(
     port: PortLocation,
     telemetry: OceanTelemetry,
     safety: HazardEvaluation,
@@ -736,56 +615,43 @@ def render_tactical_map(
     selected_pfz: PFZZone,
     route: RouteWaypoints,
     theme_name: str,
-    height: int = 560
+    height: int = 540
 ):
     """
-    Renders the interactive Leaflet tactical geospatial map containing all
-    nautical, bathymetric, bio-optical, and animated streamline layers.
+    Renders the modern tactical maritime map container with clean light basemaps,
+    PFZ potential fishing hotspots, IMBL border polygons, and nautical markers.
     """
-    base_tiles = "cartodbpositron" if ("Day" in theme_name or "Light" in theme_name) else "cartodbdark_matter"
+    base_tiles = "cartodbpositron" if ("Light" in theme_name or "ChargeFlow" in theme_name or "Day" in theme_name) else "cartodbdark_matter"
 
     m = folium.Map(
         location=[port.lat, port.lon],
         zoom_start=9,
         tiles=base_tiles,
-        name="Standard Chart",
+        name="CartoDB Standard Chart",
         control_scale=True
     )
 
-    # Layer 1: ESRI World Ocean Bathymetry (GEBCO / NOAA Submarine Contours)
+    # Layer 1: ESRI World Ocean Bathymetry
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
-        attr="Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, National Geographic",
+        attr="Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS",
         name="🌊 Ocean Bathymetry (GEBCO / NOAA)",
         overlay=False,
         control=True
     ).add_to(m)
 
-    # Layer 2: OpenSeaMap Nautical Seamarks (Buoys, Beacons, Depths, Shoals)
+    # Layer 2: OpenSeaMap Nautical Marks & Buoys
     folium.TileLayer(
         tiles="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
-        attr="Map data &copy; <a href='http://www.openseamap.org'>OpenSeaMap</a> contributors",
-        name="⚓ OpenSeaMap (Nautical Marks, Buoys, Lights)",
+        attr="Map data &copy; <a href='http://www.openseamap.org'>OpenSeaMap</a>",
+        name="⚓ OpenSeaMap (Buoys, Beacons, Depth)",
         overlay=True,
         control=True,
         show=True
     ).add_to(m)
 
-    # Layer 3: Live Doppler Rain Radar (RainViewer)
-    radar_url = fetch_rainviewer_radar_url()
-    if radar_url:
-        folium.TileLayer(
-            tiles=radar_url,
-            attr="Weather Radar &copy; RainViewer",
-            name="🌧️ Live Doppler Rain Radar",
-            overlay=True,
-            control=True,
-            opacity=0.65,
-            show=False
-        ).add_to(m)
-
-    # Layer 4: Marine Protected Areas & Conservation Reserves (MarineMap MSP)
-    mpa_group = folium.FeatureGroup(name="🛡️ Marine Protected Areas (MarineMap MSP)", show=True)
+    # Layer 3: Marine Protected Areas
+    mpa_group = folium.FeatureGroup(name="🛡️ Marine Protected Areas (MSP)", show=True)
     for mpa in get_marine_spatial_zones(port.id):
         folium.Polygon(
             locations=mpa.coordinates,
@@ -793,28 +659,28 @@ def render_tactical_map(
             weight=2.5,
             fill=True,
             fill_color=mpa.color,
-            fill_opacity=0.22,
+            fill_opacity=0.20,
             tooltip=f"🛡️ {mpa.name} ({mpa.category})",
             popup=folium.Popup(f"""
-            <div style="font-family: sans-serif; font-size: 12px; color: #0f172a; min-width: 250px;">
-                <h4 style="margin:0 0 6px 0; color:{mpa.color};">🛡️ {mpa.name}</h4>
+            <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #0f172a; min-width: 240px;">
+                <h4 style="margin:0 0 6px 0; color:{mpa.color}; font-size:14px;">🛡️ {mpa.name}</h4>
                 <b>Category:</b> {mpa.category}<br>
                 <p style="margin:6px 0; font-size:11px; line-height:1.4;">{mpa.restriction}</p>
                 <span style="font-size:10px; color:#64748b;"><b>Legal Basis:</b> {mpa.legal_source}</span>
             </div>
-            """, max_width=320)
+            """, max_width=300)
         ).add_to(mpa_group)
     mpa_group.add_to(m)
 
-    # Layer 5: Harbor Base Station Marker
+    # Layer 4: Base Harbor Station Marker
     harbor_popup = f"""
-    <div style="font-family: sans-serif; font-size: 13px; color: #0f172a; min-width: 210px;">
-        <h4 style="margin:0 0 6px 0; color:#0284c7;">⚓ {port.name}</h4>
+    <div style="font-family: 'Inter', sans-serif; font-size: 13px; color: #0f172a; min-width: 220px;">
+        <h4 style="margin:0 0 6px 0; color:#2563eb; font-size:15px;">⚓ {port.name} Operations Hub</h4>
         <b>Wave:</b> {telemetry.wave_height}m | <b>Swell:</b> {telemetry.swell_wave_height}m ({telemetry.swell_wave_period}s)<br>
         <b>SST:</b> {telemetry.sea_surface_temperature}°C | <b>Wind:</b> {telemetry.wind_speed} km/h<br>
-        <b>Current:</b> {telemetry.ocean_current_velocity} km/h @ {telemetry.ocean_current_direction:.0f}°<br>
-        <span style="display:inline-block; margin-top:5px; font-weight:bold; color:{'#16a34a' if safety.status=='SAFE_GO' else '#dc2626'};">
-            {safety.status.replace('_', ' ')}
+        <b>Ocean Current:</b> {telemetry.ocean_current_velocity} km/h @ {telemetry.ocean_current_direction:.0f}°<br>
+        <span style="display:inline-block; margin-top:6px; font-weight:700; color:{'#166534' if safety.status=='SAFE_GO' else '#991b1b'};">
+            ● Status: {safety.status.replace('_', ' ')}
         </span>
     </div>
     """
@@ -825,19 +691,19 @@ def render_tactical_map(
         icon=folium.Icon(color="blue", icon="anchor", prefix="fa")
     ).add_to(m)
 
-    # Layer 6: Potential Fishing Zones (PFZ)
+    # Layer 5: PFZ Zones (Potential Fishing Zones)
     pfz_group = folium.FeatureGroup(name="🐟 Potential Fishing Zones (PFZ)", show=True)
     for pfz in all_pfzs:
         is_selected = (pfz.zone_id == selected_pfz.zone_id)
-        zone_color = "#0284c7" if is_selected else "#38bdf8"
+        zone_color = "#2563eb" if is_selected else "#60a5fa"
 
         pfz_popup = f"""
-        <div style="font-family: sans-serif; font-size: 12px; color: #0f172a; min-width: 220px;">
-            <h4 style="margin:0 0 4px 0; color:#0284c7;">🐟 {pfz.name}</h4>
-            <b>Catch Probability:</b> <span style="color:#059669; font-weight:bold;">{pfz.fish_density_score}%</span><br>
-            <b>Range & Bearing:</b> {pfz.distance_km} km @ {pfz.bearing_deg}°<br>
+        <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #0f172a; min-width: 230px;">
+            <h4 style="margin:0 0 4px 0; color:#2563eb; font-size:14px;">🐟 {pfz.name}</h4>
+            <b>PFZ Biomass Score:</b> <span style="color:#16a34a; font-weight:800;">{pfz.fish_density_score}%</span><br>
+            <b>Range & Heading:</b> {pfz.distance_km} km @ {pfz.bearing_deg}°<br>
             <b>Target Species:</b> {', '.join(pfz.species_likely[:2])}<br>
-            <b>SST / Chl-a:</b> {pfz.sst_celsius}°C / {pfz.chlorophyll_proxy} mg/m³ | Depth {pfz.depth_m}m
+            <b>Thermal Edge:</b> {pfz.sst_celsius}°C · Chl-a {pfz.chlorophyll_proxy} mg/m³
         </div>
         """
         folium.Circle(
@@ -848,7 +714,7 @@ def render_tactical_map(
             fill=True,
             fill_color=zone_color,
             fill_opacity=0.35 if is_selected else 0.15,
-            tooltip=f"{pfz.name} ({pfz.fish_density_score}% Catch Score)"
+            tooltip=f"{pfz.name} ({pfz.fish_density_score}% Biomass Score)"
         ).add_to(pfz_group)
 
         folium.CircleMarker(
@@ -863,12 +729,11 @@ def render_tactical_map(
         ).add_to(pfz_group)
     pfz_group.add_to(m)
 
-    # Layer 7: Fuel-Optimized Navigation Corridor
+    # Layer 6: Fuel-Optimized Navigation Corridor
     route_group = folium.FeatureGroup(name="⛽ Fuel Navigation Corridor", show=True)
-    route_color = "#0284c7" if ("Day" in theme_name or "Light" in theme_name) else ("#10b981" if "Tactical" in theme_name else "#38bdf8")
     folium.PolyLine(
         locations=route.waypoints,
-        color=route_color,
+        color="#2563eb",
         weight=4,
         opacity=0.9,
         dash_array="6, 6",
@@ -876,110 +741,30 @@ def render_tactical_map(
     ).add_to(route_group)
     route_group.add_to(m)
 
-    # Layer 8: International Maritime Boundary Lines (IMBL)
+    # Layer 7: International Maritime Boundary Lines (IMBL)
     imbl_group = folium.FeatureGroup(name="🛑 International Boundaries (IMBL)", show=True)
     for b_name, b_coords in IMBL_BOUNDARIES.items():
         folium.PolyLine(
             locations=b_coords,
             color="#ef4444",
             weight=2.5,
-            opacity=0.85,
+            opacity=0.9,
             dash_array="8, 6",
             tooltip=f"RESTRICTED: {b_name}"
         ).add_to(imbl_group)
     imbl_group.add_to(m)
 
-    # Layer 9: Animated Ocean Current Flow Streamlines (Windy.com Style)
-    current_group = folium.FeatureGroup(name="🌊 Ocean Current Streamlines (Windy Style)", show=True)
-    rad_dir = math.radians(telemetry.ocean_current_direction)
-    flow_speed = max(0.5, telemetry.ocean_current_velocity)
-    
-    is_west = "West" in port.coast
-    lon_dir = -1.0 if is_west else 1.0
-    
-    offsets = [-0.35, -0.22, -0.10, 0.05, 0.18, 0.30, 0.42, 0.55]
-    for idx, off in enumerate(offsets):
-        start_lat = port.lat + off * 0.8
-        start_lon = port.lon + lon_dir * (0.20 + abs(off) * 0.3)
-        
-        dist_km = 35.0
-        d_lat = (dist_km / 111.0) * math.cos(rad_dir)
-        d_lon = (dist_km / (111.0 * math.cos(math.radians(port.lat)))) * math.sin(rad_dir)
-        
-        mid_lat = start_lat + d_lat * 0.5 + 0.02 * math.sin(idx)
-        mid_lon = start_lon + d_lon * 0.5 + 0.02 * math.cos(idx)
-        end_lat = start_lat + d_lat
-        end_lon = start_lon + d_lon
-        
-        pts = [(start_lat, start_lon), (mid_lat, mid_lon), (end_lat, end_lon)]
-        
-        flow_color = "#38bdf8" if flow_speed < 1.5 else ("#00f2fe" if flow_speed < 2.5 else "#f59e0b")
-        folium.PolyLine(
-            locations=pts,
-            color=flow_color,
-            weight=2.5,
-            opacity=0.85,
-            dash_array="8, 14",
-            tooltip=f"Ocean Current: {telemetry.ocean_current_velocity} km/h @ {telemetry.ocean_current_direction:.0f}°"
-        ).add_to(current_group)
-        
-        arrow_html = f"""
-        <div style="transform: rotate({telemetry.ocean_current_direction:.0f}deg); color:{flow_color}; font-size:16px; font-weight:bold; text-shadow:0 0 4px #000;">
-            ➔
-        </div>
-        """
-        folium.Marker(
-            location=[mid_lat, mid_lon],
-            icon=folium.DivIcon(html=arrow_html)
-        ).add_to(current_group)
-
-    current_group.add_to(m)
-
-    # Compact Layer Controls
+    # Layer Controls
     folium.LayerControl(position="topright", collapsed=True).add_to(m)
-
-    # DOM Animation Trigger for Leaflet SVG Paths
-    current_anim_js = """
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        setTimeout(function() {
-            var paths = document.querySelectorAll("path[stroke-dasharray='8, 14']");
-            paths.forEach(function(p) {
-                p.classList.add("animated-current-flow");
-            });
-        }, 800);
-    });
-    </script>
-    """
-    m.get_root().html.add_child(folium.Element(current_anim_js))
 
     st_folium(m, height=height, use_container_width=True)
 
 
 # ---------------------------------------------------------
-# REUSABLE SECTION TABS HELPER (NON-CRAMPED, PROPER SPACING)
+# STATE MANAGEMENT & INITIALIZATION
 # ---------------------------------------------------------
 
-def render_section_tabs(tab_list: List[str], current_tab: str, session_key: str) -> str:
-    """
-    Renders clean, spacious, reusable secondary navigation tabs with proper
-    spacing, hover effects, and active state indicators.
-    """
-    cols = st.columns(len(tab_list) + 2)
-    selected_tab = current_tab
-    for idx, tab_name in enumerate(tab_list):
-        with cols[idx]:
-            is_active = (tab_name == current_tab)
-            btn_type = "primary" if is_active else "secondary"
-            if st.button(tab_name, key=f"{session_key}_{idx}", type=btn_type, use_container_width=True):
-                selected_tab = tab_name
-                st.session_state[session_key] = tab_name
-                st.rerun()
-    return selected_tab
-
-
-# Application Schema & Cache Invalidation Version
-_CACHE_SCHEMA_VER = "v3.4_realtime_continuous_risk"
+_CACHE_SCHEMA_VER = "v4.0_chargeflow_enterprise_saas"
 if st.session_state.get("_cache_schema_ver") != _CACHE_SCHEMA_VER:
     st.session_state._cache_schema_ver = _CACHE_SCHEMA_VER
     st.session_state.last_pipeline_result = None
@@ -987,29 +772,18 @@ if st.session_state.get("_cache_schema_ver") != _CACHE_SCHEMA_VER:
 if "orchestrator" not in st.session_state:
     st.session_state.orchestrator = MultiAgentOrchestrator()
 
-# Primary Navigation State (EXACTLY 5 SECTIONS)
-if "nav_section" not in st.session_state:
-    st.session_state.nav_section = "Dashboard"
+# Primary 2-Tier Navigation State
+if "active_nav_tab" not in st.session_state:
+    st.session_state.active_nav_tab = "Overview / Landing"
 
-# Sub-navigation states
-if "sub_explore" not in st.session_state:
-    st.session_state.sub_explore = "Tactical Map"
-
-if "sub_conditions" not in st.session_state:
-    st.session_state.sub_conditions = "Current & Forecast"
-
-if "sub_safety" not in st.session_state:
-    st.session_state.sub_safety = "Operational Status"
-
-if "sub_settings" not in st.session_state:
-    st.session_state.sub_settings = "Vessel & Voyage"
-
-# Settings & Global State
 if "selected_theme" not in st.session_state:
-    st.session_state.selected_theme = "🌙 Ocula Oceanic Dark"
+    st.session_state.selected_theme = "⚡ ChargeFlow Clean Light"
 
 if "active_port_id" not in st.session_state:
     st.session_state.active_port_id = "kochi"
+
+if "user_role" not in st.session_state:
+    st.session_state.user_role = "Harbor Master"
 
 if "query_text" not in st.session_state:
     st.session_state.query_text = "Can we sail from Kochi harbor for Yellowfin Tuna?"
@@ -1017,54 +791,38 @@ if "query_text" not in st.session_state:
 if "advisory_lang" not in st.session_state:
     st.session_state.advisory_lang = "English"
 
-if "last_pipeline_result" not in st.session_state:
-    st.session_state.last_pipeline_result = None
+if "vessel_class" not in st.session_state:
+    st.session_state.vessel_class = "Mechanized Trawler (12-18m)"
+
+if "show_rule_explainer_modal" not in st.session_state:
+    st.session_state.show_rule_explainer_modal = False
 
 if "show_sos_modal" not in st.session_state:
     st.session_state.show_sos_modal = False
 
-if "show_guide_modal" not in st.session_state:
-    st.session_state.show_guide_modal = False
+if "show_walkin_modal" not in st.session_state:
+    st.session_state.show_walkin_modal = False
 
-if "vessel_class" not in st.session_state:
-    st.session_state.vessel_class = "Mechanized Trawler (12-18m)"
+# Interactive Fleet Registry state (Replicating Chargers Registry Table)
+if "fleet_registry" not in st.session_state:
+    st.session_state.fleet_registry = [
+        {"id": "IND-KC-104", "name": "Sea Queen IV", "harbor": "kochi", "tonnage": "18.5 T (Trawler)", "target": "Yellowfin Tuna", "fuel": "142 L", "status": "AVAILABLE", "clearance": "CLEARED"},
+        {"id": "IND-VR-882", "name": "Matsya Raj", "harbor": "veraval", "tonnage": "14.0 T (Gillnetter)", "target": "Indian Mackerel", "fuel": "98 L", "status": "AVAILABLE", "clearance": "CLEARED"},
+        {"id": "IND-CH-301", "name": "Ocean Hunter", "harbor": "chennai", "tonnage": "22.0 T (Longliner)", "target": "Yellowfin Tuna", "fuel": "210 L", "status": "SAILING", "clearance": "ACTIVE_VOYAGE"},
+        {"id": "IND-MG-519", "name": "Netravati Pearl", "harbor": "mangalore", "tonnage": "12.0 T (Fiber Boat)", "target": "Sardine", "fuel": "64 L", "status": "AVAILABLE", "clearance": "CLEARED"},
+        {"id": "IND-VZ-204", "name": "Bay Star", "harbor": "visakhapatnam", "tonnage": "25.0 T (Trawler)", "target": "Silver Pomfret", "fuel": "185 L", "status": "AVAILABLE", "clearance": "CLEARED"},
+        {"id": "IND-TT-612", "name": "Pearl Diver III", "harbor": "thoothukudi", "tonnage": "9.5 T (Artisanal)", "target": "Reef Perch", "fuel": "45 L", "status": "RESTRICTED", "clearance": "HOLD_WEATHER"},
+        {"id": "IND-PB-091", "name": "Saurashtra Rider", "harbor": "porbandar", "tonnage": "16.0 T (Trawler)", "target": "Indian Salmon", "fuel": "120 L", "status": "AVAILABLE", "clearance": "CLEARED"}
+    ]
 
-if "departure_window" not in st.session_state:
-    st.session_state.departure_window = "Immediate (Current Tide)"
-
-if "unit_system" not in st.session_state:
-    st.session_state.unit_system = "Metric (km/h, km)"
-
-port_list = list(INDIAN_PORTS.keys())
-
-# Sync top header widget states immediately on rerun before pipeline execution
-if "global_harbor_select" in st.session_state:
-    _sel = st.session_state.global_harbor_select
-    if isinstance(_sel, str) and _sel in INDIAN_PORTS:
-        if st.session_state.active_port_id != _sel:
-            st.session_state.active_port_id = _sel
-            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_sel].name} for Yellowfin Tuna?"
-            st.session_state.last_pipeline_result = None
-    elif isinstance(_sel, int) and 0 <= _sel < len(port_list):
-        _port_id = port_list[_sel]
-        if st.session_state.active_port_id != _port_id:
-            st.session_state.active_port_id = _port_id
-            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_port_id].name} for Yellowfin Tuna?"
-            st.session_state.last_pipeline_result = None
-
-if "global_theme_select" in st.session_state:
-    _t_opt = st.session_state.global_theme_select
-    _t_map = {
-        "☀️ Light": "☀️ Ocula Sky Day",
-        "🌙 Dark": "🌙 Ocula Oceanic Dark",
-        "⚡ Tactical": "⚡ Tactical Radar"
-    }
-    if _t_opt in _t_map and st.session_state.selected_theme != _t_map[_t_opt]:
-        st.session_state.selected_theme = _t_map[_t_opt]
-
-if "global_lang_select" in st.session_state:
-    if st.session_state.advisory_lang != st.session_state.global_lang_select:
-        st.session_state.advisory_lang = st.session_state.global_lang_select
+# Priority Queue Data (Replicating Priority Queue Control)
+if "departure_queue" not in st.session_state:
+    st.session_state.departure_queue = [
+        {"vessel_id": "IND-KC-104", "skipper": "Capt. Rajeev Nair", "class": "COMMERCIAL FLEET", "priority": "P1 - COMMERCIAL", "departure": "05:00 IST", "pfz": "Cochin Ridge PFZ", "status": "APPROVED"},
+        {"vessel_id": "IND-MG-519", "skipper": "S. K. Poojary", "class": "ARTISANAL CRAFT", "priority": "P2 - ARTISANAL", "departure": "05:30 IST", "pfz": "Mangalore Deep PFZ", "status": "APPROVED"},
+        {"vessel_id": "IND-VR-882", "skipper": "Dinesh Solanki", "class": "COMMERCIAL FLEET", "priority": "P1 - COMMERCIAL", "departure": "06:00 IST", "pfz": "Veraval Southwest PFZ", "status": "QUEUED"},
+        {"vessel_id": "IND-TT-612", "skipper": "M. Anthony", "class": "ARTISANAL CRAFT", "priority": "P3 - RESTRICTED", "departure": "HOLD", "pfz": "Tuticorin Bank", "status": "HOLD_INCOIS"}
+    ]
 
 # ---------------------------------------------------------
 # EXECUTE DATA PIPELINE
@@ -1075,7 +833,7 @@ if (
     st.session_state.last_pipeline_result.port.id != st.session_state.active_port_id or
     st.session_state.last_pipeline_result.query_intent.vessel_class != st.session_state.vessel_class
 ):
-    with st.spinner("Fetching live ocean telemetry & verifying safety rules..."):
+    with st.spinner("Executing Deterministic Marine Rule Engine & Live Telemetry Ingestion..."):
         res: ORCASynthesisResult = st.session_state.orchestrator.run_pipeline(
             query=st.session_state.query_text,
             selected_port_id=st.session_state.active_port_id,
@@ -1089,152 +847,91 @@ res: ORCASynthesisResult = st.session_state.last_pipeline_result
 port_tides: PortTideData = res.tides if res.tides is not None else calculate_port_tides(res.port.id)
 port_hourly: HourlyMarineForecast = res.hourly_forecast if res.hourly_forecast is not None else fetch_hourly_marine_forecast(res.port)
 
-# Dynamic Unit conversions
-is_naut = "Nautical" in st.session_state.get("unit_system", "Metric (km/h, km)")
-if is_naut:
-    curr_disp = f"{res.telemetry.ocean_current_velocity * 0.539957:.1f}"
-    curr_unit = "kts"
-    wind_disp = f"{res.telemetry.wind_speed * 0.539957:.1f}"
-    wind_unit = "kts"
-    gust_disp = f"Gusts {res.telemetry.wind_gusts * 0.539957:.1f} kts"
-    dist_label_top = f"{res.route.total_distance_nm:.1f} nm"
-else:
-    curr_disp = f"{res.telemetry.ocean_current_velocity:.1f}"
-    curr_unit = "km/h"
-    wind_disp = f"{res.telemetry.wind_speed:.1f}"
-    wind_unit = "km/h"
-    gust_disp = f"Gusts {res.telemetry.wind_gusts:.1f} km/h"
-    dist_label_top = f"{res.route.total_distance_nm * 1.852:.1f} km"
-
-# Global Operational Status Classification (Available across all navigation tabs)
-if res.safety.status == "SAFE_GO":
-    status_cls = "ff-status-safe"
-    status_icon = "●"
-    status_title = "SAFE TO SAIL"
-    status_tag = "GO"
-    status_color = "var(--success)"
-    status_desc = f"Normal sea conditions off {res.port.name}. Wave and swell heights remain well within safe limits (<2.5m). Unrestricted offshore fishing cleared."
-elif res.safety.status == "CAUTION_CONDITIONAL":
-    status_cls = "ff-status-caution"
-    status_icon = "●"
-    status_title = "CAUTION ADVISED"
-    status_tag = "CONDITIONAL"
-    status_color = "var(--warning)"
-    status_desc = f"Moderate swell ({res.telemetry.swell_wave_height}m) or wind gusts off {res.port.name}. Traditional craft (<10m) advised to stay within 12 nm."
-else:
-    status_cls = "ff-status-danger"
-    status_icon = "●"
-    status_title = "NO-GO (OPERATIONS SUSPENDED)"
-    status_tag = "DANGER"
-    status_color = "var(--danger)"
-    status_desc = f"INCOIS threshold breached: Swell > 2.5m or wind > 45 km/h. All fishing vessels ordered to remain moored."
-
-# Dynamic continuous risk classification
-if res.safety.risk_score < 20:
-    risk_grade = "Low Ocean Hazard"
-    risk_grade_color = "var(--success)"
-elif res.safety.risk_score < 35:
-    risk_grade = "Moderate Sea State"
-    risk_grade_color = "#0284c7"
-elif res.safety.risk_score < 60:
-    risk_grade = "Elevated Caution"
-    risk_grade_color = "var(--warning)"
-else:
-    risk_grade = "Severe / No-Go"
-    risk_grade_color = "var(--danger)"
-
-
-# ---------------------------------------------------------
-# INJECT THEME CSS
-# ---------------------------------------------------------
+# Inject ChargeFlow CSS
 inject_theme(st.session_state.selected_theme)
 
-
 # ---------------------------------------------------------
-# COLLAPSIBLE NAVIGATION DRAWER (SIDEBAR) — ZERO RADIO BUTTONS!
+# 1. TOP GLOBAL NAVIGATION BAR (TWO-TIER HIERARCHY)
 # ---------------------------------------------------------
 
-with st.sidebar:
-    st.markdown("""
-    <div style="padding: 10px 0 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:24px;">⚓</span>
-            <div>
-                <div style="font-size:16px; font-weight:800; color:var(--primary); line-height:1.1;">FishingFriend</div>
-                <div style="font-size:11px; color:var(--text-muted);">ORCA Marine AI · ISRO SIH26176</div>
+# Top Header Card Container
+st.markdown("""
+<div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:16px; padding:12px 22px; margin-bottom:18px; box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <!-- Brand & Sub-badge -->
+    <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:26px; line-height:1;">⚓</span>
+        <div>
+            <div style="font-size:18px; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em; display:flex; align-items:center; gap:8px;">
+                <span>FishingFriend</span>
+                <span style="font-size:10px; font-weight:700; background:var(--primary-subtle); color:var(--primary); padding:2px 8px; border-radius:9999px; border:1px solid rgba(37,99,235,0.2);">RULE-BASED MARINE ENGINE</span>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); font-weight:500;">
+                ISRO SIH26176 · ORCA Marine Ecosystem Reasoning
             </div>
         </div>
     </div>
-    <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
-        OPERATIONS
+    <!-- Right Live Pill & Role Badge -->
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div class="cf-toast-pill">
+            <span class="cf-pulse-dot"></span>
+            <span>Local Rule Engine Active</span>
+        </div>
+        <div style="background:var(--bg-surface-hover); border:1px solid var(--border); padding:6px 12px; border-radius:10px; font-size:12px; font-weight:600; color:var(--text-secondary); display:flex; align-items:center; gap:6px;">
+            <span>👤</span>
+            <span>Harbor Master Desk</span>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-    # 5 Primary Navigation Items rendered as Clean Nav Buttons with Left Indicator Active State
-    nav_items = [
-        ("Dashboard", "🏠 Dashboard"),
-        ("Explore", "🗺 Explore"),
-        ("Conditions", "🌦 Conditions"),
-        ("Safety & Advisory", "🛟 Safety & Advisory"),
-        ("Settings", "⚙ Settings")
-    ]
+# 7 Center Primary Navigation Tabs (Pill Structure)
+nav_tabs = [
+    "Overview / Landing",
+    "Harbor Admin Portal",
+    "Harbor Fleet Grid",
+    "Mission Dispatch & PFZ",
+    "Safety & IMBL Queue",
+    "SOS & Emergency Desk",
+    "Marine Reports & Analytics"
+]
 
-    for key_name, label_name in nav_items:
-        is_active = (st.session_state.nav_section == key_name)
+# Quick Switcher & Port Bar
+t_cols = st.columns([1.1, 1.3, 1.2, 1.4, 1.3, 1.3, 1.4, 1.0])
+for idx, tab_name in enumerate(nav_tabs):
+    with t_cols[idx]:
+        is_active = (st.session_state.active_nav_tab == tab_name)
         btn_type = "primary" if is_active else "secondary"
-        if st.button(label_name, key=f"side_nav_{key_name}", type=btn_type, use_container_width=True):
-            st.session_state.nav_section = key_name
+        tab_short = {
+            "Overview / Landing": "🌐 Overview",
+            "Harbor Admin Portal": "🏢 Operations",
+            "Harbor Fleet Grid": "🚢 Fleet Grid",
+            "Mission Dispatch & PFZ": "🎯 Dispatch & PFZ",
+            "Safety & IMBL Queue": "🛡️ Safety Queue",
+            "SOS & Emergency Desk": "🚨 SOS Desk",
+            "Marine Reports & Analytics": "📊 Analytics"
+        }.get(tab_name, tab_name)
+        
+        if st.button(tab_short, key=f"top_tab_{idx}", type=btn_type, use_container_width=True):
+            st.session_state.active_nav_tab = tab_name
             st.rerun()
 
-    # Minimal bottom status indicator in drawer
-    st.markdown("""
-    <div style="margin-top: 48px; padding: 12px; background: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); font-size: 11px; line-height: 1.4;">
-        <div style="font-weight: 700; color: var(--success); display:flex; align-items:center; gap:6px;">
-            <span style="font-size:8px;">●</span> Systems Online
-        </div>
-        <div style="color: var(--text-muted); font-size: 10px; margin-top: 2px;">
-            Live INCOIS & Open-Meteo Sync
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+with t_cols[7]:
+    if st.button("🚨 SOS", type="primary", key="btn_quick_sos", use_container_width=True):
+        st.session_state.show_sos_modal = not st.session_state.show_sos_modal
+        st.rerun()
 
-
-# ---------------------------------------------------------
-# GLOBAL TOP HEADER BAR (UNCLUTTERED, GENEROUS WIDTHS)
-# ---------------------------------------------------------
-
-hdr_col1, hdr_col2, hdr_col3, hdr_col4, hdr_col5, hdr_col6 = st.columns([2.6, 3.4, 1.6, 1.6, 1.4, 2.4])
-
-with hdr_col1:
-    st.markdown("""
-    <div style="display:flex; align-items:center; gap:10px; padding-top:4px;">
-        <span style="font-size:22px;">⚓</span>
-        <div>
-            <div style="font-size:16px; font-weight:800; color:var(--primary); line-height:1.1;">FishingFriend</div>
-            <div style="font-size:11px; color:var(--text-muted);">Marine Intelligence</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with hdr_col2:
+# Harbor Quick Selector Strip
+h_c1, h_c2, h_c3, h_c4 = st.columns([4, 3, 3, 2])
+with h_c1:
     port_list = list(INDIAN_PORTS.keys())
-    
-    def _on_harbor_dropdown_change():
-        _chosen = st.session_state.global_harbor_select
-        if _chosen in INDIAN_PORTS and _chosen != st.session_state.active_port_id:
-            st.session_state.active_port_id = _chosen
-            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[_chosen].name} for Yellowfin Tuna?"
-            st.session_state.last_pipeline_result = None
-
-    cur_idx = port_list.index(st.session_state.active_port_id) if st.session_state.active_port_id in port_list else 0
+    cur_p_idx = port_list.index(st.session_state.active_port_id) if st.session_state.active_port_id in port_list else 0
     selected_p = st.selectbox(
-        "Base Harbor",
+        "Active Operational Harbor",
         options=port_list,
-        format_func=lambda pid: f"📍 {INDIAN_PORTS[pid].name} ({'West' if 'West' in INDIAN_PORTS[pid].coast else 'East'})",
-        index=cur_idx,
+        format_func=lambda pid: f"⚓ {INDIAN_PORTS[pid].name} ({INDIAN_PORTS[pid].state} · {INDIAN_PORTS[pid].coast})",
+        index=cur_p_idx,
         label_visibility="collapsed",
-        key="global_harbor_select",
-        on_change=_on_harbor_dropdown_change
+        key="global_port_selector"
     )
     if selected_p != st.session_state.active_port_id:
         st.session_state.active_port_id = selected_p
@@ -1242,509 +939,921 @@ with hdr_col2:
         st.session_state.last_pipeline_result = None
         st.rerun()
 
-with hdr_col3:
-    theme_options = ["☀️ Light", "🌙 Dark", "⚡ Tactical"]
-    cur_t_idx = 1
-    if "Day" in st.session_state.selected_theme or "Light" in st.session_state.selected_theme:
-        cur_t_idx = 0
-    elif "Tactical" in st.session_state.selected_theme:
-        cur_t_idx = 2
-
-    chosen_t = st.selectbox(
-        "Theme",
-        options=theme_options,
-        index=cur_t_idx,
-        label_visibility="collapsed",
-        key="global_theme_select"
-    )
-    theme_map = {
-        "☀️ Light": "☀️ Ocula Sky Day",
-        "🌙 Dark": "🌙 Ocula Oceanic Dark",
-        "⚡ Tactical": "⚡ Tactical Radar"
-    }
-    if theme_map[chosen_t] != st.session_state.selected_theme:
-        st.session_state.selected_theme = theme_map[chosen_t]
+with h_c2:
+    v_opts = ["Mechanized Trawler (12-18m)", "Traditional Motorized (<10m)", "Deep-Sea Longliner (>20m)", "FRP Fiber Boat (8-10m)"]
+    cur_v = v_opts.index(st.session_state.vessel_class) if st.session_state.vessel_class in v_opts else 0
+    sel_v = st.selectbox("Vessel Class", options=v_opts, index=cur_v, label_visibility="collapsed", key="global_vessel_sel")
+    if sel_v != st.session_state.vessel_class:
+        st.session_state.vessel_class = sel_v
+        st.session_state.last_pipeline_result = None
         st.rerun()
 
-with hdr_col4:
-    lang_options = ["English", "हिन्दी", "தமிழ்"]
-    cur_l_idx = 0
+with h_c3:
+    lang_opts = ["English", "हिन्दी (Hindi)", "தமிழ் (Tamil)"]
+    cur_l = 0
     if "Hindi" in st.session_state.advisory_lang or "हिन्दी" in st.session_state.advisory_lang:
-        cur_l_idx = 1
+        cur_l = 1
     elif "Tamil" in st.session_state.advisory_lang or "தமிழ்" in st.session_state.advisory_lang:
-        cur_l_idx = 2
-
-    chosen_l = st.selectbox(
-        "Language",
-        options=lang_options,
-        index=cur_l_idx,
-        label_visibility="collapsed",
-        key="global_lang_select"
-    )
-    if chosen_l != st.session_state.advisory_lang:
-        st.session_state.advisory_lang = chosen_l
+        cur_l = 2
+    sel_lang = st.selectbox("Language", options=lang_opts, index=cur_l, label_visibility="collapsed", key="global_lang_sel")
+    if sel_lang != st.session_state.advisory_lang:
+        st.session_state.advisory_lang = sel_lang
         st.rerun()
 
-with hdr_col5:
-    if st.button("💡 Guide", use_container_width=True, key="hdr_guide_btn"):
-        st.session_state.show_guide_modal = not st.session_state.show_guide_modal
-        st.session_state.show_sos_modal = False
+with h_c4:
+    t_opts = ["⚡ ChargeFlow Clean Light", "🌙 Oceanic Dark", "⚡ Tactical Radar"]
+    cur_t = 0
+    if "Dark" in st.session_state.selected_theme:
+        cur_t = 1
+    elif "Tactical" in st.session_state.selected_theme:
+        cur_t = 2
+    sel_t = st.selectbox("Theme", options=t_opts, index=cur_t, label_visibility="collapsed", key="global_theme_sel")
+    if sel_t != st.session_state.selected_theme:
+        st.session_state.selected_theme = sel_t
         st.rerun()
 
-with hdr_col6:
-    if st.button("🚨 Emergency SOS", type="primary", use_container_width=True, key="hdr_sos_btn"):
-        st.session_state.show_sos_modal = not st.session_state.show_sos_modal
-        st.session_state.show_guide_modal = False
-        st.rerun()
+st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# GLOBAL MODALS (GUIDE & SOP / EMERGENCY SOS)
+# GLOBAL MODALS (SOS / RULE EXPLAINER)
 # ---------------------------------------------------------
-
-if st.session_state.show_guide_modal:
-    st.markdown("""
-    <div class="ff-modal-box" style="border-left: 5px solid var(--primary); margin-top: 8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="font-size:16px; font-weight:800; color:var(--primary);">
-                💡 SKIPPER'S FIELD GUIDE & OPERATIONAL SOP
-            </div>
-            <div style="font-size:11px; font-weight:700; color:var(--primary); background:var(--primary-subtle); padding:4px 8px; border-radius:6px;">
-                INCOIS / IMD RULES
-            </div>
-        </div>
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 14px;">
-            <div style="background: var(--success-bg); border-left: 3px solid var(--success); padding: 12px 14px; border-radius: 6px;">
-                <b style="color:var(--success); font-size:13px;">🟢 SAFE TO SAIL (GO)</b>
-                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4; color:var(--text-secondary);">
-                    • Swell &lt; 1.80m & Wind &lt; 32 km/h.<br>
-                    • Safe distance from International Maritime Boundaries (&gt;10 nm).<br>
-                    • All registered craft cleared for offshore voyage.
-                </p>
-            </div>
-            <div style="background: var(--warning-bg); border-left: 3px solid var(--warning); padding: 12px 14px; border-radius: 6px;">
-                <b style="color:var(--warning); font-size:13px;">🟡 CAUTION (CONDITIONAL)</b>
-                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4; color:var(--text-secondary);">
-                    • Swell 1.80m - 2.50m or Wind 32 - 45 km/h.<br>
-                    • Traditional craft (&lt;10m) restricted within 12 nm.<br>
-                    • Maintain continuous VHF Ch 16 radio watch.
-                </p>
-            </div>
-            <div style="background: var(--danger-bg); border-left: 3px solid var(--danger); padding: 12px 14px; border-radius: 6px;">
-                <b style="color:var(--danger); font-size:13px;">🔴 NO-GO (SUSPENSION)</b>
-                <p style="font-size:12px; margin:4px 0 0 0; line-height:1.4; color:var(--text-secondary);">
-                    • Swell &gt; 2.50m (INCOIS High Wave Red Alert).<br>
-                    • Wind &gt; 45.0 km/h (IMD Squall Warning).<br>
-                    • Proximity to IMBL &lt; 10.0 nm. Operations suspended.
-                </p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    if st.button("✕ Close Guide", key="btn_close_guide"):
-        st.session_state.show_guide_modal = False
-        st.rerun()
 
 if st.session_state.show_sos_modal:
-    st.markdown(f"""
-    <div class="ff-modal-box" style="border: 2px solid var(--danger); background: var(--danger-bg); margin-top: 8px;">
+    st.markdown("""
+    <div style="background:#fee2e2; border:2px solid #ef4444; border-radius:16px; padding:22px 26px; margin-bottom:20px; box-shadow:var(--shadow-lg);">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="font-size:17px; font-weight:800; color:var(--danger);">
-                🚨 DISTRESS EMERGENCY BEACON (MAYDAY PROTOCOL)
+            <div style="font-size:18px; font-weight:800; color:#991b1b; display:flex; align-items:center; gap:8px;">
+                <span>🚨</span> EMERGENCY MARITIME DISTRESS DESK (MAYDAY PROTOCOL)
             </div>
-            <div style="font-size:11px; font-weight:700; color:var(--danger); background:rgba(239, 68, 68, 0.15); padding:4px 8px; border-radius:6px;">
-                VHF CH 16 / DSC CHANNEL 70
-            </div>
+            <span class="cf-badge cf-badge-danger">VHF CH 16 / SAR 1554</span>
         </div>
-        <p style="font-size:12px; margin:6px 0 10px 0; color:var(--text-primary);">
-            Immediate broadcast payload for Indian Coast Guard (1554) and Coastal Security Police (1093).
+        <p style="font-size:13px; color:#7f1d1d; margin:6px 0 14px 0;">
+            Immediate broadcast channel for Indian Coast Guard Maritime Rescue Co-ordination Centres (MRCC) & Coastal Police.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    sos_col1, sos_col2 = st.columns([7, 3])
-    with sos_col1:
+    s1, s2 = st.columns([7, 3])
+    with s1:
         distress_payload = (
             f"MAYDAY MAYDAY MAYDAY\n"
-            f"VESSEL: {st.session_state.vessel_class} (Reg: IND-{res.port.id.upper()}-402)\n"
-            f"CURRENT POSITION: Lat {res.port.lat:.4f}° N, Lon {res.port.lon:.4f}° E\n"
-            f"NEAREST BASE: {res.port.name}, {res.port.state} ({res.port.coast})\n"
-            f"NEAREST INT'L BOUNDARY: {res.safety.nearest_imbl_name} ({res.safety.border_distance_km} km away)\n"
-            f"CURRENT WAVE / SWELL: {res.telemetry.wave_height}m (Swell {res.telemetry.swell_wave_height}m)\n"
-            f"EMERGENCY FREQUENCY: VHF Ch 16 (156.800 MHz) | Distress Relay: 1554"
+            f"STATION: {res.port.name} Marine Operations Hub\n"
+            f"VESSEL CLASS: {st.session_state.vessel_class}\n"
+            f"COORDINATES: Lat {res.port.lat:.4f}° N, Lon {res.port.lon:.4f}° E\n"
+            f"SEA STATE: Wave {res.telemetry.wave_height}m | Swell {res.telemetry.swell_wave_height}m | Wind {res.telemetry.wind_speed} km/h\n"
+            f"IMBL DISTANCE: {res.safety.border_distance_km} km to {res.safety.nearest_imbl_name}\n"
+            f"SAR CHANNELS: VHF 156.800 MHz (Ch 16) | Toll-Free Coast Guard: 1554"
         )
         st.code(distress_payload, language="text")
-
-    with sos_col2:
-        st.markdown(f"""
-        <div style="font-size:12px; line-height:1.7; color:var(--text-primary);">
-            <b>📞 Emergency Contacts:</b><br>
-            • <b>Coast Guard MRCC:</b> <a href="tel:1554" style="color:var(--primary); font-weight:bold;">1554</a><br>
-            • <b>Marine Police:</b> <a href="tel:1093" style="color:var(--primary); font-weight:bold;">1093</a><br>
-            • <b>Disaster SEOC:</b> 1070 / 1077<br>
-            • <b>Sea Ambulance:</b> 108
+    with s2:
+        st.markdown("""
+        <div style="font-size:12px; line-height:1.8; color:var(--text-primary);">
+            <b>📞 National Sea Helplines:</b><br>
+            • Coast Guard MRCC: <b style="color:#2563eb;">1554</b><br>
+            • Coastal Police: <b style="color:#16a34a;">1093</b><br>
+            • National Emergency: <b>112</b><br>
+            • Sea Ambulance: <b>108</b>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("📡 Broadcast Alert (Simulated)", type="primary", use_container_width=True, key="btn_send_sos"):
-            st.success("✅ Simulated Mayday Packet transmitted to nearest Coast Guard MRCC Station.")
-        if st.button("✕ Close SOS", use_container_width=True, key="btn_close_sos"):
+        if st.button("📡 Transmit Simulated Mayday", type="primary", use_container_width=True, key="btn_send_mayday"):
+            st.success("✅ Mayday payload acknowledged by Indian Coast Guard SAR Station.")
+        if st.button("✕ Close Emergency Desk", use_container_width=True, key="btn_close_sos_modal"):
             st.session_state.show_sos_modal = False
             st.rerun()
 
+    st.markdown("<div style='margin-bottom: 24px;'></div>", unsafe_allow_html=True)
 
-# =========================================================
-# SECTION 1: 🏠 DASHBOARD (RADICALLY SIMPLIFIED OVERVIEW)
-# =========================================================
 
-if st.session_state.nav_section == "Dashboard":
-    # 1. Page Title & Selected Harbor
-    st.markdown(f"""
-    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 16px;">
-        <div>
-            <h2 style="margin:0; font-size:28px; font-weight:800; color:var(--text-primary); letter-spacing:-0.4px;">Fishing Operations</h2>
-            <div style="font-size:14px; color:var(--text-muted); margin-top:2px;">
-                📍 <b>{res.port.name}</b> · {res.port.coast} · {datetime.now().strftime('%d-%b-%Y %H:%M IST')}
-            </div>
-        </div>
-        <div style="font-size:13px; color:var(--text-muted); text-align:right;">
-            Vessel: <b>{st.session_state.vessel_class.split('(')[0].strip()}</b>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 2. Primary Status: Clean Operational Clearance Hero Panel
-    st.markdown(f"""
-    <div class="ff-status-panel {status_cls}">
-        <div>
-            <div style="font-size:13px; font-weight:700; color:{status_color}; text-transform:uppercase; letter-spacing:0.8px;">
-                {status_icon} {status_title}
-            </div>
-            <div style="font-size:26px; font-weight:800; color:{status_color}; margin: 2px 0 4px 0;">
-                {status_tag}
-            </div>
-            <div style="font-size:13px; color:var(--text-secondary); max-width:720px; line-height:1.5;">
-                {status_desc}
-            </div>
-        </div>
-        <div style="text-align:right; min-width:130px;">
-            <div style="font-size:28px; font-weight:800; color:{status_color}; font-family:'JetBrains Mono';">
-                {res.safety.risk_score} <span style="font-size:14px; font-weight:600; color:var(--text-muted);">/ 100</span>
-            </div>
-            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Risk Index</div>
-            <div style="font-size:11px; font-weight:700; color:{risk_grade_color}; margin-top:2px;">{risk_grade}</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 3. Current Conditions: Single Compact Horizontal Metric Strip
-    st.markdown(f"""
-    <div class="ff-metric-strip">
-        <div class="ff-metric-item">
-            <div class="ff-metric-label">🌊 Swell</div>
-            <div class="ff-metric-value">{res.telemetry.swell_wave_height} <span style="font-size:13px;">m</span></div>
-            <div class="ff-metric-sub">{res.telemetry.swell_wave_period}s Period</div>
-        </div>
-        <div class="ff-metric-item">
-            <div class="ff-metric-label">🌡️ SST</div>
-            <div class="ff-metric-value">{res.telemetry.sea_surface_temperature}°<span style="font-size:13px;">C</span></div>
-            <div class="ff-metric-sub">Thermal Edge</div>
-        </div>
-        <div class="ff-metric-item">
-            <div class="ff-metric-label">🌀 Current</div>
-            <div class="ff-metric-value">{curr_disp} <span style="font-size:13px;">{curr_unit}</span></div>
-            <div class="ff-metric-sub">Drift {res.telemetry.ocean_current_direction:.0f}°</div>
-        </div>
-        <div class="ff-metric-item">
-            <div class="ff-metric-label">💨 Wind</div>
-            <div class="ff-metric-value">{wind_disp} <span style="font-size:13px;">{wind_unit}</span></div>
-            <div class="ff-metric-sub">{gust_disp}</div>
-        </div>
-        <div class="ff-metric-item">
-            <div class="ff-metric-label">🌿 Chlorophyll-A</div>
-            <div class="ff-metric-value">{res.telemetry.chlorophyll_proxy} <span style="font-size:11px;">mg/m³</span></div>
-            <div class="ff-metric-sub">Oceansat-3</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 4. Two Compact Summary Cards: ONLY Top 1 Fishing Recommendation & ORCA Summary
-    dash_col1, dash_col2 = st.columns(2)
-
-    with dash_col1:
-        st.markdown(f"""
-        <div class="ff-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-                <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px;">
-                    RECOMMENDED FISHING ZONE
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                    <div style="font-size:17px; font-weight:800; color:var(--primary);">
-                        ⭐ {res.top_pfz.name}
-                    </div>
-                    <div style="font-size:16px; font-weight:800; color:var(--success); font-family:'JetBrains Mono';">
-                        {res.top_pfz.fish_density_score}% Score
-                    </div>
-                </div>
-                <div style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.5;">
-                    <b>Range:</b> {dist_label_top} · <b>Depth:</b> {res.top_pfz.depth_m}m · <b>Bearing:</b> {res.top_pfz.bearing_deg}°<br>
-                    <b>Target Species:</b> {', '.join(res.top_pfz.species_likely[:2])}
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        if st.button("View All Fishing Zones →", key="btn_dash_all_pfz", use_container_width=True):
-            st.session_state.nav_section = "Explore"
-            st.session_state.sub_explore = "Fishing Zones"
-            st.rerun()
-
-    with dash_col2:
-        if "Hindi" in st.session_state.advisory_lang or "हिन्दी" in st.session_state.advisory_lang:
-            adv_sum = res.advisory.hindi['executive_summary']
-        elif "Tamil" in st.session_state.advisory_lang or "தமிழ்" in st.session_state.advisory_lang:
-            adv_sum = res.advisory.tamil['executive_summary']
-        else:
-            adv_sum = res.advisory.english['executive_summary']
-
-        st.markdown(f"""
-        <div class="ff-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-                <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px;">
-                    ORCA AI INSIGHT
-                </div>
-                <div style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:8px;">
-                    {res.advisory.english['status_headline']}
-                </div>
-                <div style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.5;">
-                    {adv_sum[:170]}...
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        if st.button("View Full Advisory & Audio →", key="btn_dash_full_adv", use_container_width=True):
-            st.session_state.nav_section = "Safety & Advisory"
-            st.session_state.sub_safety = "Actionable Advisory"
-            st.rerun()
-
-    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
-
-    # 5. Compact Map Preview
+if st.session_state.show_rule_explainer_modal:
     st.markdown("""
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div style="font-size:14px; font-weight:700; color:var(--text-primary);">
-            Operational Map Preview
+    <div class="cf-card" style="border-left: 5px solid #2563eb;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-size:16px; font-weight:800; color:var(--primary);">
+                📖 DETERMINISTIC MARINE RULE ARCHITECTURE (ZERO HALLUCINATION)
+            </div>
+            <span class="cf-badge cf-badge-info">INCOIS / IMD COMPLIANT</span>
         </div>
-        <span style="font-size:11px; color:var(--text-muted);">OpenSeaMap & Current Streamlines</span>
+        <p style="font-size:13px; color:var(--text-secondary); margin:8px 0 14px 0;">
+            Unlike generic generative models that fabricate navigation points, FishingFriend executes 100% deterministic physical mathematical algorithms in pure Python before any synthesis.
+        </p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:14px;">
+            <div style="background:var(--success-bg); border:1px solid var(--success-border); padding:12px 14px; border-radius:10px;">
+                <b style="color:var(--success); font-size:13px;">🌊 1. INCOIS Swell Guardrail</b>
+                <p style="font-size:12px; margin:4px 0 0 0; color:var(--text-secondary); line-height:1.4;">
+                    Swell wave height > 2.50m triggers instantaneous Hard NO-GO refusal.
+                </p>
+            </div>
+            <div style="background:var(--badge-info-bg); border:1px solid var(--badge-info-border); padding:12px 14px; border-radius:10px;">
+                <b style="color:var(--primary); font-size:13px;">🐟 2. Oceansat-3 PFZ Fronts</b>
+                <p style="font-size:12px; margin:4px 0 0 0; color:var(--text-secondary); line-height:1.4;">
+                    Chlorophyll-a gradients (>0.4 mg/m³) & SST fronts (26-29°C) calculate pelagic fish density.
+                </p>
+            </div>
+            <div style="background:var(--danger-bg); border:1px solid var(--danger-border); padding:12px 14px; border-radius:10px;">
+                <b style="color:var(--danger); font-size:13px;">🛑 3. IMBL Geofencing</b>
+                <p style="font-size:12px; margin:4px 0 0 0; color:var(--text-secondary); line-height:1.4;">
+                    Strict 10 NM safety exclusion corridor off Pakistan, Sri Lanka & Bangladesh borders.
+                </p>
+            </div>
+            <div style="background:var(--warning-bg); border:1px solid var(--warning-border); padding:12px 14px; border-radius:10px;">
+                <b style="color:var(--warning); font-size:13px;">⛽ 4. Current-Assisted Drift</b>
+                <p style="font-size:12px; margin:4px 0 0 0; color:var(--text-secondary); line-height:1.4;">
+                    Vectors calculate fuel burn reductions (~15-22% diesel savings) along rhumb lines.
+                </p>
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
-
-    render_tactical_map(
-        port=res.port,
-        telemetry=res.telemetry,
-        safety=res.safety,
-        all_pfzs=[res.top_pfz],
-        selected_pfz=res.top_pfz,
-        route=res.route,
-        theme_name=st.session_state.selected_theme,
-        height=320
-    )
-
-    if st.button("Open Tactical Map →", key="btn_dash_open_map", use_container_width=True):
-        st.session_state.nav_section = "Explore"
-        st.session_state.sub_explore = "Tactical Map"
+    if st.button("✕ Close Rule Architecture", key="btn_close_rule_explainer"):
+        st.session_state.show_rule_explainer_modal = False
         st.rerun()
 
 
 # =========================================================
-# SECTION 2: 🗺 EXPLORE (TACTICAL MAP / ZONES / SEA ANALYSIS)
+# SCREEN 1: 🌐 OVERVIEW / LANDING HERO
+# Replicating ChargeFlow Landing Hero Screen
 # =========================================================
 
-elif st.session_state.nav_section == "Explore":
-    st.markdown(f"""
-    <div style="margin-bottom:14px;">
-        <h2 style="margin:0; font-size:26px; font-weight:800; color:var(--text-primary);">Explore</h2>
-        <div style="font-size:14px; color:var(--text-muted); margin-top:2px;">
-            Marine intelligence, tactical navigation and fishing opportunities off <b>{res.port.name}</b>.
+if st.session_state.active_nav_tab == "Overview / Landing":
+
+    # Hero Badge Pill
+    st.markdown("""
+    <div style="text-align:center; padding: 24px 10px 10px 10px;">
+        <div style="display:inline-block; background:var(--primary-subtle); border:1px solid rgba(37,99,235,0.25); color:var(--primary); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; padding:6px 16px; border-radius:9999px; margin-bottom:16px;">
+            ⚡ DETERMINISTIC RULE-BASED MARINE ADVISORY (NO AI/ML HALLUCINATION)
         </div>
+        <h1 style="font-size:40px; font-weight:800; color:var(--text-primary); letter-spacing:-0.03em; margin:0 auto 12px auto; max-width:920px; line-height:1.15;">
+            Smart Marine Ecosystem Reasoning & Coastal Fleet Safety Engine
+        </h1>
+        <p style="font-size:16px; color:var(--text-secondary); max-width:780px; margin:0 auto 24px auto; line-height:1.6;">
+            Eliminate rough sea navigation risks and boundary cross-overs. Real-time satellite telemetry correlation, strict INCOIS wave thresholds, fuel-efficient PFZ waypoints, and automated regional voice dispatch.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Reusable Spacious SectionTabs
-    explore_tabs = ["Tactical Map", "Fishing Zones", "Sea Analysis"]
-    st.session_state.sub_explore = render_section_tabs(explore_tabs, st.session_state.sub_explore, "tab_explore")
+    # Dual CTA Buttons
+    cta1, cta2, cta3, cta4 = st.columns([3, 3, 3, 3])
+    with cta2:
+        if st.button("🚀 Launch Operations Demo", type="primary", use_container_width=True, key="hero_cta_demo"):
+            st.session_state.active_nav_tab = "Harbor Admin Portal"
+            st.rerun()
+    with cta3:
+        if st.button("📖 How Rule Engine Works", use_container_width=True, key="hero_cta_rules"):
+            st.session_state.show_rule_explainer_modal = True
+            st.rerun()
 
-    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
 
-    # SUBVIEW 2.1: TACTICAL MAP
-    if st.session_state.sub_explore == "Tactical Map":
-        st.caption("Layer control (top-right of chart): Toggle Nautical Marks, ESRI Bathymetry, MPAs, PFZ Hotspots, and Animated Current Streamlines.")
-        
-        render_tactical_map(
-            port=res.port,
-            telemetry=res.telemetry,
-            safety=res.safety,
-            all_pfzs=res.all_pfzs,
-            selected_pfz=res.top_pfz,
-            route=res.route,
-            theme_name=st.session_state.selected_theme,
-            height=600
-        )
-
-        st.markdown(f"""
-        <div class="ff-card" style="margin-top:14px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-            <div style="font-size:13px; color:var(--text-secondary);">
-                🎯 <b>Target PFZ:</b> {res.top_pfz.name} ({dist_label_top} · Bearing {res.top_pfz.bearing_deg}°) | 
-                ⛽ <b>Transit:</b> ~{res.route.fuel_burn_liters} L (Saved: <span style="color:var(--success); font-weight:bold;">{res.route.fuel_savings_liters} L</span>) |
-                🛑 <b>IMBL Border:</b> {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})
+    # 3 Metric Hero Cards Horizontally Stacked
+    mc1, mc2, mc3 = st.columns(3)
+    with mc1:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; padding:24px 20px;">
+            <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
+                AVAILABLE HARBORS
             </div>
-            <span style="font-size:11px; background:var(--primary-subtle); color:var(--primary); padding:4px 10px; border-radius:4px; font-weight:600;">
-                Live OpenSeaMap & Bathymetry Active
-            </span>
+            <div style="font-size:32px; font-weight:800; color:var(--text-primary); margin:8px 0 4px 0;">
+                7 Major Ports Active
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+                Veraval, Kochi, Chennai, Vizag, Mangalore, Tuticorin, Porbandar
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # SUBVIEW 2.2: FISHING ZONES
-    elif st.session_state.sub_explore == "Fishing Zones":
-        st.markdown("##### 🐟 Discovered Potential Fishing Zones (ISRO Oceansat-3 Frontiers)")
-        st.caption("Thermal front gradients and chlorophyll upwelling zones prioritized for pelagic fish aggregations.")
-
-        for idx, pfz in enumerate(res.all_pfzs):
-            is_top = (pfz.zone_id == res.top_pfz.zone_id)
-            badge_border = "border-left: 4px solid var(--primary);" if is_top else "border-left: 4px solid var(--border);"
-            bg_accent = "background: var(--bg-subtle);" if is_top else ""
-            
-            st.markdown(f"""
-            <div class="ff-card" style="{badge_border} {bg_accent} padding: 18px; margin-bottom: 14px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <span style="font-size:17px; font-weight:800; color:var(--primary);">
-                            {'⭐ ' if is_top else ''}{pfz.name}
-                        </span>
-                        <span style="font-size:11px; margin-left:8px; background:rgba(0,0,0,0.06); padding:2px 8px; border-radius:4px; font-weight:600;">
-                            {pfz.confidence_level}
-                        </span>
-                    </div>
-                    <div style="font-size:17px; font-weight:800; color:var(--success); font-family:'JetBrains Mono';">
-                        {pfz.fish_density_score}% Catch Score
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top:12px; font-size:13px; color:var(--text-secondary);">
-                    <div><b>Range & Heading:</b> {pfz.distance_km} km @ {pfz.bearing_deg}°</div>
-                    <div><b>Bathymetry Depth:</b> {pfz.depth_m} meters</div>
-                    <div><b>SST / Chl-a:</b> {pfz.sst_celsius}°C / {pfz.chlorophyll_proxy} mg/m³</div>
-                    <div><b>Thermal Edge:</b> {pfz.thermal_gradient_desc}</div>
-                </div>
-                <div style="margin-top:10px; font-size:13px; color:var(--text-primary);">
-                    <b>Target Species:</b> <span style="color:var(--primary); font-weight:600;">{', '.join(pfz.species_likely)}</span>
-                </div>
+    with mc2:
+        wave_status_text = "Favorable" if res.safety.status == "SAFE_GO" else ("Caution" if res.safety.status == "CAUTION_CONDITIONAL" else "Dangerous")
+        wave_color = "#16a34a" if res.safety.status == "SAFE_GO" else ("#d97706" if res.safety.status == "CAUTION_CONDITIONAL" else "#dc2626")
+        st.markdown(f"""
+        <div class="cf-card" style="text-align:center; padding:24px 20px;">
+            <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
+                ACTIVE SEA STATE ({res.port.name})
             </div>
-            """, unsafe_allow_html=True)
-
-    # SUBVIEW 2.3: SEA ANALYSIS
-    elif st.session_state.sub_explore == "Sea Analysis":
-        st.markdown("##### 🌊 Oceanographic Analysis & Marine Protected Areas")
-        
-        sa_col1, sa_col2 = st.columns(2)
-        with sa_col1:
-            st.markdown(f"""
-            <div class="ff-card">
-                <div style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:10px;">
-                    🌊 Physical Oceanography Parameters
-                </div>
-                <div style="font-size:13px; line-height:1.8; color:var(--text-secondary);">
-                    • <b>Significant Wave Height:</b> {res.telemetry.wave_height} m (Dir: {res.telemetry.wave_direction:.0f}°)<br>
-                    • <b>Dominant Swell Height:</b> {res.telemetry.swell_wave_height} m (Period: {res.telemetry.swell_wave_period} s)<br>
-                    • <b>Sea Surface Temperature (SST):</b> {res.telemetry.sea_surface_temperature}°C<br>
-                    • <b>Ocean Current Stream:</b> {curr_disp} {curr_unit} @ {res.telemetry.ocean_current_direction:.0f}° drift<br>
-                    • <b>Bio-Optical Chlorophyll Proxy:</b> {res.telemetry.chlorophyll_proxy} mg/m³
-                </div>
+            <div style="font-size:32px; font-weight:800; color:{wave_color}; margin:8px 0 4px 0;">
+                Swell {res.telemetry.swell_wave_height}m | {wave_status_text}
             </div>
-            """, unsafe_allow_html=True)
-
-        with sa_col2:
-            st.markdown(f"""
-            <div class="ff-card">
-                <div style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:10px;">
-                    🛡️ Marine Spatial Planning (MarineMap MSP)
-                </div>
-                <div style="font-size:13px; line-height:1.6; color:var(--text-secondary);">
-                    Sensitive coral reefs and statutory conservation reserves off <b>{res.port.name}</b>:
-                </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+                INCOIS Alert Level: <b>{res.safety.incois_alert_level.replace('_', ' ')}</b>
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-            mpas_local = get_marine_spatial_zones(res.port.id)
-            if mpas_local:
-                for m in mpas_local:
-                    st.markdown(f"""
-                    <div style="font-size:12px; padding:12px 14px; background:rgba(234, 88, 12, 0.08); border-left:4px solid #ea580c; border-radius:6px; margin-bottom:10px;">
-                        <b style="color:#ea580c; font-size:13px;">🛡️ {m.name} ({m.category})</b><br>
-                        <span style="color:var(--text-secondary);">{m.restriction}</span><br>
-                        <span style="font-size:11px; color:var(--text-muted);">Legal Basis: {m.legal_source}</span>
-                    </div>
-                    """, unsafe_allow_html=True)
-            else:
-                st.info("No restricted marine sanctuaries immediately adjacent to this harbor fairway.")
+    with mc3:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; padding:24px 20px;">
+            <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.6px;">
+                MONITORED COASTAL ZONES
+            </div>
+            <div style="font-size:32px; font-weight:800; color:var(--text-primary); margin:8px 0 4px 0;">
+                EEZ & Border Safety
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+                Arabian Sea, Bay of Bengal, Palk Strait & Gulf of Mannar
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
+
+    # Rule Architecture Grid (4 Clean Bordered Cards)
+    st.markdown("### ⚙️ Deterministic Marine Rule Architecture")
+    r_col1, r_col2, r_col3, r_col4 = st.columns(4)
+
+    with r_col1:
+        st.markdown("""
+        <div class="cf-card" style="height:100%; border-top: 4px solid #2563eb;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
+                🌊 1. Swell & Current Compatibility
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin:0;">
+                Wave swell &gt; 2.5m triggers instantaneous Hard NO-GO under INCOIS safety protocols.
+            </p>
+            <div style="margin-top:12px;">
+                <span class="cf-badge cf-badge-danger">LIMIT: 2.50 M</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with r_col2:
+        st.markdown("""
+        <div class="cf-card" style="height:100%; border-top: 4px solid #16a34a;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
+                🐟 2. Bio-Optical Biomass
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin:0;">
+                Chlorophyll-a & SST thermal front correlation identifies high-density pelagic aggregations.
+            </p>
+            <div style="margin-top:12px;">
+                <span class="cf-badge cf-badge-available">ISRO OCEANSAT-3</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with r_col3:
+        st.markdown("""
+        <div class="cf-card" style="height:100%; border-top: 4px solid #dc2626;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
+                🛑 3. Maritime Border Fence
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin:0;">
+                Enforces strict 10 NM safety exclusion corridor against international boundary lines (IMBL).
+            </p>
+            <div style="margin-top:12px;">
+                <span class="cf-badge cf-badge-danger">BUFFER: 10 NM</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with r_col4:
+        st.markdown("""
+        <div class="cf-card" style="height:100%; border-top: 4px solid #d97706;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">
+                🚨 4. Distress Auto-Escalation
+            </div>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5; margin:0;">
+                Emergency SOS broadcast payload formulation with VHF Ch 16 & Coast Guard MRCC 1554 dispatch.
+            </p>
+            <div style="margin-top:12px;">
+                <span class="cf-badge cf-badge-inuse">VHF 16 & SAR 1554</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # =========================================================
-# SECTION 3: 🌦 CONDITIONS (FORECAST / TIDES / RADAR)
+# SCREEN 2: 🏢 HARBOR ADMIN PORTAL (OPERATIONS CONTROL)
+# Replicating ChargeFlow Admin Portal
 # =========================================================
 
-elif st.session_state.nav_section == "Conditions":
+elif st.session_state.active_nav_tab == "Harbor Admin Portal":
+
+    # Header with live subtitle + Right Action Buttons
+    admin_hdr1, admin_hdr2 = st.columns([7, 3])
+    with admin_hdr1:
+        st.markdown(f"""
+        <div>
+            <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary); letter-spacing:-0.02em;">
+                Harbor Operations Control
+            </h2>
+            <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+                📍 <b>{res.port.name} Operations Hub</b> · {res.port.state} ({res.port.coast}) · Live Buoy Sync: {datetime.now().strftime('%d-%b-%Y %H:%M IST')}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with admin_hdr2:
+        btn_a1, btn_a2 = st.columns(2)
+        with btn_a1:
+            if st.button("+ Dispatch Vessel", type="primary", use_container_width=True, key="btn_add_dispatch"):
+                st.session_state.active_nav_tab = "Mission Dispatch & PFZ"
+                st.rerun()
+        with btn_a2:
+            if st.button("Walk-In Skipper", use_container_width=True, key="btn_walkin_reg"):
+                st.session_state.show_walkin_modal = True
+                st.rerun()
+
+    st.markdown("<div style='margin-top: 14px;'></div>", unsafe_allow_html=True)
+
+    if st.session_state.show_walkin_modal:
+        st.markdown("""
+        <div class="cf-card" style="border-left: 4px solid var(--primary);">
+            <div style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:8px;">
+                ⚓ Fast Walk-In Skipper Registration Desk
+            </div>
+            <div style="font-size:13px; color:var(--text-secondary);">
+                Register an incoming artisanal or mechanized boat for immediate harbor clearance and PFZ waypoint calculation.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        w_c1, w_c2, w_c3 = st.columns(3)
+        with w_c1:
+            st.text_input("Skipper Full Name", value="Capt. Ramesh Patel", key="wi_name")
+        with w_c2:
+            st.text_input("Craft Reg No.", value=f"IND-{res.port.id.upper()}-991", key="wi_reg")
+        with w_c3:
+            st.selectbox("Craft Category", options=["Mechanized Trawler", "Traditional (<10m)", "FRP Fiber Boat"], key="wi_cat")
+        if st.button("Submit Walk-in & Run Route Engine", type="primary", key="btn_wi_submit"):
+            st.success("✅ Walk-in skipper registered and cleared for route computation.")
+            st.session_state.show_walkin_modal = False
+            st.session_state.active_nav_tab = "Mission Dispatch & PFZ"
+            st.rerun()
+
+    # 4 Top KPI Stat Cards
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+    with kpi1:
+        cleared_count = sum(1 for v in st.session_state.fleet_registry if v["clearance"] == "CLEARED")
+        st.markdown(f"""
+        <div class="cf-stat-card">
+            <div class="cf-stat-label">
+                <span>AVAILABLE FLEET CLEARANCES</span>
+                <span class="cf-badge cf-badge-available">LIVE</span>
+            </div>
+            <div class="cf-stat-value">{cleared_count} Craft Ready</div>
+            <div class="cf-stat-delta cf-delta-up">
+                <span>↑ 100% Harbor Fairway Open</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi2:
+        swell_delta = "Safe (<2.0m)" if res.telemetry.swell_wave_height < 2.0 else "Caution (>2.0m)"
+        delta_class = "cf-delta-up" if res.telemetry.swell_wave_height < 2.0 else "cf-delta-down"
+        st.markdown(f"""
+        <div class="cf-stat-card">
+            <div class="cf-stat-label">
+                <span>ACTIVE HARBOR WAVE SWELL</span>
+                <span class="cf-badge cf-badge-info">INCOIS</span>
+            </div>
+            <div class="cf-stat-value">{res.telemetry.swell_wave_height:.2f} m</div>
+            <div class="cf-stat-delta {delta_class}">
+                <span>● Period {res.telemetry.swell_wave_period}s ({swell_delta})</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi3:
+        queue_len = len(st.session_state.departure_queue)
+        st.markdown(f"""
+        <div class="cf-stat-card">
+            <div class="cf-stat-label">
+                <span>DEPARTURE QUEUE LENGTH</span>
+                <span class="cf-badge cf-badge-inuse">TRANSIT</span>
+            </div>
+            <div class="cf-stat-value">{queue_len} Vessels Scheduled</div>
+            <div class="cf-stat-delta cf-delta-neutral">
+                <span>Next Tide: {port_tides.tide_phase.split('(')[0].strip()}</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi4:
+        st.markdown(f"""
+        <div class="cf-stat-card">
+            <div class="cf-stat-label">
+                <span>AVG DIESEL FUEL SAVINGS</span>
+                <span class="cf-badge cf-badge-available">OCEAN DRIFT</span>
+            </div>
+            <div class="cf-stat-value">{res.route.fuel_savings_pct:.1f}% Saved</div>
+            <div class="cf-stat-delta cf-delta-up">
+                <span>~{res.route.fuel_savings_liters:.1f} L saved via drift corridor</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
+
+    # Operational Clearance Banner
+    if res.safety.status == "SAFE_GO":
+        hero_cls = "cf-status-hero-safe"
+        hero_badge = '<span class="cf-badge cf-badge-available">CLEARED TO SAIL</span>'
+        hero_title = "GREEN SAFE: Normal Sea State & Unrestricted Navigation"
+    elif res.safety.status == "CAUTION_CONDITIONAL":
+        hero_cls = "cf-status-hero-caution"
+        hero_badge = '<span class="cf-badge cf-badge-inuse">CAUTION ADVISED</span>'
+        hero_title = "AMBER CAUTION: Moderate Swell / Traditional Craft Restrained"
+    else:
+        hero_cls = "cf-status-hero-danger"
+        hero_badge = '<span class="cf-badge cf-badge-danger">OPERATIONS SUSPENDED</span>'
+        hero_title = "RED DANGER: High Wave Alert (INCOIS Threshold Breached)"
+
     st.markdown(f"""
-    <div style="margin-bottom:14px;">
-        <h2 style="margin:0; font-size:26px; font-weight:800; color:var(--text-primary);">Conditions</h2>
-        <div style="font-size:14px; color:var(--text-muted); margin-top:2px;">
-            Weather, 48-hour marine forecast, tides and live radar observation for <b>{res.port.name}</b>.
+    <div class="cf-status-hero {hero_cls}">
+        <div>
+            <div style="margin-bottom:6px;">{hero_badge}</div>
+            <div style="font-size:18px; font-weight:800; color:var(--text-primary);">{hero_title}</div>
+            <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; max-width:750px;">
+                Observed Swell {res.telemetry.swell_wave_height}m | Wind {res.telemetry.wind_speed} km/h | 
+                Target Fishing Zone: <b>{res.top_pfz.name}</b> ({res.top_pfz.fish_density_score}% Score).
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:26px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono';">
+                {res.safety.risk_score} <span style="font-size:14px; color:var(--text-muted);">/ 100</span>
+            </div>
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Hazard Risk Score</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Reusable Spacious SectionTabs
-    cond_tabs = ["Current & Forecast", "Tides", "Radar & Satellite"]
-    st.session_state.sub_conditions = render_section_tabs(cond_tabs, st.session_state.sub_conditions, "tab_cond")
+    # Main Tactical Map Card
+    st.markdown("""
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="font-size:16px; font-weight:700; color:var(--text-primary);">
+            Tactical Ocean Map & Geospatial Operations Fairway
+        </div>
+        <span style="font-size:12px; color:var(--text-muted);">
+            CartoDB Light · OpenSeaMap · Oceansat-3 PFZ Hotspots · IMBL Geofencing
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    render_chargeflow_tactical_map(
+        port=res.port,
+        telemetry=res.telemetry,
+        safety=res.safety,
+        all_pfzs=res.all_pfzs,
+        selected_pfz=res.top_pfz,
+        route=res.route,
+        theme_name=st.session_state.selected_theme,
+        height=560
+    )
+
+
+# =========================================================
+# SCREEN 3: 🚢 HARBOR FLEET GRID (VESSEL REGISTRY TABLE)
+# Replicating ChargeFlow Chargers Registry Table
+# =========================================================
+
+elif st.session_state.active_nav_tab == "Harbor Fleet Grid":
+
+    st.markdown("""
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
+        <div>
+            <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
+                Coastal Fleet & Harbor Registry
+            </h2>
+            <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+                Real-time tracking of registered coastal trawlers, artisanal skippers, clearance certificates, and fuel burn metrics.
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Search & Filter Strip
+    f_c1, f_c2, f_c3 = st.columns([5, 4, 3])
+    with f_c1:
+        search_query = st.text_input("Search vessel ID or skipper name", placeholder="🔍 Search IND-KC-104, Sea Queen...", label_visibility="collapsed")
+    with f_c2:
+        filter_status = st.selectbox("Filter Status", options=["All Statuses", "AVAILABLE", "SAILING", "RESTRICTED"], label_visibility="collapsed")
+    with f_c3:
+        if st.button("↻ Refresh Fleet State", use_container_width=True):
+            st.rerun()
+
+    # Replicated Clean HTML Table
+    table_html = """
+    <div class="cf-table-container">
+        <table class="cf-table">
+            <thead>
+                <tr>
+                    <th>Vessel ID & Name</th>
+                    <th>Harbor Base</th>
+                    <th>Engine & Tonnage</th>
+                    <th>Target Zone</th>
+                    <th>Est. Fuel Transit</th>
+                    <th>Clearance Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+    """
+
+    for v in st.session_state.fleet_registry:
+        if filter_status != "All Statuses" and v["status"] != filter_status:
+            continue
+        if search_query and search_query.lower() not in v["id"].lower() and search_query.lower() not in v["name"].lower():
+            continue
+
+        if v["status"] == "AVAILABLE":
+            badge_html = '<span class="cf-badge cf-badge-available">AVAILABLE</span>'
+        elif v["status"] == "SAILING":
+            badge_html = '<span class="cf-badge cf-badge-info">SAILING / IN USE</span>'
+        else:
+            badge_html = '<span class="cf-badge cf-badge-danger">RESTRICTED</span>'
+
+        table_html += f"""
+        <tr>
+            <td>
+                <b>{v['id']}</b><br>
+                <span style="font-size:12px; color:var(--text-muted);">{v['name']}</span>
+            </td>
+            <td>📍 {INDIAN_PORTS.get(v['harbor'], res.port).name}</td>
+            <td>{v['tonnage']}</td>
+            <td>🐟 {v['target']}</td>
+            <td><b>{v['fuel']}</b></td>
+            <td>{badge_html}</td>
+            <td>
+                <span style="font-size:12px; font-weight:700; color:var(--primary); cursor:pointer;">
+                    [ Cleared ]
+                </span>
+            </td>
+        </tr>
+        """
+
+    table_html += """
+            </tbody>
+        </table>
+    </div>
+    """
+    st.markdown(table_html, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+
+    # Interactive Toggle Clearance Action
+    st.markdown("##### ⚡ Quick Harbor Clearance Operations")
+    tc1, tc2, tc3 = st.columns([4, 4, 4])
+    with tc1:
+        v_ids = [v["id"] for v in st.session_state.fleet_registry]
+        sel_v_id = st.selectbox("Select Vessel ID", options=v_ids)
+    with tc2:
+        new_status = st.selectbox("New Clearance State", options=["AVAILABLE", "SAILING", "RESTRICTED"])
+    with tc3:
+        st.markdown("<div style='height:28px;'></div>", unsafe_allow_html=True)
+        if st.button("Apply Status Change", type="primary", use_container_width=True):
+            for v in st.session_state.fleet_registry:
+                if v["id"] == sel_v_id:
+                    v["status"] = new_status
+                    v["clearance"] = "CLEARED" if new_status == "AVAILABLE" else ("ACTIVE_VOYAGE" if new_status == "SAILING" else "HOLD_WEATHER")
+            st.success(f"Status for {sel_v_id} updated to {new_status}!")
+            st.rerun()
+
+
+# =========================================================
+# SCREEN 4: 🎯 MISSION DISPATCH & PFZ (WALK-IN DESK FORM)
+# Replicating ChargeFlow Walk-In Customer Desk Form
+# =========================================================
+
+elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
+
+    st.markdown("""
+    <div>
+        <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
+            Mission Dispatch Desk & Safe PFZ Calculator
+        </h2>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+            Input vessel voyage parameters to compute deterministic fuel-optimized PFZ rhumb-line corridors.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
 
-    # SUBVIEW 3.1: CURRENT & FORECAST
-    if st.session_state.sub_conditions == "Current & Forecast":
-        hc1, hc2, hc3 = st.columns(3)
-        with hc1:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center; padding:14px;">
-                <div style="font-size:11px; font-weight:700; color:var(--primary);">48H PEAK SWELL HEIGHT</div>
-                <div style="font-size:24px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono'; margin:4px 0;">
-                    {port_hourly.max_wave_height:.2f} <span style="font-size:14px;">m</span>
+    d_col1, d_col2 = st.columns([7, 5])
+
+    with d_col1:
+        st.markdown("""
+        <div class="cf-card">
+            <div style="font-size:16px; font-weight:700; color:var(--primary); margin-bottom:14px;">
+                📋 Skipper & Craft Registration Form
+            </div>
+        """, unsafe_allow_html=True)
+
+        fc1, fc2 = st.columns(2)
+        with fc1:
+            skipper_name = st.text_input("Skipper Full Name", value="Capt. Murugan Velu")
+            craft_reg = st.text_input("Vessel Registration No.", value=f"IND-{res.port.id.upper()}-402")
+            dep_harbor = st.selectbox(
+                "Departure Harbor Base",
+                options=list(INDIAN_PORTS.keys()),
+                index=list(INDIAN_PORTS.keys()).index(st.session_state.active_port_id),
+                format_func=lambda x: f"⚓ {INDIAN_PORTS[x].name} ({INDIAN_PORTS[x].state})"
+            )
+
+        with fc2:
+            skipper_phone = st.text_input("Skipper Mobile Phone", value="+91 98401 23456")
+            target_species = st.selectbox("Target Fish Species", options=["Yellowfin Tuna", "Indian Mackerel", "Sardine", "Silver Pomfret", "Kingfish"])
+            adv_lang_choice = st.selectbox("Preferred Voice Language", options=["English", "हिन्दी (Hindi)", "தமிழ் (Tamil)"])
+
+        radius_nm = st.slider("Trip Operational Radius (Nautical Miles)", min_value=10, max_value=60, value=25, step=5)
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        if st.button("🚀 Compute Safe PFZ Route via Rule Engine", type="primary", use_container_width=True, key="btn_run_dispatch_calc"):
+            st.session_state.active_port_id = dep_harbor
+            st.session_state.query_text = f"Can we sail from {INDIAN_PORTS[dep_harbor].name} for {target_species}?"
+            st.session_state.advisory_lang = adv_lang_choice
+            st.session_state.last_pipeline_result = None
+            st.success(f"✅ Route successfully computed for {skipper_name} ({craft_reg}) to {res.top_pfz.name}!")
+            st.rerun()
+
+    with d_col2:
+        st.markdown(f"""
+        <div class="cf-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+                <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">
+                    OPTIMIZED FISHING ZONE TARGET
                 </div>
-                <div style="font-size:11px; color:var(--text-muted);">INCOIS Status: <b>{port_hourly.incois_wave_risk}</b></div>
+                <div style="font-size:20px; font-weight:800; color:var(--primary); margin:6px 0 2px 0;">
+                    ⭐ {res.top_pfz.name}
+                </div>
+                <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin-top:8px;">
+                    • <b>Catch Probability:</b> <span style="color:#16a34a; font-weight:800;">{res.top_pfz.fish_density_score}%</span><br>
+                    • <b>Range & Bearing:</b> {res.route.total_distance_nm:.1f} NM @ {res.top_pfz.bearing_deg}°<br>
+                    • <b>Transit Fuel Burn:</b> ~{res.route.fuel_burn_liters:.1f} Liters Diesel<br>
+                    • <b>Ocean Current Assisted Savings:</b> <span style="color:#16a34a; font-weight:700;">{res.route.fuel_savings_liters:.1f} L ({res.route.fuel_savings_pct:.1f}%)</span><br>
+                    • <b>IMBL Nearest Border:</b> {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})
+                </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:var(--primary-subtle); border-radius:10px; font-size:12px; color:var(--text-primary);">
+                💡 <b>ISRO Satellite Synthesis:</b> Thermal front edge at {res.top_pfz.sst_celsius}°C with Chlorophyll-a proxy {res.top_pfz.chlorophyll_proxy} mg/m³.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
+
+    # Discovered PFZ Zones Grid
+    st.markdown("##### 🐟 All Discovered Potential Fishing Zones (Oceansat-3)")
+    z_cols = st.columns(len(res.all_pfzs))
+    for idx, (zc, pz) in enumerate(zip(z_cols, res.all_pfzs)):
+        with zc:
+            is_top = (pz.zone_id == res.top_pfz.zone_id)
+            top_badge = '<span class="cf-badge cf-badge-available">TOP RECOMMENDATION</span>' if is_top else '<span class="cf-badge cf-badge-info">SECONDARY</span>'
+            border_color = "var(--primary)" if is_top else "var(--card-border)"
+            st.markdown(f"""
+            <div class="cf-card" style="border-color:{border_color}; padding:16px;">
+                <div style="margin-bottom:8px;">{top_badge}</div>
+                <div style="font-size:16px; font-weight:800; color:var(--primary);">{pz.name}</div>
+                <div style="font-size:22px; font-weight:800; color:#16a34a; margin:6px 0;">{pz.fish_density_score}% <span style="font-size:12px; color:var(--text-muted);">Catch</span></div>
+                <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">
+                    Distance: {pz.distance_km} km @ {pz.bearing_deg}°<br>
+                    Depth: {pz.depth_m}m · SST: {pz.sst_celsius}°C
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
-        with hc2:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center; padding:14px;">
-                <div style="font-size:11px; font-weight:700; color:var(--warning);">48H MAX WIND GUST</div>
-                <div style="font-size:24px; font-weight:800; color:var(--warning); font-family:'JetBrains Mono'; margin:4px 0;">
-                    {port_hourly.max_wind_gust:.1f} <span style="font-size:14px;">km/h</span>
+
+# =========================================================
+# SCREEN 5: 🛡️ SAFETY & IMBL QUEUE (PRIORITY QUEUE & AUDIT TRAIL)
+# Replicating ChargeFlow Priority Queue Control & Session Audit
+# =========================================================
+
+elif st.session_state.active_nav_tab == "Safety & IMBL Queue":
+
+    st.markdown("""
+    <div>
+        <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
+            Safety & Priority Departure Queue Control
+        </h2>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+            Deterministic compliance verification, IMBL safety buffers, and prioritized vessel dispatch queue.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+
+    # Priority Departure Queue Cards
+    st.markdown("##### ⏱️ Active Departure Queue & Class Priority")
+    q_table_html = """
+    <div class="cf-table-container">
+        <table class="cf-table">
+            <thead>
+                <tr>
+                    <th>Vessel Reg</th>
+                    <th>Skipper Name</th>
+                    <th>Craft Class</th>
+                    <th>Priority Level</th>
+                    <th>Departure Window</th>
+                    <th>Target Frontier</th>
+                    <th>Queue Status</th>
+                </tr>
+            </thead>
+            <tbody>
+    """
+    for q in st.session_state.departure_queue:
+        if "COMMERCIAL" in q["class"]:
+            p_badge = '<span class="cf-badge cf-badge-info">COMMERCIAL FLEET</span>'
+        elif "ARTISANAL" in q["class"]:
+            p_badge = '<span class="cf-badge cf-badge-available">ARTISANAL CRAFT</span>'
+        else:
+            p_badge = '<span class="cf-badge cf-badge-danger">EMERGENCY SOS</span>'
+
+        q_status_badge = '<span class="cf-badge cf-badge-available">APPROVED</span>' if q["status"] == "APPROVED" else ('<span class="cf-badge cf-badge-inuse">QUEUED</span>' if q["status"] == "QUEUED" else '<span class="cf-badge cf-badge-danger">HOLD WEATHER</span>')
+
+        q_table_html += f"""
+        <tr>
+            <td><b>{q['vessel_id']}</b></td>
+            <td>{q['skipper']}</td>
+            <td>{p_badge}</td>
+            <td><b>{q['priority']}</b></td>
+            <td>{q['departure']}</td>
+            <td>{q['pfz']}</td>
+            <td>{q_status_badge}</td>
+        </tr>
+        """
+    q_table_html += """
+            </tbody>
+        </table>
+    </div>
+    """
+    st.markdown(q_table_html, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 24px;'></div>", unsafe_allow_html=True)
+
+    # Deterministic Rule Decision Audit Trail
+    st.markdown("##### 📜 Deterministic Rule Engine Decision Audit Trail")
+    st.caption("Chronological zero-hallucination verification records for every physical boundary & telemetry metric.")
+
+    for item in res.safety.audit_log:
+        is_pass = (item.verdict == "PASS")
+        is_caution = (item.verdict == "CAUTION")
+        v_badge = '<span class="cf-badge cf-badge-available">RULE_PASS</span>' if is_pass else ('<span class="cf-badge cf-badge-inuse">CAUTION</span>' if is_caution else '<span class="cf-badge cf-badge-danger">FAIL_TRIGGER</span>')
+        border_col = "#16a34a" if is_pass else ("#d97706" if is_caution else "#dc2626")
+
+        st.markdown(f"""
+        <div class="cf-card" style="border-left: 4px solid {border_col}; padding: 14px 18px; margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    {v_badge}
+                    <b style="font-size:14px; color:var(--text-primary);">{item.metric}</b>
                 </div>
-                <div style="font-size:11px; color:var(--text-muted);">IMD Status: <b>{port_hourly.imd_wind_risk}</b></div>
+                <span style="font-size:11px; color:var(--text-muted); font-weight:600;">{item.regulatory_source}</span>
+            </div>
+            <div style="font-size:13px; color:var(--text-secondary); margin-top:6px; line-height:1.5;">
+                • <b>Observed:</b> {item.observed_value} | <b>Threshold Limit:</b> {item.threshold}<br>
+                • <b>Physical Evaluation:</b> {item.explanation}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
+# =========================================================
+# SCREEN 6: 🚨 SOS & EMERGENCY DESK (SEARCH & RESCUE)
+# Replicating ChargeFlow Emergency Modal & Direct Dispatch
+# =========================================================
+
+elif st.session_state.active_nav_tab == "SOS & Emergency Desk":
+
+    st.markdown("""
+    <div>
+        <h2 style="font-size:26px; font-weight:800; margin:0; color:#dc2626;">
+            🚨 Coastal Search & Rescue (SAR) & Emergency Desk
+        </h2>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+            Official direct dispatch hotlines, VHF radio distress watch, and regional MRCC contacts.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+
+    # 4 Emergency Hotlines
+    e1, e2, e3, e4 = st.columns(4)
+    with e1:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; border-top: 4px solid #2563eb;">
+            <div style="font-size:11px; font-weight:700; color:#2563eb; text-transform:uppercase;">INDIAN COAST GUARD</div>
+            <div style="font-size:30px; font-weight:800; color:#2563eb; margin:6px 0; font-family:'JetBrains Mono';">1554</div>
+            <div style="font-size:11px; color:var(--text-muted);">24x7 Toll-Free SAR</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with e2:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; border-top: 4px solid #16a34a;">
+            <div style="font-size:11px; font-weight:700; color:#16a34a; text-transform:uppercase;">COASTAL POLICE</div>
+            <div style="font-size:30px; font-weight:800; color:#16a34a; margin:6px 0; font-family:'JetBrains Mono';">1093</div>
+            <div style="font-size:11px; color:var(--text-muted);">Marine Security</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with e3:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; border-top: 4px solid #d97706;">
+            <div style="font-size:11px; font-weight:700; color:#d97706; text-transform:uppercase;">NATIONAL EMERGENCY</div>
+            <div style="font-size:30px; font-weight:800; color:#d97706; margin:6px 0; font-family:'JetBrains Mono';">112</div>
+            <div style="font-size:11px; color:var(--text-muted);">All Services Relay</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with e4:
+        st.markdown("""
+        <div class="cf-card" style="text-align:center; border-top: 4px solid #dc2626;">
+            <div style="font-size:11px; font-weight:700; color:#dc2626; text-transform:uppercase;">SEA AMBULANCE</div>
+            <div style="font-size:30px; font-weight:800; color:#dc2626; margin:6px 0; font-family:'JetBrains Mono';">108</div>
+            <div style="font-size:11px; color:var(--text-muted);">Critical Evacuation</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+
+    # Direct Station Contacts Grid
+    st.markdown(f"##### 📍 Regional Station Contacts for **{res.port.name}**")
+    contacts = res.emergency_contacts if res.emergency_contacts else get_emergency_contacts(res.port.id)
+
+    ec_left, ec_right = st.columns(2)
+    for idx, c in enumerate(contacts):
+        col_target = ec_left if idx % 2 == 0 else ec_right
+        with col_target:
+            st.markdown(f"""
+            <div class="cf-card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span class="cf-badge cf-badge-info">{c.category}</span>
+                        <div style="font-size:16px; font-weight:700; color:var(--text-primary); margin-top:4px;">{c.agency_name}</div>
+                    </div>
+                    <span style="font-size:14px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono';">{c.toll_free}</span>
+                </div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.6;">
+                    📞 <b>Direct Phone:</b> {c.phone}<br>
+                    📻 <b>VHF Channel:</b> <b style="color:var(--primary);">{c.vhf_channel}</b><br>
+                    📍 <b>Station:</b> {c.location} | <b>Sector:</b> {c.jurisdiction}<br>
+                    🛡️ <b>Role:</b> {c.response_role}
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
-        with hc3:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center; padding:14px;">
-                <div style="font-size:11px; font-weight:700; color:var(--success);">TELEMETRY DATA SOURCE</div>
-                <div style="font-size:20px; font-weight:800; color:var(--success); margin:6px 0;">
-                    {'Live Open-Meteo' if port_hourly.is_live else 'Synthetic Marine Model'}
-                </div>
-                <div style="font-size:11px; color:var(--text-muted);">48h Horizon Ahead</div>
+    # Official Voyage Manifest & Print Slip
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+    st.markdown("##### 📋 Official Maritime Dispatch Slip & Port Clearance Manifest")
+    manifest_ref = f"IND-MARITIME-{res.port.id.upper()}-{abs(hash(res.port.id + res.top_pfz.zone_id)) % 100000:05d}"
+    
+    st.markdown(f"""
+    <div class="cf-card" style="border: 2px dashed var(--border-strong); background: var(--bg-subtle);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--border); padding-bottom:10px;">
+            <div>
+                <div style="font-size:16px; font-weight:800; color:var(--primary);">📑 OFFICIAL VOYAGE MANIFEST & CLEARANCE SLIP</div>
+                <div style="font-size:11px; color:var(--text-muted);">Ref: <b>{manifest_ref}</b> · Generated {datetime.now().strftime('%d-%b-%Y %H:%M IST')}</div>
             </div>
-            """, unsafe_allow_html=True)
+            <span class="cf-badge cf-badge-available">{res.safety.status.replace('_', ' ')}</span>
+        </div>
+        <div style="font-size:13px; line-height:1.8; margin-top:12px; color:var(--text-secondary);">
+            • <b>Vessel Registered:</b> {st.session_state.vessel_class} (Hub: {res.port.name})<br>
+            • <b>Target PFZ Frontier:</b> {res.top_pfz.name} ({res.route.total_distance_nm:.1f} NM @ {res.top_pfz.bearing_deg}°)<br>
+            • <b>Target Species:</b> {', '.join(res.top_pfz.species_likely[:3])}<br>
+            • <b>Tidal Phase:</b> {port_tides.tide_phase.split('(')[0]} · Bar Depth {port_tides.harbor_bar_depth_m:.1f}m<br>
+            • <b>Estimated Transit Fuel:</b> ~{res.route.fuel_burn_liters:.1f} L (Current-Assisted Saved: <b style="color:#16a34a;">{res.route.fuel_savings_liters:.1f} L</b>)<br>
+            • <b>Safety Geofence:</b> IMBL {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})<br>
+            • <b>Search & Rescue:</b> Coast Guard 1554 · VHF Ch 16 (156.800 MHz)
+        </div>
+        <div style="margin-top:14px; text-align:right;">
+            <button onclick="window.print()" style="background:#2563eb; color:#ffffff; font-weight:700; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-size:13px; box-shadow:0 1px 3px rgba(37,99,235,0.3);">
+                🖨️ Print Official Clearance Manifest
+            </button>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-        # 48-Hour Wave & Swell Height Interactive Chart
+
+# =========================================================
+# SCREEN 7: 📊 MARINE REPORTS & ANALYTICS (TIDES, FORECAST, RADAR)
+# Replicating ChargeFlow Analytics Dashboard
+# =========================================================
+
+elif st.session_state.active_nav_tab == "Marine Reports & Analytics":
+
+    st.markdown(f"""
+    <div>
+        <h2 style="font-size:26px; font-weight:800; margin:0; color:var(--text-primary);">
+            Marine Reports & Oceanographic Analytics
+        </h2>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">
+            48-hour continuous wave forecast, harmonic astronomical tides, and Doppler precipitation radar for <b>{res.port.name}</b>.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+
+    # 3 Analytics Sub-tabs
+    an_t1, an_t2, an_t3 = st.tabs(["🌊 48-Hour Wave Forecast", "📈 Astronomical Tides", "📡 Live Doppler Radar"])
+
+    with an_t1:
+        st.markdown("##### 🌊 48-Hour Wave & Swell Height Forecast (Open-Meteo)")
+        st.caption("Includes the INCOIS 2.50m High Wave Red Alert Safety Threshold Line.")
+
         hourly_plot_data = []
         for h in port_hourly.hours:
             hourly_plot_data.append({
@@ -1752,670 +1861,137 @@ elif st.session_state.nav_section == "Conditions":
                 "Significant Wave (m)": h.wave_height_m,
                 "Swell Height (m)": h.swell_wave_height_m,
                 "Wind Gust (km/h)": h.wind_gusts_kmh,
-                "Rain Probability (%)": h.precipitation_probability_pct
+                "Precipitation (%)": h.precipitation_probability_pct
             })
         df_hourly = pd.DataFrame(hourly_plot_data)
 
-        chart_color = "#0284c7" if ("Day" in st.session_state.selected_theme or "Light" in st.session_state.selected_theme) else ("#10b981" if "Tactical" in st.session_state.selected_theme else "#38bdf8")
-
         chart_wave = alt.Chart(df_hourly).mark_line(
             interpolate="monotone",
-            color=chart_color,
+            color="#2563eb",
             strokeWidth=3
         ).encode(
             x=alt.X("Hour:N", title="Forecast Timeline (IST)", axis=alt.Axis(labelAngle=-45)),
-            y=alt.Y("Significant Wave (m):Q", title="Wave / Swell Height (m)", scale=alt.Scale(domain=[0, max(3.0, port_hourly.max_wave_height + 0.5)])),
-            tooltip=["Hour:N", "Significant Wave (m):Q", "Swell Height (m):Q", "Wind Gust (km/h):Q", "Rain Probability (%):Q"]
+            y=alt.Y("Significant Wave (m):Q", title="Wave Height (m)", scale=alt.Scale(domain=[0, max(3.0, port_hourly.max_wave_height + 0.5)])),
+            tooltip=["Hour:N", "Significant Wave (m):Q", "Swell Height (m):Q", "Wind Gust (km/h):Q"]
         )
 
-        chart_swell = alt.Chart(df_hourly).mark_line(
-            interpolate="monotone",
-            color="#38bdf8" if ("Day" in st.session_state.selected_theme or "Light" in st.session_state.selected_theme) else "#94a3b8",
-            strokeWidth=2,
-            strokeDash=[4, 4]
-        ).encode(
-            x="Hour:N",
-            y="Swell Height (m):Q"
-        )
-
-        danger_rule = alt.Chart(pd.DataFrame([{"y": 2.5}])).mark_rule(
+        danger_line = alt.Chart(pd.DataFrame([{"y": 2.5}])).mark_rule(
             color="#ef4444",
             strokeWidth=2,
             strokeDash=[6, 4]
         ).encode(y="y:Q")
 
-        final_forecast_chart = (chart_wave + chart_swell + danger_rule).properties(
-            height=280,
-            title="48-Hour Wave & Swell Profile with INCOIS 2.5m Red Alert Threshold Line (Red Dashed)"
-        ).configure_title(fontSize=13, anchor="start", color=chart_color)
+        final_chart = (chart_wave + danger_line).properties(height=280)
+        st.altair_chart(final_chart, use_container_width=True)
 
-        st.altair_chart(final_forecast_chart, use_container_width=True)
+    with an_t2:
+        st.markdown(f"##### 📈 Astronomical Tidal Curve for **{port_tides.port_name}**")
+        st.caption(f"Current Water Level: {port_tides.current_water_level_m:.2f}m · Tidal Phase: {port_tides.tide_phase}")
 
-        # Upcoming Hourly Forecast Windows
-        st.markdown("###### ⏱️ Upcoming Hourly Marine Windows")
-        step_cols = st.columns(6)
-        for idx, (c, h_entry) in enumerate(zip(step_cols, port_hourly.hours[::3][:6])):
-            with c:
-                is_danger_wave = h_entry.swell_wave_height_m >= 2.5
-                is_caution_wave = h_entry.swell_wave_height_m >= 1.8 and not is_danger_wave
-                badge_color = "#ef4444" if is_danger_wave else ("#f59e0b" if is_caution_wave else "#16a34a")
-                badge_text = "DANGER" if is_danger_wave else ("CAUTION" if is_caution_wave else "SAFE")
-                
-                st.markdown(f"""
-                <div class="ff-card" style="border-top:3px solid {badge_color}; padding:10px; text-align:center;">
-                    <div style="font-size:11px; font-weight:700; color:var(--primary);">{h_entry.hour_label.split(' ')[1]}</div>
-                    <div style="font-size:16px; font-weight:800; margin:4px 0; font-family:'JetBrains Mono';">{h_entry.wave_height_m:.1f} m</div>
-                    <div style="font-size:10px; color:var(--text-muted);">Swell {h_entry.swell_wave_height_m:.1f}m</div>
-                    <div style="font-size:10px; color:var(--text-muted);">Wind {h_entry.wind_speed_kmh:.0f} km/h</div>
-                    <div style="font-size:10px; font-weight:700; color:{badge_color}; margin-top:4px;">{badge_text}</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-    # SUBVIEW 3.2: TIDES
-    elif st.session_state.sub_conditions == "Tides":
-        st.markdown(f"##### 🌊 Astronomical Tides & Coastal Water Levels for **{port_tides.port_name}**")
-        st.caption("Harmonic constituents calibrated against Survey of India & NIO tidal benchmarks.")
-
-        tb1, tb2, tb3, tb4 = st.columns(4)
-        with tb1:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center;">
-                <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase;">Water Level</div>
-                <div style="font-size:24px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono'; margin:4px 0;">
-                    {port_tides.current_water_level_m:.2f} <span style="font-size:13px;">m</span>
-                </div>
-                <div style="font-size:11px; color:var(--text-muted);">Above Chart Datum</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with tb2:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center;">
-                <div style="font-size:11px; font-weight:700; color:var(--success); text-transform:uppercase;">Tidal Phase</div>
-                <div style="font-size:18px; font-weight:800; color:var(--success); margin:6px 0;">
-                    {port_tides.tide_phase.split('(')[0].strip()}
-                </div>
-                <div style="font-size:11px; color:var(--text-muted);">{port_tides.time_to_next_extreme}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with tb3:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center;">
-                <div style="font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase;">Stream Velocity</div>
-                <div style="font-size:24px; font-weight:800; color:var(--primary); font-family:'JetBrains Mono'; margin:4px 0;">
-                    {port_tides.tidal_stream_velocity_knots:.1f} <span style="font-size:13px;">kts</span>
-                </div>
-                <div style="font-size:11px; color:var(--text-muted);">Spring Range: {port_tides.mean_spring_range_m:.2f}m</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with tb4:
-            st.markdown(f"""
-            <div class="ff-card" style="text-align:center;">
-                <div style="font-size:11px; font-weight:700; color:var(--warning); text-transform:uppercase;">Harbor Bar Depth</div>
-                <div style="font-size:24px; font-weight:800; color:var(--warning); font-family:'JetBrains Mono'; margin:4px 0;">
-                    {port_tides.harbor_bar_depth_m:.1f} <span style="font-size:13px;">m</span>
-                </div>
-                <div style="font-size:11px; color:var(--text-muted);">At Low Water Datum</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        if port_tides.harbor_bar_keel_warning:
-            st.markdown(f"""
-            <div style="background:var(--warning-bg); border-left:4px solid var(--warning); padding:10px 16px; border-radius:8px; margin: 14px 0; font-size:13px; color:var(--text-primary);">
-                ⚠️ <b>HARBOR BAR NOTICE:</b> {port_tides.harbor_bar_keel_warning}
-            </div>
-            """, unsafe_allow_html=True)
-
-        # 48-Hour Continuous Spline Tide Chart
         tide_plot_data = []
         for p in port_tides.hourly_heights_48h:
             tide_plot_data.append({
                 "Time": p.time_str,
-                "Tide Height (m)": p.height_m,
-                "Is Extreme": p.is_extreme,
-                "Label": p.extreme_label if p.extreme_label else ""
+                "Tide Height (m)": p.height_m
             })
         df_tides = pd.DataFrame(tide_plot_data)
 
-        chart_color = "#0284c7" if ("Day" in st.session_state.selected_theme or "Light" in st.session_state.selected_theme) else ("#10b981" if "Tactical" in st.session_state.selected_theme else "#38bdf8")
-
-        line_chart = alt.Chart(df_tides).mark_line(
+        tide_line = alt.Chart(df_tides).mark_line(
             interpolate="monotone",
-            color=chart_color,
-            strokeWidth=3.5
+            color="#2563eb",
+            strokeWidth=3
         ).encode(
             x=alt.X("Time:N", title="Timeline (IST)", axis=alt.Axis(labelAngle=-45)),
             y=alt.Y("Tide Height (m):Q", title="Water Level (m Above Datum)", scale=alt.Scale(zero=False)),
-            tooltip=["Time:N", "Tide Height (m):Q", "Label:N"]
+            tooltip=["Time:N", "Tide Height (m):Q"]
         )
 
-        area_chart = alt.Chart(df_tides).mark_area(
+        tide_area = alt.Chart(df_tides).mark_area(
             interpolate="monotone",
-            color=chart_color,
+            color="#2563eb",
             opacity=0.15
         ).encode(
             x=alt.X("Time:N"),
             y=alt.Y("Tide Height (m):Q")
         )
 
-        msl_rule = alt.Chart(pd.DataFrame([{"y": 1.0}])).mark_rule(
-            color="#94a3b8",
-            strokeDash=[4, 4]
-        ).encode(y="y:Q")
+        st.altair_chart((tide_area + tide_line).properties(height=280), use_container_width=True)
 
-        final_tide_chart = (area_chart + line_chart + msl_rule).properties(
-            height=280,
-            title=f"Astronomical Tidal Curve: {port_tides.port_name} (Continuous 48-Hour Trend)"
-        ).configure_title(fontSize=13, anchor="start", color=chart_color)
-
-        st.altair_chart(final_tide_chart, use_container_width=True)
-
-    # SUBVIEW 3.3: RADAR & SATELLITE
-    elif st.session_state.sub_conditions == "Radar & Satellite":
-        st.markdown("##### 📡 Live Doppler Precipitation Radar & Squall Tracking")
-        
-        rad_col1, rad_col2 = st.columns([8, 4])
-        with rad_col1:
-            st.markdown(f"""
-            <div class="ff-card" style="padding:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-weight:700; font-size:14px; color:var(--primary);">
-                        🌧️ Active Coastal Radar: {res.port.name}
-                    </span>
-                    <span style="font-size:11px; background:var(--primary-subtle); color:var(--primary); padding:2px 8px; border-radius:4px; font-weight:600;">
-                        LIVE DOPPLER FEED
-                    </span>
-                </div>
-                <iframe 
-                    src="https://www.rainviewer.com/map.html?loc={res.port.lat},{res.port.lon},8&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=83&lm=1&layer=radar&sm=1&sn=1" 
-                    width="100%" 
-                    height="460" 
-                    style="border:none; border-radius:8px;"
-                    allowfullscreen>
-                </iframe>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with rad_col2:
-            st.markdown("""
-            <div class="ff-card">
-                <h4 style="margin:0 0 10px 0; color:var(--primary); font-size:15px;">🌦️ Doppler Radar Interpretation</h4>
-                <div style="font-size:12px; line-height:1.7; color:var(--text-secondary);">
-                    • <b>Indian Radar Network:</b> Connected to coastal Doppler radars (IMD Kochi, Chennai, Mumbai, Visakhapatnam).<br>
-                    • <b>Reflectivity Scale (dBZ):</b><br>
-                      &nbsp;&nbsp;🟦 <b>15 - 25 dBZ:</b> Light drizzle / mist.<br>
-                      &nbsp;&nbsp;🟩 <b>25 - 35 dBZ:</b> Moderate rain showers.<br>
-                      &nbsp;&nbsp;🟨 <b>35 - 45 dBZ:</b> Heavy monsoon squalls.<br>
-                      &nbsp;&nbsp;🟥 <b>> 45 dBZ:</b> Severe storm cell (&gt;45 km/h).
-                </div>
-                <div style="background:var(--primary-subtle); border-left:3px solid var(--primary); padding:10px 12px; border-radius:6px; font-size:12px; margin-top:12px; color:var(--text-primary);">
-                    💡 <b>Skipper Directive:</b> If red squall echoes develop within 15 nm of fairway, abort deep-sea transit.
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-
-# =========================================================
-# SECTION 4: 🛟 SAFETY & ADVISORY (STATUS / ADVISORY / EMERGENCY)
-# =========================================================
-
-elif st.session_state.nav_section == "Safety & Advisory":
-    st.markdown(f"""
-    <div style="margin-bottom:14px;">
-        <h2 style="margin:0; font-size:26px; font-weight:800; color:var(--text-primary);">Safety & Advisory</h2>
-        <div style="font-size:14px; color:var(--text-muted); margin-top:2px;">
-            Deterministic safety evaluation, ORCA AI natural language query, and emergency contacts.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Reusable Spacious SectionTabs
-    safety_tabs = ["Operational Status", "Actionable Advisory", "Emergency"]
-    st.session_state.sub_safety = render_section_tabs(safety_tabs, st.session_state.sub_safety, "tab_safety")
-
-    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
-
-    # SUBVIEW 4.1: OPERATIONAL STATUS
-    if st.session_state.sub_safety == "Operational Status":
+    with an_t3:
+        st.markdown(f"##### 📡 Live Doppler Precipitation Radar for **{res.port.name}**")
+        st.caption("Connected to Indian coastal radar network via RainViewer.")
         st.markdown(f"""
-        <div class="ff-status-panel {status_cls}">
-            <div>
-                <div style="font-size:13px; font-weight:700; color:{status_color}; text-transform:uppercase; letter-spacing:0.8px;">
-                    {status_icon} {status_title}
-                </div>
-                <div style="font-size:26px; font-weight:800; color:{status_color}; margin: 2px 0 4px 0;">
-                    {status_tag}
-                </div>
-                <div style="font-size:13px; color:var(--text-secondary); max-width:720px; line-height:1.5;">
-                    {status_desc}
-                </div>
-            </div>
-            <div style="text-align:right; min-width:130px;">
-                <div style="font-size:28px; font-weight:800; color:{status_color}; font-family:'JetBrains Mono';">
-                    {res.safety.risk_score} <span style="font-size:14px; font-weight:600; color:var(--text-muted);">/ 100</span>
-                </div>
-                <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Risk Score</div>
-                <div style="font-size:11px; font-weight:700; color:{risk_grade_color}; margin-top:2px;">{risk_grade}</div>
-            </div>
+        <div class="cf-card" style="padding:10px;">
+            <iframe 
+                src="https://www.rainviewer.com/map.html?loc={res.port.lat},{res.port.lon},8&oFa=0&oC=1&oU=0&oCS=1&oF=0&oAP=1&c=3&o=83&lm=1&layer=radar&sm=1&sn=1" 
+                width="100%" 
+                height="460" 
+                style="border:none; border-radius:10px;"
+                allowfullscreen>
+            </iframe>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("##### 🛡️ Deterministic Rule Compliance Matrix (Zero-Hallucination Guardrails)")
-        st.caption("All physical safety limits are evaluated deterministically in pure Python before AI synthesis.")
 
-        audit_table = []
-        for item in res.safety.audit_log:
-            v_tag = "✅ PASS" if item.verdict == "PASS" else ("⚠️ CAUTION" if item.verdict == "CAUTION" else "❌ FAIL TRIGGER")
-            audit_table.append({
-                "Metric": item.metric,
-                "Observed Telemetry": item.observed_value,
-                "Regulatory Limit": item.threshold,
-                "Standard / Source": item.regulatory_source,
-                "Verdict": v_tag,
-                "Physical Rationale": item.explanation
-            })
-        st.dataframe(audit_table, use_container_width=True)
+# ---------------------------------------------------------
+# ACTIVE VOYAGE MONITOR & SPOKEN VOICE SYNTHESIZER
+# (Present across bottom of active operational sessions)
+# ---------------------------------------------------------
 
-    # SUBVIEW 4.2: ACTIONABLE ADVISORY & NATURAL QUERY
-    elif st.session_state.sub_safety == "Actionable Advisory":
-        st.markdown("##### 🤖 Ask ORCA Multi-Agent AI")
-        q_col1, q_col2 = st.columns([9, 2])
-        with q_col1:
-            query_input = st.text_input(
-                "Query ORCA:",
-                value=st.session_state.query_text,
-                placeholder="Ask query (e.g. Can we sail from Kochi for Yellowfin Tuna?)...",
-                label_visibility="collapsed",
-                key="adv_query_input"
-            )
-        with q_col2:
-            if st.button("🔍 Query AI", use_container_width=True, key="btn_adv_query"):
-                if query_input != st.session_state.query_text:
-                    st.session_state.query_text = query_input
-                    st.session_state.last_pipeline_result = None
-                    st.rerun()
+if st.session_state.active_nav_tab in ["Harbor Admin Portal", "Mission Dispatch & PFZ"]:
+    st.markdown("<div style='margin-top: 24px;'></div>", unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
+    if "Hindi" in st.session_state.advisory_lang or "हिन्दी" in st.session_state.advisory_lang:
+        adv = res.advisory.hindi
+        speech_code = "hi-IN"
+        speech_btn_title = "▶ ऑडियो में सुनें (Listen in Hindi)"
+    elif "Tamil" in st.session_state.advisory_lang or "தமிழ்" in st.session_state.advisory_lang:
+        adv = res.advisory.tamil
+        speech_code = "ta-IN"
+        speech_btn_title = "▶ ஆடியோவில் கேளுங்கள் (Listen in Tamil)"
+    else:
+        adv = res.advisory.english
+        speech_code = "en-IN"
+        speech_btn_title = "▶ Voice Audio Advisory (Listen in English)"
 
-        # Select Language
-        lang_pills = ["English", "हिन्दी (Hindi)", "தமிழ் (Tamil)"]
-        cur_l = 0
-        if "Hindi" in st.session_state.advisory_lang or "हिन्दी" in st.session_state.advisory_lang:
-            cur_l = 1
-        elif "Tamil" in st.session_state.advisory_lang or "தமிழ்" in st.session_state.advisory_lang:
-            cur_l = 2
+    clean_speech_text = f"{adv['status_headline']}. {adv['safety_action']}. {adv['executive_summary']}"
+    clean_speech_text = clean_speech_text.replace('"', ' ').replace("'", ' ').replace('\n', ' ').replace('\r', ' ')
 
-        sel_l = st.segmented_control("Advisory Language", options=lang_pills, default=lang_pills[cur_l])
-        if sel_l:
-            st.session_state.advisory_lang = sel_l
-
-        if "Hindi" in st.session_state.advisory_lang:
-            adv = res.advisory.hindi
-        elif "Tamil" in st.session_state.advisory_lang:
-            adv = res.advisory.tamil
-        else:
-            adv = res.advisory.english
-
-        # Audio Speech Synthesis Feature
-        speech_lang_code = "hi-IN" if "Hindi" in st.session_state.advisory_lang else ("ta-IN" if "Tamil" in st.session_state.advisory_lang else "en-IN")
-        speech_label = "🔊 ऑडियो में सुनें (Listen in Hindi)" if "Hindi" in st.session_state.advisory_lang else ("🔊 ஆடியோவில் கேளுங்கள் (Listen in Tamil)" if "Tamil" in st.session_state.advisory_lang else "🔊 Voice Audio Companion (Listen in English)")
-        
-        clean_speech_text = f"{adv['status_headline']}. {adv['safety_action']}. {adv['executive_summary']}"
-        clean_speech_text = clean_speech_text.replace('"', ' ').replace("'", ' ').replace('\n', ' ').replace('\r', ' ')
-
-        is_dark_theme = ("Dark" in st.session_state.selected_theme or "Tactical" in st.session_state.selected_theme)
-        aud_bg = "rgba(56, 189, 248, 0.12)" if is_dark_theme else "rgba(2, 132, 199, 0.08)"
-        aud_border = "#38bdf8" if is_dark_theme else "#0284c7"
-        aud_text = "#38bdf8" if is_dark_theme else "#0284c7"
-        aud_sub = "#cbd5e1" if is_dark_theme else "#64748b"
-        aud_btn_primary = "#38bdf8" if is_dark_theme else "#0284c7"
-        aud_btn_text = "#07111f" if is_dark_theme else "#ffffff"
-
-        audio_html = f"""
-        <div style="background:{aud_bg}; border:1px solid {aud_border}; border-radius:10px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-family:'Plus Jakarta Sans', -apple-system, sans-serif;">
-            <div>
-                <div style="font-weight:700; font-size:14px; color:{aud_text};">{speech_label}</div>
-                <div style="font-size:12px; color:{aud_sub}; margin-top:2px;">Spoken audio voice advisory for skippers & deckhands with zero reading required.</div>
-            </div>
-            <div style="display:flex; gap:8px;">
-                <button id="tts-play-btn" onclick="playAdvisorySpeech()" style="background:{aud_btn_primary}; color:{aud_btn_text}; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
-                    ▶ Play Voice
-                </button>
-                <button id="tts-stop-btn" onclick="stopAdvisorySpeech()" style="background:#475569; color:#ffffff; border:none; padding:8px 14px; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">
-                    ⏹ Stop
-                </button>
-            </div>
+    # Audio synthesis player
+    audio_widget = f"""
+    <div style="background:var(--bg-subtle); border:1px solid var(--border); border-radius:14px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; box-shadow:var(--shadow-sm); font-family:'Inter', sans-serif;">
+        <div>
+            <div style="font-weight:700; font-size:14px; color:var(--primary);">{speech_btn_title}</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Automated regional voice speech companion for fishermen and skippers with zero reading required.</div>
         </div>
-        <script>
-        function playAdvisorySpeech() {{
-            if ('speechSynthesis' in window) {{
-                window.speechSynthesis.cancel();
-                var utterance = new SpeechSynthesisUtterance("{clean_speech_text}");
-                utterance.lang = "{speech_lang_code}";
-                utterance.rate = 0.92;
-                utterance.pitch = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }} else {{
-                alert("Speech synthesis is not supported in this browser.");
-            }}
-        }}
-        function stopAdvisorySpeech() {{
-            if ('speechSynthesis' in window) {{
-                window.speechSynthesis.cancel();
-            }}
-        }}
-        </script>
-        """
-        components.html(audio_html, height=75)
-
-        adv_col1, adv_col2 = st.columns([7, 5])
-        with adv_col1:
-            st.markdown(f"""
-            <div class="ff-card">
-                <h3 style="margin:0 0 10px 0; color:var(--primary); font-size:18px;">{adv['title']}</h3>
-                <div style="font-weight:700; font-size:15px; margin-bottom:8px; color:var(--text-primary);">{adv['status_headline']}</div>
-                <p style="font-size:13px; line-height:1.6; color:var(--text-secondary);">{adv['executive_summary']}</p>
-                <div style="background:var(--primary-subtle); border-left:3px solid var(--primary); padding:10px 14px; border-radius:6px; font-size:13px; margin:12px 0; color:var(--text-primary);">
-                    <b>Directive:</b> {adv['safety_action']}
-                </div>
-                <div style="font-size:13px; line-height:1.6; color:var(--text-secondary);">
-                    <b>Target Fish Species:</b> {adv['recommended_pfz']['target_species']}<br>
-                    <b>Recommended Zone:</b> {adv['recommended_pfz']['name']} ({adv['recommended_pfz']['coordinates']})<br>
-                    <b>Distance & Heading:</b> {adv['recommended_pfz']['distance_bearing']}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with adv_col2:
-            st.markdown(f"""
-            <div class="ff-card">
-                <div style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:8px;">⛽ Transit & Fuel Economics</div>
-                <div style="font-size:13px; line-height:1.7; color:var(--text-secondary);">
-                    • <b>Transit Duration:</b> {adv['fuel_and_route']['estimated_transit']}<br>
-                    • <b>Diesel Consumption:</b> {adv['fuel_and_route']['fuel_consumption']}<br>
-                    • <b>Fuel Saved:</b> <span style="color:var(--success); font-weight:bold;">{adv['fuel_and_route']['fuel_savings']}</span><br>
-                    • <b>Ocean Current Assist:</b> {adv['fuel_and_route']['current_notes']}<br>
-                    • <b>Boundary Safety:</b> {adv['fuel_and_route']['border_safety']}
-                </div>
-                <div style="margin-top:14px; padding:10px; background:var(--primary-subtle); border-radius:6px; font-size:12px; color:var(--text-primary);">
-                    📞 <b>Emergency Assistance:</b> {adv['emergency_contacts']}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-    # SUBVIEW 4.3: EMERGENCY
-    elif st.session_state.sub_safety == "Emergency":
-        st.markdown(f"##### 🚨 24x7 Emergency Coastal Shore Guards & Helplines for **{res.port.name}**")
-        st.caption("Official direct dispatch channels for sea emergencies, search & rescue (SAR), and border alerts.")
-
-        em_h1, em_h2, em_h3, em_h4 = st.columns(4)
-        with em_h1:
-            st.markdown("""
-            <div class="ff-card" style="text-align:center; border-top: 3px solid #0284c7;">
-                <div style="font-size:11px; font-weight:700; color:#0284c7;">INDIAN COAST GUARD</div>
-                <div style="font-size:22px; font-weight:800; color:#0284c7; margin:4px 0; font-family:'JetBrains Mono';">1554</div>
-                <div style="font-size:11px; color:var(--text-muted);">Toll-Free 24x7 SAR</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with em_h2:
-            st.markdown("""
-            <div class="ff-card" style="text-align:center; border-top: 3px solid #059669;">
-                <div style="font-size:11px; font-weight:700; color:#059669;">MARINE POLICE</div>
-                <div style="font-size:22px; font-weight:800; color:#059669; margin:4px 0; font-family:'JetBrains Mono';">1093</div>
-                <div style="font-size:11px; color:var(--text-muted);">Coastal Security</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with em_h3:
-            st.markdown("""
-            <div class="ff-card" style="text-align:center; border-top: 3px solid #d97706;">
-                <div style="font-size:11px; font-weight:700; color:#d97706;">DISASTER MANAGEMENT</div>
-                <div style="font-size:22px; font-weight:800; color:#d97706; margin:4px 0; font-family:'JetBrains Mono';">1070 / 1077</div>
-                <div style="font-size:11px; color:var(--text-muted);">State / District SEOC</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with em_h4:
-            st.markdown("""
-            <div class="ff-card" style="text-align:center; border-top: 3px solid #dc2626;">
-                <div style="font-size:11px; font-weight:700; color:#dc2626;">SEA AMBULANCE</div>
-                <div style="font-size:22px; font-weight:800; color:#dc2626; margin:4px 0; font-family:'JetBrains Mono';">108</div>
-                <div style="font-size:11px; color:var(--text-muted);">Medical Evacuation</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<div style='margin-top:16px;'></div>", unsafe_allow_html=True)
-        contacts = res.emergency_contacts if res.emergency_contacts else get_emergency_contacts(res.port.id)
-        
-        c_left, c_right = st.columns(2)
-        for idx, c in enumerate(contacts):
-            target_col = c_left if idx % 2 == 0 else c_right
-            with target_col:
-                badge_color = "#0284c7" if "Coast Guard" in c.category else ("#059669" if "Police" in c.category else "#d97706")
-                st.markdown(f"""
-                <div class="ff-card">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <span style="font-size:11px; font-weight:700; color:{badge_color}; text-transform:uppercase;">
-                                {c.category}
-                            </span>
-                            <div style="font-size:15px; font-weight:700; margin-top:2px; color:var(--text-primary);">{c.agency_name}</div>
-                        </div>
-                        <span style="font-size:12px; font-weight:700; background:var(--primary-subtle); color:var(--primary); padding:2px 8px; border-radius:4px;">
-                            {c.toll_free}
-                        </span>
-                    </div>
-                    <div style="font-size:12px; margin-top:8px; line-height:1.6; color:var(--text-secondary);">
-                        📞 <b>Direct Phone:</b> {c.phone}<br>
-                        📻 <b>Radio Channel:</b> <span style="font-weight:600; color:var(--primary);">{c.vhf_channel}</span><br>
-                        📍 <b>Station Base:</b> {c.location} | <b>Sector:</b> {c.jurisdiction}<br>
-                        🛡️ <b>Response Role:</b> {c.response_role}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-
-# =========================================================
-# SECTION 5: ⚙ SETTINGS (VESSEL & VOYAGE / PREFERENCES)
-# =========================================================
-
-elif st.session_state.nav_section == "Settings":
-    st.markdown(f"""
-    <div style="margin-bottom:14px;">
-        <h2 style="margin:0; font-size:26px; font-weight:800; color:var(--text-primary);">Settings</h2>
-        <div style="font-size:14px; color:var(--text-muted); margin-top:2px;">
-            Vessel classification, departure timings, voice presets and user preferences.
+        <div style="display:flex; gap:8px;">
+            <button onclick="playVoiceSpeech()" style="background:#2563eb; color:#ffffff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px; box-shadow:0 1px 3px rgba(37,99,235,0.3);">
+                ▶ Play Voice
+            </button>
+            <button onclick="stopVoiceSpeech()" style="background:#64748b; color:#ffffff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;">
+                ⏹ Stop
+            </button>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    <script>
+    function playVoiceSpeech() {{
+        if ('speechSynthesis' in window) {{
+            window.speechSynthesis.cancel();
+            var msg = new SpeechSynthesisUtterance("{clean_speech_text}");
+            msg.lang = "{speech_code}";
+            msg.rate = 0.92;
+            window.speechSynthesis.speak(msg);
+        }}
+    }}
+    function stopVoiceSpeech() {{
+        if ('speechSynthesis' in window) {{
+            window.speechSynthesis.cancel();
+        }}
+    }}
+    </script>
+    """
+    components.html(audio_widget, height=80)
 
-    # Reusable Spacious SectionTabs
-    settings_tabs = ["Vessel & Voyage", "Preferences"]
-    st.session_state.sub_settings = render_section_tabs(settings_tabs, st.session_state.sub_settings, "tab_settings")
-
-    st.markdown("<div style='margin-top: 16px;'></div>", unsafe_allow_html=True)
-
-    # SUBVIEW 5.1: VESSEL & VOYAGE
-    if st.session_state.sub_settings == "Vessel & Voyage":
-        v_col1, v_col2 = st.columns(2)
-        with v_col1:
-            st.markdown("##### ⛵ Vessel Classification & OAL")
-            vessel_options = [
-                "Mechanized Trawler (12-18m)",
-                "Small Craft (<10m)",
-                "FRP / Fiber Boat (8-10m)",
-                "Deep-Sea Longliner (>20m)"
-            ]
-            cur_v_idx = vessel_options.index(st.session_state.vessel_class) if st.session_state.vessel_class in vessel_options else 0
-            sel_vessel = st.selectbox(
-                "Vessel Classification & Length Overall (OAL)",
-                options=vessel_options,
-                index=cur_v_idx,
-                help="Small Craft (<10m) enforces stricter wave limits (<1.8m) under INCOIS/IMD safety standards."
-            )
-            if sel_vessel != st.session_state.vessel_class:
-                st.session_state.vessel_class = sel_vessel
-                st.session_state.last_pipeline_result = None
-                st.rerun()
-
-        with v_col2:
-            st.markdown("##### ⏰ Departure Timing Window")
-            dep_options = [
-                "Immediate (Current Tide)",
-                "Next High Water Window",
-                "Dawn Departure (04:00 IST)",
-                "Dusk Departure (17:00 IST)"
-            ]
-            cur_dep_idx = dep_options.index(st.session_state.departure_window) if st.session_state.departure_window in dep_options else 0
-            sel_dep = st.selectbox(
-                "Departure Window Synchronization",
-                options=dep_options,
-                index=cur_dep_idx,
-                help="Harmonizes vessel departure with bar depth & tidal stream."
-            )
-            if sel_dep != st.session_state.departure_window:
-                st.session_state.departure_window = sel_dep
-                st.rerun()
-
-        # Official Voyage Manifest & Clearance Slip
-        st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
-        st.markdown("##### 📋 Official Voyage Manifest & Port Clearance Slip")
-        
-        status_color = "var(--success)" if res.safety.status == "SAFE_GO" else ("var(--warning)" if res.safety.status == "CAUTION_CONDITIONAL" else "var(--danger)")
-        manifest_ref = f"IND-MARITIME-{res.port.id.upper()}-{abs(hash(res.port.id + res.top_pfz.zone_id)) % 100000:05d}"
-        
-        st.markdown(f"""
-        <div class="ff-card" style="border: 2px dashed var(--border-strong); background: var(--bg-subtle); padding: 20px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-                <div>
-                    <div style="font-size:16px; font-weight:800; color:var(--primary);">📑 OFFICIAL VOYAGE MANIFEST & CLEARANCE SLIP</div>
-                    <div style="font-size:11px; color:var(--text-muted);">Ref: <b>{manifest_ref}</b> · Generated {datetime.now().strftime('%d-%b-%Y %H:%M IST')}</div>
-                </div>
-                <span style="font-size:12px; font-weight:800; color:{status_color}; background:rgba(0,0,0,0.06); padding:4px 10px; border-radius:4px; border:1px solid var(--border);">
-                    {res.safety.status.replace('_', ' ')}
-                </span>
-            </div>
-            <div style="font-size:13px; line-height:1.8; margin-top:12px; color:var(--text-secondary);">
-                • <b>Vessel Registered:</b> {st.session_state.vessel_class} (Base Port: {res.port.name})<br>
-                • <b>Departure Time:</b> {st.session_state.departure_window} | Water Level: {port_tides.current_water_level_m:.2f}m<br>
-                • <b>Target PFZ Frontier:</b> {res.top_pfz.name} ({dist_label_top} · Bearing {res.top_pfz.bearing_deg}°)<br>
-                • <b>Target Pelagic Species:</b> {', '.join(res.top_pfz.species_likely[:3])}<br>
-                • <b>Tide & Harbor Bar:</b> {port_tides.tide_phase.split('(')[0]} · Depth {port_tides.harbor_bar_depth_m:.1f}m<br>
-                • <b>Fuel Estimate:</b> ~{res.route.fuel_burn_liters} L (Current Assisted Saved: <b style="color:var(--success);">{res.route.fuel_savings_liters} L</b>)<br>
-                • <b>Safety Guard:</b> IMBL {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})<br>
-                • <b>Emergency SAR Dispatch:</b> Coast Guard 1554 · VHF Ch 16 (156.800 MHz) · Police 1093
-            </div>
-            <div style="margin-top:14px; text-align:right;">
-                <button onclick="window.print()" style="background:var(--primary); color:var(--text-on-primary); font-weight:700; border:none; padding:8px 18px; border-radius:6px; cursor:pointer; font-size:13px;">
-                    🖨️ Print Official Slip
-                </button>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # SUBVIEW 5.2: PREFERENCES
-    elif st.session_state.sub_settings == "Preferences":
-        p_col1, p_col2 = st.columns(2)
-        with p_col1:
-            st.markdown("##### 📏 Units & Display System")
-            unit_options = ["Metric (km/h, km)", "Nautical (knots, nm)"]
-            cur_u_idx = unit_options.index(st.session_state.unit_system) if st.session_state.unit_system in unit_options else 0
-            sel_unit = st.selectbox(
-                "Display Units",
-                options=unit_options,
-                index=cur_u_idx,
-                help="Choose between metric units (km/h, km) and maritime nautical units (knots, nm)."
-            )
-            if sel_unit != st.session_state.unit_system:
-                st.session_state.unit_system = sel_unit
-                st.rerun()
-
-            st.markdown("##### 🌐 Default Advisory Language")
-            lang_opts = ["English", "हिन्दी (Hindi)", "தமிழ் (Tamil)"]
-            cur_l_idx = 0
-            if "Hindi" in st.session_state.advisory_lang:
-                cur_l_idx = 1
-            elif "Tamil" in st.session_state.advisory_lang:
-                cur_l_idx = 2
-            
-            sel_lang = st.selectbox("Preferred Language", options=lang_opts, index=cur_l_idx)
-            if sel_lang != st.session_state.advisory_lang:
-                st.session_state.advisory_lang = sel_lang
-                st.rerun()
-
-            # Multilingual Voice Query Presets
-            st.markdown("##### 🎙️ Quick Voice Query Presets")
-            vp1, vp2 = st.columns(2)
-            with vp1:
-                if st.button("EN: Kochi Tuna", use_container_width=True, key="vp_en_kochi_set"):
-                    st.session_state.query_text = "Can we sail from Kochi harbor for Yellowfin Tuna?"
-                    st.session_state.active_port_id = "kochi"
-                    st.session_state.advisory_lang = "English"
-                    st.session_state.last_pipeline_result = None
-                    st.session_state.nav_section = "Safety & Advisory"
-                    st.session_state.sub_safety = "Actionable Advisory"
-                    st.rerun()
-                if st.button("TA: கொச்சி சூரை", use_container_width=True, key="vp_ta_kochi_set"):
-                    st.session_state.query_text = "கொச்சியிலிருந்து இன்று சூரை மீன் பிடிக்க கடலுக்குச் செல்லலாமா?"
-                    st.session_state.active_port_id = "kochi"
-                    st.session_state.advisory_lang = "தமிழ்"
-                    st.session_state.last_pipeline_result = None
-                    st.session_state.nav_section = "Safety & Advisory"
-                    st.session_state.sub_safety = "Actionable Advisory"
-                    st.rerun()
-            with vp2:
-                if st.button("HI: वेरावल मछली", use_container_width=True, key="vp_hi_veraval_set"):
-                    st.session_state.query_text = "क्या कल सुबह वेरावल से समुद्र में जाना सुरक्षित है?"
-                    st.session_state.active_port_id = "veraval"
-                    st.session_state.advisory_lang = "हिन्दी"
-                    st.session_state.last_pipeline_result = None
-                    st.session_state.nav_section = "Safety & Advisory"
-                    st.session_state.sub_safety = "Actionable Advisory"
-                    st.rerun()
-                if st.button("EN: Pomfret Vizag", use_container_width=True, key="vp_en_vizag_set"):
-                    st.session_state.query_text = "Visakhapatnam harbor to deep Bay of Bengal for Pomfret"
-                    st.session_state.active_port_id = "visakhapatnam"
-                    st.session_state.advisory_lang = "English"
-                    st.session_state.last_pipeline_result = None
-                    st.session_state.nav_section = "Safety & Advisory"
-                    st.session_state.sub_safety = "Actionable Advisory"
-                    st.rerun()
-
-        with p_col2:
-            st.markdown("##### 🎨 Cockpit Visual Theme")
-            t_opts = ["☀️ Light", "🌙 Dark", "⚡ Tactical"]
-            cur_t = 1
-            if "Day" in st.session_state.selected_theme or "Light" in st.session_state.selected_theme:
-                cur_t = 0
-            elif "Tactical" in st.session_state.selected_theme:
-                cur_t = 2
-
-            sel_t = st.selectbox("Select Theme", options=t_opts, index=cur_t)
-            theme_map_set = {
-                "☀️ Light": "☀️ Ocula Sky Day",
-                "🌙 Dark": "🌙 Ocula Oceanic Dark",
-                "⚡ Tactical": "⚡ Tactical Radar"
-            }
-            if theme_map_set[sel_t] != st.session_state.selected_theme:
-                st.session_state.selected_theme = theme_map_set[sel_t]
-                st.rerun()
-
-            st.markdown("""
-            <div class="ff-card" style="margin-top:16px; font-size:12px; color:var(--text-secondary);">
-                <b>Platform Specifications:</b><br>
-                • Problem Statement: ISRO SIH26176 / sih_176<br>
-                • Architecture: ORCA Multi-Agent AI (5 Collaborative Agents)<br>
-                • Ingestion: ISRO Oceansat-3, INCOIS Rules, Open-Meteo, OpenSeaMap<br>
-                • Zero-Hallucination Deterministic Guardrails
-            </div>
-            """, unsafe_allow_html=True)
-
-
-# ---------------------------------------------------------
-# GLOBAL FOOTER
-# ---------------------------------------------------------
+# Global Footer
 st.markdown("<div style='margin-top: 36px; border-top: 1px solid var(--border); padding-top: 14px;'></div>", unsafe_allow_html=True)
-st.caption("FishingFriend · ORCA Marine Multi-Agent AI · ISRO SIH26176 · 100% Free Open Telemetry & Open-Source Marine Architecture · Designed for Indian Fishermen & Harbor Authorities.")
+st.caption("FishingFriend · ORCA Marine Multi-Agent AI · ISRO SIH26176 · Inspired by ChargeFlow Modern SaaS Aesthetic · Designed for Indian Coastal Fishermen & Harbor Authorities.")
