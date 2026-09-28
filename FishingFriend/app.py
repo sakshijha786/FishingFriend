@@ -843,6 +843,10 @@ if (
 
 res: ORCASynthesisResult = st.session_state.last_pipeline_result
 
+# Compute fuel savings percentage
+total_nominal_fuel = res.route.fuel_burn_liters + res.route.fuel_savings_liters
+fuel_savings_pct = (res.route.fuel_savings_liters / max(1.0, total_nominal_fuel)) * 100.0 if total_nominal_fuel > 0 else 18.5
+
 # Safe fallback for astronomical tides and hourly forecast
 port_tides: PortTideData = res.tides if res.tides is not None else calculate_port_tides(res.port.id)
 port_hourly: HourlyMarineForecast = res.hourly_forecast if res.hourly_forecast is not None else fetch_hourly_marine_forecast(res.port)
@@ -1335,7 +1339,7 @@ elif st.session_state.active_nav_tab == "Harbor Admin Portal":
                 <span>AVG DIESEL FUEL SAVINGS</span>
                 <span class="cf-badge cf-badge-available">OCEAN DRIFT</span>
             </div>
-            <div class="cf-stat-value">{res.route.fuel_savings_pct:.1f}% Saved</div>
+            <div class="cf-stat-value">{fuel_savings_pct:.1f}% Saved</div>
             <div class="cf-stat-delta cf-delta-up">
                 <span>~{res.route.fuel_savings_liters:.1f} L saved via drift corridor</span>
             </div>
@@ -1581,7 +1585,7 @@ elif st.session_state.active_nav_tab == "Mission Dispatch & PFZ":
                     • <b>Catch Probability:</b> <span style="color:#16a34a; font-weight:800;">{res.top_pfz.fish_density_score}%</span><br>
                     • <b>Range & Bearing:</b> {res.route.total_distance_nm:.1f} NM @ {res.top_pfz.bearing_deg}°<br>
                     • <b>Transit Fuel Burn:</b> ~{res.route.fuel_burn_liters:.1f} Liters Diesel<br>
-                    • <b>Ocean Current Assisted Savings:</b> <span style="color:#16a34a; font-weight:700;">{res.route.fuel_savings_liters:.1f} L ({res.route.fuel_savings_pct:.1f}%)</span><br>
+                    • <b>Ocean Current Assisted Savings:</b> <span style="color:#16a34a; font-weight:700;">{res.route.fuel_savings_liters:.1f} L ({fuel_savings_pct:.1f}%)</span><br>
                     • <b>IMBL Nearest Border:</b> {res.safety.border_distance_km} km ({res.safety.nearest_imbl_name})
                 </div>
             </div>
